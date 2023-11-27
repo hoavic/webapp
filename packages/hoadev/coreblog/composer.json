@@ -1,0 +1,25 @@
+{
+    "name": "hoadev/coreblog",
+    "description": "Core Blog use with laravel framework, make with ?? by hoadev",
+    "autoload": {
+        "psr-4": {
+            "Hoadev\\Coreblog\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "hoavic",
+            "email": "oceo.info@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "HoaDev\\CoreBlog\\CoreBlogProvider"
+            ],
+            "aliases": {
+                "Debugbar": "HoaDev\\CoreBlog\\Facade"
+            }
+        }
+    }
+}
