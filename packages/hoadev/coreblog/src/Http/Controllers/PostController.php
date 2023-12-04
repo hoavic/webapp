@@ -5,15 +5,20 @@ namespace Hoadev\CoreBlog\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Hoadev\CoreBlog\Models\Post;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class PostController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $posts = Post::where('type', $request->query('type'))->get();
+
+        return Inertia::render('CoreBlog/Admin/Post/Index', [
+            'posts' => $posts
+        ]);
     }
 
     /**

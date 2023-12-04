@@ -14,8 +14,13 @@ class CoreBlogProvider extends ServiceProvider
     public function boot()
     {
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
-        $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
+        /* $this->loadRoutesFrom(__DIR__.'/../routes/web.php'); */
         $this->loadViewsFrom(__DIR__.'/../views', 'coreblog');
        /*  dd('active'); */
+
+        $this->publishes([
+            __DIR__.'/../resources/js/Pages/' => resource_path('/js/Pages/CoreBlog/'),
+        ], 'coreblog-js');
+
     }
 }

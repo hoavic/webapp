@@ -5,15 +5,20 @@ namespace Hoadev\CoreBlog\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Hoadev\CoreBlog\Models\Term;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class TermController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $terms = '';
+
+        return Inertia::render('CoreBlog/Admin/Term/Index', [
+            'terms' => $terms
+        ]);
     }
 
     /**

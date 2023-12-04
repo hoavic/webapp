@@ -3,7 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-
+use Hoadev\CoreBlog\Traits\CoreBlogRoute;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -24,12 +24,20 @@ Route::get('/', function () {
     ]);
 });
 
-Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified',
-])->group(function () {
-    Route::get('/dashboard', function () {
+Route::group([
+    'prefix' => 'admin',
+    'middleware' => [
+        'auth:sanctum',
+        config('jetstream.auth_session'),
+        'verified',
+    ]
+], function () {
+
+    /* Route::get('/', function() { return redirect()->route('dashboard'); }); */
+
+/*     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
-    })->name('dashboard');
+    })->name('dashboard'); */
+
+    CoreBlogRoute::Init();
 });
