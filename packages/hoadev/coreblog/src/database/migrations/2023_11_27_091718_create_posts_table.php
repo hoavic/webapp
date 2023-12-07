@@ -31,7 +31,7 @@ return new class extends Migration
 /*             $table->timestamp('modified');
             $table->timestamp('modified_gmt'); */
             $table->longText('post_content_filtered')->nullable();
-            $table->bigInteger('parent')->nullable()->default(0);
+            $table->bigInteger('parent_id')->nullable()->default(0);
             $table->string('guid')->nullable();
             $table->integer('menu_order')->nullable();
             $table->string('type')->nullable()->default('post');

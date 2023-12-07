@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignIdFor(Term::class);
             $table->string('taxonomy');
             $table->string('description')->nullable();
-            $table->bigInteger('parent')->default(0);
+            $table->bigInteger('parent_id')->default(0);
             $table->bigInteger('count');
         });
     }

@@ -5,3 +5,16 @@
 [x-cloak] {
     display: none;
 }
+
+
+table {
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 0.5rem 0.8rem;
+    border-bottom: 1px solid;
+    border-top:1px solid;
+    border-color: rgb(209 213 219);
+
+}

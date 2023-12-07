@@ -23,7 +23,7 @@ class Post extends Model
         'comment_status',
         'password',
         'name',
-        'parent',
+        'parent_id',
         'type',
         'comment_count'
     ];

@@ -52,7 +52,7 @@ class PostController extends Controller
             'post.comment_status' => 'required|string',
             'post.password' => 'required|string',
             'post.name' => 'required|string|unique:posts',
-            'post.parent' => 'nullable|string',
+            'post.parent_id' => 'nullable|string',
             'post.type' => 'required|string',
         ]);
 

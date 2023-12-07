@@ -3,6 +3,7 @@
 namespace Hoadev\CoreBlog\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use Hoadev\CoreBlog\Models\Taxonomy;
 use Hoadev\CoreBlog\Models\Term;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -14,10 +15,20 @@ class TermController extends Controller
      */
     public function index(Request $request)
     {
-        $terms = '';
+
+        $taxonomy = $request->query('taxonomy', 'category');
+
+        $taxonomies = Taxonomy::where('taxonomy', $taxonomy)->with(['term', 'term.termMetas'])->paginate(10);
+
+        $taxonomies->appends(['taxonomy' => $taxonomy]);
+
+        if($request->query('search') !== null) {
+            $taxonomies->appends(['search' => $request->query('search')]);
+        }
 
         return Inertia::render('CoreBlog/Admin/Term/Index', [
-            'terms' => $terms
+            'taxonomy' => $taxonomy,
+            'taxonomies' => $taxonomies
         ]);
     }
 
@@ -34,7 +45,25 @@ class TermController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'term.name' => 'required|string',
+            'term.slug' => 'nullable|string|unique:terms,slug',
+            'term.group' => 'required|integer',
+            'taxonomy.taxonomy' => 'required|string',
+            'taxonomy.desxription' => 'nullable|string',
+            'taxonomy.parent_id' => 'required|integer',
+            'taxonomy.count' => 'required|integer',
+        ]);
+
+/*         dd($validated); */
+
+        $term = Term::create($validated['term']);
+
+        if ($term) {
+            $term->taxonomy()->create($validated['taxonomy']);
+        }
+
+        return to_route('terms.index');
     }
 
     /**
@@ -50,7 +79,14 @@ class TermController extends Controller
      */
     public function edit(Term $term)
     {
-        //
+        $term = $term->load(['termMetas', 'taxonomy']);
+
+        $taxonomies = Taxonomy::where('taxonomy', $term->taxonomy->taxonomy)->with('term')->get();
+
+        return Inertia::render('CoreBlog/Admin/Term/Edit', [
+            'term' => $term,
+            'taxonomies' => $taxonomies
+        ]);
     }
 
     /**
@@ -58,7 +94,24 @@ class TermController extends Controller
      */
     public function update(Request $request, Term $term)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string',
+            'slug' => 'nullable|string|unique:terms,slug,'.$term->id,
+            'group' => 'required|integer',
+            'taxonomy' => 'array',
+            'taxonomy.taxonomy' => 'required|string',
+            'taxonomy.desxription' => 'nullable|string',
+            'taxonomy.parent_id' => 'required|integer',
+            'taxonomy.count' => 'required|integer',
+        ]);
+
+/*         dd($validated); */
+
+        $term->update($validated);
+
+        $term->taxonomy()->update($validated['taxonomy']);
+
+        return to_route('terms.index');
     }
 
     /**

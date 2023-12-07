@@ -15,7 +15,7 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->string('name');
             $table->string('slug')->nullable();
-            $table->string('group')->default(0);
+            $table->integer('group')->default(0);
         });
     }
 

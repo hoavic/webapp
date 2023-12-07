@@ -16,7 +16,9 @@ class Term extends Model
     public $timestamps = false;
 
     protected $fillable = [
-
+        'name',
+        'slug',
+        'group'
     ];
 
     public function taxonomy(): HasOne
