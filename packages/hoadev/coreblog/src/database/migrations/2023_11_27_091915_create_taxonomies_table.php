@@ -18,8 +18,9 @@ return new class extends Migration
             $table->foreignIdFor(Term::class);
             $table->string('taxonomy');
             $table->string('description')->nullable();
-            $table->bigInteger('parent_id')->default(0);
+/*             $table->bigInteger('parent_id')->default(0); */
             $table->bigInteger('count');
+            $table->nestedSet();
         });
     }
 
@@ -28,6 +29,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('taxonomies');
+        Schema::dropIfExists('taxonomies', function (Blueprint $table) {
+            $table->dropNestedSet();
+        });
     }
 };

@@ -5,6 +5,7 @@ namespace Hoadev\CoreBlog\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Hoadev\CoreBlog\Models\Taxonomy;
 use Hoadev\CoreBlog\Models\Term;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -18,17 +19,27 @@ class TermController extends Controller
 
         $taxonomy = $request->query('taxonomy', 'category');
 
-        $taxonomies = Taxonomy::where('taxonomy', $taxonomy)->with(['term', 'term.termMetas'])->paginate(10);
+        $search = $request->query('search');
+
+        $taxonomies = Taxonomy::with(['term', 'ancestors'])
+                        ->where('taxonomy', $taxonomy)
+                        ->whereHas('term', function (Builder $query) use($search) {
+                            $query->where('name', 'like', '%'.$search.'%');
+                        })
+                        ->defaultOrder()
+                        ->paginate(10);
 
         $taxonomies->appends(['taxonomy' => $taxonomy]);
 
-        if($request->query('search') !== null) {
-            $taxonomies->appends(['search' => $request->query('search')]);
+        if($search !== null) {
+            $taxonomies->appends(['search' => $search]);
         }
 
         return Inertia::render('CoreBlog/Admin/Term/Index', [
             'taxonomy' => $taxonomy,
-            'taxonomies' => $taxonomies
+            'search' => $search,
+            'taxonomies' => $taxonomies,
+            'allTaxonomies' => Taxonomy::with(['term', 'ancestors'])->where('taxonomy', $taxonomy)->defaultOrder()->get()
         ]);
     }
 
@@ -50,8 +61,8 @@ class TermController extends Controller
             'term.slug' => 'nullable|string|unique:terms,slug',
             'term.group' => 'required|integer',
             'taxonomy.taxonomy' => 'required|string',
-            'taxonomy.desxription' => 'nullable|string',
-            'taxonomy.parent_id' => 'required|integer',
+            'taxonomy.description' => 'nullable|string',
+            'taxonomy.parent_id' => 'nullable|integer',
             'taxonomy.count' => 'required|integer',
         ]);
 
@@ -63,15 +74,25 @@ class TermController extends Controller
             $term->taxonomy()->create($validated['taxonomy']);
         }
 
-        return to_route('terms.index');
+        /* return to_route('terms.index', ['taxonomy='.$validated['taxonomy']['taxonomy']]); */
+        return redirect()->route('terms.index', ['taxonomy='.$validated['taxonomy']['taxonomy']])->with('message', 'Add '.$term->name.' Successfully!');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Term $term)
+    public function show($taxonomy, $slug)
     {
-        //
+        if($term = Term::with(['taxonomy, termMetas'])->where('slug', $slug)->first()) {
+            return Inertia::render('CoreBlog/Admin/Term/Show', [
+                'taxonomy' => $taxonomy,
+                'term' => $term
+            ]);
+        } else {
+            return redirect()->route('dashboard');
+        }
+
+
     }
 
     /**
@@ -99,9 +120,10 @@ class TermController extends Controller
             'slug' => 'nullable|string|unique:terms,slug,'.$term->id,
             'group' => 'required|integer',
             'taxonomy' => 'array',
+            'taxonomy.id' => 'required|integer',
             'taxonomy.taxonomy' => 'required|string',
-            'taxonomy.desxription' => 'nullable|string',
-            'taxonomy.parent_id' => 'required|integer',
+            'taxonomy.description' => 'nullable|string',
+            'taxonomy.parent_id' => 'nullable|integer',
             'taxonomy.count' => 'required|integer',
         ]);
 
@@ -111,14 +133,29 @@ class TermController extends Controller
 
         $term->taxonomy()->update($validated['taxonomy']);
 
-        return to_route('terms.index');
+        // đáng lẽ không cần, nhưng nestedset cần
+        $taxonomy = Taxonomy::find($validated['taxonomy']['id']);
+        if($validated['taxonomy']['parent_id'] === null) {
+            $taxonomy->makeRoot()->save();
+        } else {
+            $parent = Taxonomy::find($validated['taxonomy']['parent_id']);
+            $parent->prependNode($taxonomy);
+        }
+
+
+        /* return to_route('terms.index', ['taxonomy='.$validated['taxonomy']['taxonomy']]); */
+        return redirect()->route('terms.index', ['taxonomy='.$validated['taxonomy']['taxonomy']])->with('message', 'Update '.$term->name.' Successfully!');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Term $term)
+    public function destroy(Request $request, Term $term)
     {
-        //
+        $taxonomy = $term->taxonomy;
+        if($term->delete()) {$taxonomy->delete();}
+
+        /* return to_route('terms.index', ['taxonomy='.$request->query('taxonomy', 'category')])->with('success', 'your message,here'); */
+        return redirect()->route('terms.index', ['taxonomy='.$request->query('taxonomy', 'category')])->with('message', 'Delete '.$term->name.' Successfully!');
     }
 }

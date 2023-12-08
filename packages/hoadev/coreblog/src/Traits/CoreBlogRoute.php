@@ -26,9 +26,12 @@ trait CoreBlogRoute {
 
         Route::get('coreblog', CoreBlogController::class); //demo
 
+        Route::resource('terms', TermController::class)->except(['show']);
+        Route::get('{taxonomy}/{slug}', [TermController::class, 'show'])->name('terms.show');
+
         Route::resource('posts', PostController::class);
         Route::resource('comments', CommentController::class);
-        Route::resource('terms', TermController::class);
+
     }
 
 }

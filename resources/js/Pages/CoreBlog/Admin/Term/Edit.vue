@@ -1,11 +1,8 @@
 <script setup>
-import PrimaryButton from '@/Components/PrimaryButton.vue';
+
 import AppLayout from '@/Layouts/AppLayout.vue';
-import Pagination from '@/Components/Pagination.vue';
-import { router, useForm } from '@inertiajs/vue3';
-import { reactive } from 'vue';
-import slugify from 'slugify';
-import SecondaryButton from '@/Components/SecondaryButton.vue';
+import { useForm } from '@inertiajs/vue3';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
 
 const props = defineProps({
     term: Object,
@@ -26,7 +23,7 @@ function submit() {
 </script>
 
 <template>
-    <AppLayout :title="'Edit' + term.name">
+    <AppLayout :title="'Edit ' + term.name">
 
         <div v-if="Object.keys(errors).length > 0" class="m-6 p-4 bg-red-100 text-red-900 border border-red-900 rounded-lg">
             <ul class="flex flex-col gap-2">
@@ -39,7 +36,7 @@ function submit() {
 
                 <div class="lg:flex-1 lg:px-6">
                     <h1 class="mx-6 mb-6 font-bold">Edit {{ term.name }}</h1>
-                    <!-- <p>{{ taxonomies }}</p> -->
+                    <p>{{ form }}</p>
                     <form @submit.prevent="submit">
                         <div class="m-6">
                             <input type="text" v-model="form.name" name="title" placeholder="Title..." @input="autoslug"
@@ -50,11 +47,11 @@ function submit() {
                             <input type="text" v-model="form.slug" name="slug" placeholder="slug..."
                                 class="w-full border border-gray-300 rounded-lg"/>
                         </div>
-                        {{ form }}
+
                         <div class="m-6">
                             <select v-model="form.taxonomy.parent_id" name="parent_id"
                                 class="w-full border border-gray-300 rounded-lg">
-                                <option value=0>--- Không ---</option>
+                                <option value=null>--- Không ---</option>
                                 <option v-for="tax in taxonomies" :value="tax.id" >{{ tax.term.name }}</option>
                             </select>
 
@@ -74,7 +71,9 @@ function submit() {
                 </div>
 
                 <div class="w-full lg:w-[300px]">
-
+                    <div class="my-8 mx-4 lg:ml-0 lg:mr-8 p-4 text-sm bg-gray-50 border border-gray-300 text-gray-500 rounded-lg">
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Et reiciendis omnis ad. Sint laudantium labore, magni, tenetur ipsam nisi nobis doloremque quo deleniti sunt hic autem aliquam impedit, quas maiores?
+                    </div>
                 </div>
 
             </div>

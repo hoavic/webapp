@@ -24,6 +24,8 @@ Route::get('/', function () {
     ]);
 });
 
+Route::get('/dashboard', function() { return redirect()->route('dashboard'); });
+
 Route::group([
     'prefix' => 'admin',
     'middleware' => [
