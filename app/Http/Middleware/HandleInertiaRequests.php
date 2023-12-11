@@ -41,4 +41,13 @@ class HandleInertiaRequests extends Middleware
             ]
         ];
     }
+
+/*     public function rootView(Request $request): string
+    {
+        if ($request->routeIs('*.show')) {
+            return 'layouts.guest';
+        }
+
+        return $this->rootView;
+    } */
 }

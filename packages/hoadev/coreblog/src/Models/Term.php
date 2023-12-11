@@ -30,4 +30,20 @@ class Term extends Model
     {
         return $this->hasMany(TermMeta::class);
     }
+
+    public function getPermalink() {
+        if ($this->taxonomy->taxonomy === 'category') {
+            return $this->parseSlug();
+        }
+        return $this->taxonomy->taxonomy.'/'.$this->parseSlug();
+    }
+
+    public function parseSlug() {
+        $ancestors = $this->taxonomy->ancestors;
+        $slug = '';
+        foreach($ancestors as $ancestor) {
+            $slug = $slug.'/'.$ancestor->term->slug;
+        }
+        return $slug.'/'.$this->slug;
+    }
 }

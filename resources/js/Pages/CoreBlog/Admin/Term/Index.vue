@@ -13,11 +13,7 @@ const props = defineProps({
     search: String,
     taxonomies: Object,
     allTaxonomies: Object,
-    errors: Object,
-    success: {
-        type: Object,
-        default: new Object
-    }
+    errors: Object
 });
 
 </script>
@@ -25,7 +21,7 @@ const props = defineProps({
 <template>
     <AppLayout :title="taxonomy + ' Index'">
 
-        <Alert :errors="errors" :success="success"></Alert>
+        <Alert :errors="errors"></Alert>
 
         <div class="py-8">
             <div class="lg:flex lg:flex-row">

@@ -21,7 +21,7 @@ class TermController extends Controller
 
         $search = $request->query('search');
 
-        $taxonomies = Taxonomy::with(['term', 'ancestors'])
+        $taxonomies = Taxonomy::with(['term', 'ancestors.term'])
                         ->where('taxonomy', $taxonomy)
                         ->whereHas('term', function (Builder $query) use($search) {
                             $query->where('name', 'like', '%'.$search.'%');
@@ -83,16 +83,19 @@ class TermController extends Controller
      */
     public function show($taxonomy, $slug)
     {
-        if($term = Term::with(['taxonomy, termMetas'])->where('slug', $slug)->first()) {
+
+        Inertia::setRootView('layouts.guest');
+
+        $term = Term::where('slug', $slug)->first();
+
+        if($term) {
             return Inertia::render('CoreBlog/Admin/Term/Show', [
                 'taxonomy' => $taxonomy,
-                'term' => $term
+                'term' => $term->load(['termMetas', 'taxonomy']),
             ]);
         } else {
             return redirect()->route('dashboard');
         }
-
-
     }
 
     /**

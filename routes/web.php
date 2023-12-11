@@ -41,5 +41,7 @@ Route::group([
         return Inertia::render('Dashboard');
     })->name('dashboard'); */
 
-    CoreBlogRoute::Init();
+    CoreBlogRoute::Admin();
 });
+
+CoreBlogRoute::Guest();
