@@ -13,7 +13,7 @@ const formDel = useForm({
 
 function destroy(id) {
     if (confirm("Are you sure you want to Delete")) {
-        formDel.delete(route("terms.destroy", id));
+        formDel.delete(route("admin.terms.destroy", id));
     }
 }
 
@@ -36,16 +36,16 @@ function destroy(id) {
             <tbody>
                 <template v-if="data.length > 0">
                     <tr v-for="(item, index) in data" :key="index">
-                        <td class="text-left">{{ index }}</td>
+                        <td class="text-left">{{ index + 1 }}</td>
                         <td class="text-left">
-                            <a :href="route('terms.edit', item.id)"
+                            <a :href="route('admin.terms.edit', item.id)"
                                 class="font-bold text-blue-900 whitespace-nowrap"><span v-if="item.ancestors.length > 0" class="mr-1">{{ '-'.repeat(item.ancestors.length) }}</span>{{ item.term.name }}</a>
                         </td>
                         <td class="text-gray-600 text-sm">{{ item.term.slug }}</td>
                         <td class="hidden md:table-cell text-gray-600 text-sm">{{ item.description }}</td>
                         <td class="text-sm">{{ item.count }}</td>
-                        <td class="">
-                            <div class="flex gap-2">
+                        <td>
+                            <div class="flex gap-2 justify-end">
 
                                 <a :href="getPermalink(item)" :title="'View ' + item.term.name"
                                     class="text-green-600">

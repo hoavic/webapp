@@ -75,7 +75,7 @@ class TermController extends Controller
         }
 
         /* return to_route('terms.index', ['taxonomy='.$validated['taxonomy']['taxonomy']]); */
-        return redirect()->route('terms.index', ['taxonomy='.$validated['taxonomy']['taxonomy']])->with('message', 'Add '.$term->name.' Successfully!');
+        return redirect()->route('admin.terms.index', ['taxonomy='.$validated['taxonomy']['taxonomy']])->with('message', 'Add '.$term->name.' Successfully!');
     }
 
     /**
@@ -108,6 +108,7 @@ class TermController extends Controller
         $taxonomies = Taxonomy::where('taxonomy', $term->taxonomy->taxonomy)->with('term')->get();
 
         return Inertia::render('CoreBlog/Admin/Term/Edit', [
+            'taxonomy' => $term->taxonomy->taxonomy,
             'term' => $term,
             'taxonomies' => $taxonomies
         ]);
@@ -147,7 +148,7 @@ class TermController extends Controller
 
 
         /* return to_route('terms.index', ['taxonomy='.$validated['taxonomy']['taxonomy']]); */
-        return redirect()->route('terms.index', ['taxonomy='.$validated['taxonomy']['taxonomy']])->with('message', 'Update '.$term->name.' Successfully!');
+        return redirect()->route('admin.terms.index', ['taxonomy='.$validated['taxonomy']['taxonomy']])->with('message', 'Update '.$term->name.' Successfully!');
     }
 
     /**
@@ -159,6 +160,6 @@ class TermController extends Controller
         if($term->delete()) {$taxonomy->delete();}
 
         /* return to_route('terms.index', ['taxonomy='.$request->query('taxonomy', 'category')])->with('success', 'your message,here'); */
-        return redirect()->route('terms.index', ['taxonomy='.$request->query('taxonomy', 'category')])->with('message', 'Delete '.$term->name.' Successfully!');
+        return redirect()->route('admin.terms.index', ['taxonomy='.$request->query('taxonomy', 'category')])->with('message', 'Delete '.$term->name.' Successfully!');
     }
 }

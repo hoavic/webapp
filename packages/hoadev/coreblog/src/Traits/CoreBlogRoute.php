@@ -2,11 +2,11 @@
 
 namespace Hoadev\CoreBlog\Traits;
 
+use Hoadev\CoreBlog\Http\Controllers\CommentController;
 use Hoadev\CoreBlog\Http\Controllers\CoreBlogController;
 use Hoadev\CoreBlog\Http\Controllers\PermalinkController;
 use Hoadev\CoreBlog\Http\Controllers\PostController;
 use Hoadev\CoreBlog\Http\Controllers\TermController;
-use Hoadev\CoreBlog\Models\Comment;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -14,27 +14,40 @@ trait CoreBlogRoute {
 
     public static function Admin() {
 
-
-        Route::get('/', function() {
-            return 'active'; //dmeo
-        });
-
-        Route::get('/', function() { return redirect()->route('dashboard'); });
-
         Route::get('/dashboard', function () {
-            return Inertia::render('CoreBlog/Admin/Dashboard');
+            return Inertia::render('CoreBlog/Admin/Dashboard', [
+                'admin' => [
+                    'admin_bar' => config('coreblog.admin_bar'),
+                    'menu' => config('coreblog.menu'),
+                    'post_types' => config('coreblog.post_types'),
+                    'taxonomies' => config('coreblog.taxonomies'),
+                ]
+            ]);
         })->name('dashboard');
 
-        Route::get('coreblog', CoreBlogController::class); //demo
+        Route::name('admin.')->group(function() {
+            Route::get('/', function() {
+                return 'active'; //dmeo
+            });
 
-        Route::resource('terms', TermController::class)->except(['show']);
+            Route::get('/', function() { return redirect()->route('dashboard'); });
+            Route::get('coreblog', CoreBlogController::class); //demo
 
-        Route::resource('posts', PostController::class);
-        Route::resource('comments', CommentController::class);
+            Route::resource('terms', TermController::class)->except(['show']);
 
+            Route::resource('posts', PostController::class);
+            Route::resource('comments', CommentController::class);
+
+
+        });
     }
 
     public static function Guest() {
+
+        Route::get('/', function() {
+
+        })->name('home');
+
         Route::get('{name}', [PermalinkController::class, 'single'])->name('permalink.single');
 
         Route::get('{type}/{name}', [PermalinkController::class, 'post'])->name('permalink.post')->whereIn('type', ['post', 'page', 'news', 'blog']);

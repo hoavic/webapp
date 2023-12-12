@@ -38,7 +38,9 @@ class HandleInertiaRequests extends Middleware
             ],
             'flash' => [
                 'message' => session('message')
-            ]
+            ],
+            'admin' => $this->shareInAdmin($request),
+
         ];
     }
 
@@ -50,4 +52,16 @@ class HandleInertiaRequests extends Middleware
 
         return $this->rootView;
     } */
+
+    public function shareInAdmin(Request $request) {
+        if($request->routeIs('admin.*')) {
+            /* dd(config('coreblog.admin_bar')); */
+            return [
+                    'admin_bar' => config('coreblog.admin_bar'),
+                    'menu' => config('coreblog.menu'),
+                    'post_types' => config('coreblog.post_types'),
+                    'taxonomies' => config('coreblog.taxonomies'),
+                ];
+        }
+    }
 }

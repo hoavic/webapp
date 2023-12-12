@@ -34,7 +34,7 @@ function autoslug() {
 
 function submit() {
     /* router.post(route('terms.store'), form); */
-    form.post(route('terms.store'), {
+    form.post(route('admin.terms.store'), {
         preserveScroll: true,
         onSuccess: (res) => {/* console.log(res);  */form.reset();}
     });
@@ -56,13 +56,12 @@ function submit() {
                 class="w-full border border-gray-300 rounded-lg"/>
         </div>
 
-        <div class="m-6">
+        <div v-if="($page.props.admin.taxonomies[taxonomy].hierarchical)" class="m-6">
             <select v-model="form.taxonomy.parent_id" name="parent_id"
                 class="w-full border border-gray-300 rounded-lg">
                 <option>--- Không ---</option>
                 <option v-for="tax in allTaxonomies" :value="tax.id" ><template v-if="tax.ancestors.length > 0" class="mr-1">{{ '-'.repeat(tax.ancestors.length) + ' ' }}</template>{{ tax.term.name }}</option>
             </select>
-
         </div>
 
         <div class="m-6">

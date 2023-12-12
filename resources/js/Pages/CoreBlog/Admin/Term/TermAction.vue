@@ -9,7 +9,7 @@ const props = defineProps({
 });
 
 function removeSearch() {
-    router.visit(route('terms.index') + '/?taxonomy=' + props.taxonomy);
+    router.visit(route('admin.terms.index') + '/?taxonomy=' + props.taxonomy);
 }
 
 </script>

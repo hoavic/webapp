@@ -19,7 +19,7 @@ class PostController extends Controller
 
         $type = $request->query('type', 'post');
         $posts = Post::where('type', $type)->get();
-        $allTerms = Taxonomy::where('taxonomy', ['category', 'tag'])->groupBy('taxonomy')->get();
+        $allTerms = Taxonomy::where('taxonomy', ['category', 'tag'])->get()->groupBy('taxonomy');
 
         return Inertia::render('CoreBlog/Admin/Post/Index', [
             'type' => $type,
@@ -58,7 +58,7 @@ class PostController extends Controller
 
         $request->user()->posts()->create($validated);
 
-        return redirect()->route('posts.index');
+        return redirect()->route('admin.posts.index');
     }
 
     /**
@@ -89,7 +89,7 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-        return redirect()->route('posts.index');
+        return redirect()->route('admin.posts.index');
     }
 
     /**
@@ -99,6 +99,6 @@ class PostController extends Controller
     {
         $post->delete();
 
-        return redirect()->route('posts.index');
+        return redirect()->route('admin.posts.index');
     }
 }

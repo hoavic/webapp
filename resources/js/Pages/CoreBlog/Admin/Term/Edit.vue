@@ -3,8 +3,10 @@
 import AppLayout from '@/Layouts/AppLayout.vue';
 import { useForm } from '@inertiajs/vue3';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
+import Editor from '@/Pages/CoreBlog/Admin/Includes/Editor.vue';
 
 const props = defineProps({
+    taxonomy: String,
     term: Object,
     taxonomies: Object,
     errors: Object
@@ -14,7 +16,7 @@ const form = useForm(props.term);
 
 function submit() {
     /* router.post(route('terms.store'), form); */
-    form.put(route('terms.update', props.term.id), {
+    form.put(route('admin.terms.update', props.term.id), {
         preserveScroll: true,
         onSuccess: (res) => {console.log(res);}
     });
@@ -48,7 +50,7 @@ function submit() {
                                 class="w-full border border-gray-300 rounded-lg"/>
                         </div>
 
-                        <div class="m-6">
+                        <div v-if="($page.props.admin.taxonomies[taxonomy].hierarchical)" class="m-6">
                             <select v-model="form.taxonomy.parent_id" name="parent_id"
                                 class="w-full border border-gray-300 rounded-lg">
                                 <option value=null>--- Không ---</option>
@@ -60,6 +62,10 @@ function submit() {
                         <div class="m-6">
                             <textarea v-model="form.taxonomy.description" name="description" placeholder="Description..."
                                 class="w-full border border-gray-300 rounded-lg"></textarea>
+                        </div>
+
+                        <div class="m-6">
+                            <Editor></Editor>
                         </div>
 
                         <div class="m-6">
