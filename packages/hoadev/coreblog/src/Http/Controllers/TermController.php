@@ -105,12 +105,13 @@ class TermController extends Controller
     {
         $term = $term->load(['termMetas', 'taxonomy']);
 
-        $taxonomies = Taxonomy::where('taxonomy', $term->taxonomy->taxonomy)->with('term')->get();
+ /*        $taxonomies = Taxonomy::where('taxonomy', $term->taxonomy->taxonomy)->with('term')->get(); */
+        $allTaxonomies = Taxonomy::with(['term', 'ancestors'])->where('taxonomy', $term->taxonomy->taxonomy)->defaultOrder()->get();
 
         return Inertia::render('CoreBlog/Admin/Term/Edit', [
             'taxonomy' => $term->taxonomy->taxonomy,
             'term' => $term,
-            'taxonomies' => $taxonomies
+            'allTaxonomies' => $allTaxonomies
         ]);
     }
 

@@ -4,11 +4,12 @@ import AppLayout from '@/Layouts/AppLayout.vue';
 import { useForm } from '@inertiajs/vue3';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import Editor from '@/Pages/CoreBlog/Admin/Includes/Editor.vue';
+import { stripHtml } from '@/Pages/CoreBlog/Includes/global.js';
 
 const props = defineProps({
     taxonomy: String,
     term: Object,
-    taxonomies: Object,
+    allTaxonomies: Object,
     errors: Object
 });
 
@@ -38,7 +39,7 @@ function submit() {
 
                 <div class="lg:flex-1 lg:px-6">
                     <h1 class="mx-6 mb-6 font-bold">Edit {{ term.name }}</h1>
-                    <p>{{ form }}</p>
+                    <!-- <p>{{ form }}</p> -->
                     <form @submit.prevent="submit">
                         <div class="m-6">
                             <input type="text" v-model="form.name" name="title" placeholder="Title..." @input="autoslug"
@@ -54,18 +55,19 @@ function submit() {
                             <select v-model="form.taxonomy.parent_id" name="parent_id"
                                 class="w-full border border-gray-300 rounded-lg">
                                 <option value=null>--- Không ---</option>
-                                <option v-for="tax in taxonomies" :value="tax.id" >{{ tax.term.name }}</option>
+                                <option v-for="tax in allTaxonomies" :value="tax.id" ><template v-if="tax.ancestors.length > 0" class="mr-1">{{ '-'.repeat(tax.ancestors.length) + ' ' }}</template>{{ tax.term.name }}</option>
                             </select>
 
                         </div>
 
-                        <div class="m-6">
+<!--                         <div class="m-6">
                             <textarea v-model="form.taxonomy.description" name="description" placeholder="Description..."
                                 class="w-full border border-gray-300 rounded-lg"></textarea>
-                        </div>
+                        </div> -->
 
                         <div class="m-6">
-                            <Editor></Editor>
+                            <Editor v-model="form.taxonomy.description"></Editor>
+                            {{ stripHtml(form.taxonomy.description) }}
                         </div>
 
                         <div class="m-6">

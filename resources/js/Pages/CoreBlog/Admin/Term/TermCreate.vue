@@ -20,7 +20,7 @@ const form = useForm({
     taxonomy: {
         taxonomy: props.taxonomy,
         description: null,
-        parent_id: null,
+        parent_id: 0,
         count: 0
     }
 });
@@ -59,7 +59,7 @@ function submit() {
         <div v-if="($page.props.admin.taxonomies[taxonomy].hierarchical)" class="m-6">
             <select v-model="form.taxonomy.parent_id" name="parent_id"
                 class="w-full border border-gray-300 rounded-lg">
-                <option>--- Không ---</option>
+                <option value="0">--- Không ---</option>
                 <option v-for="tax in allTaxonomies" :value="tax.id" ><template v-if="tax.ancestors.length > 0" class="mr-1">{{ '-'.repeat(tax.ancestors.length) + ' ' }}</template>{{ tax.term.name }}</option>
             </select>
         </div>

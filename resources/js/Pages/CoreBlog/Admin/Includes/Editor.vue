@@ -1,25 +1,20 @@
 <script setup>
 
-import { onMounted, reactive, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 
 import '@/coreblog/tinymce/tinymce';
 import "@/coreblog/tinymce/themes/silver/theme";
 import "@/coreblog/tinymce/icons/default/icons";
 import "@/coreblog/tinymce/skins/ui/oxide/skin.css";
 import '@/coreblog/tinymce/models/dom/model';
-import { useForm } from '@inertiajs/vue3';
-/* import { Editor } from '@/coreblog/tinymce/tinymce'; */
-/* import Editor from "@tinymce/tinymce-vue"; */
 
 const props = defineProps({
-    data: String
+    modelValue: String
 });
 
-const form = useForm(
-    {
-        content: props.data
-    }
-);
+const emit = defineEmits(['update:modelValue']);
+
+const textarea = ref(null);
 
 onMounted(() => {
     let instance = tinymce.init({
@@ -28,19 +23,22 @@ onMounted(() => {
         skin: false,
         setup: (editor) => {
             editor.on("change", (e) => {
-                form.content = tinymce.get("myeditorinstance").getContent();
-                console.log(form.content);
+/*                 form.content = tinymce.get("myeditorinstance").getContent();
+                console.log(form.content); */
+                autoSyncEmit();
             });
         }
     });
-    console.log(instance);
+/*     console.log(instance); */
 });
+
+function autoSyncEmit() {
+    emit('update:modelValue', tinymce.get("myeditorinstance").getContent());
+}
 
 
 </script>
 
 <template>
-    <!-- <Editor :init="{content_style: false}"></Editor> -->
-    <textarea v-model="form.content" id="myeditorinstance"></textarea>
-    <p>{{ form.content }}</p>
+    <textarea ref="textarea" :value="modelValue" id="myeditorinstance" ></textarea>
 </template>

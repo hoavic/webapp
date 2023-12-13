@@ -52,7 +52,7 @@ function destroy(id) {
                                     <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M.2 10a11 11 0 0 1 19.6 0A11 11 0 0 1 .2 10zm9.8 4a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm0-2a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"></path></svg>
                                 </a>
 
-                                <button type="submit" @click.prevent="destroy(item.id)"
+                                <button type="submit" @click.prevent="destroy(item.id)" :aria-label="'Delete ' + item.term.name" :title="'Delete ' + item.term.name"
                                     class="text-red-600">
                                     <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M14.5 3H9.5L8.5 4H5V6H19V4H15.5L14.5 3ZM16 9V19H8V9H16ZM6 7H18V19C18 20.1 17.1 21 16 21H8C6.9 21 6 20.1 6 19V7Z" fill="currentColor"></path><path d="M10 10H14V12H10V10Z" fill="currentColor"></path><path d="M10 13H14V15H10V13Z" fill="currentColor"></path><path d="M10 16H14V18H10V16Z" fill="currentColor"></path></svg>
                                 </button>
