@@ -34,7 +34,7 @@ const checkTermActive = (taxomomy) => {
 
     <div v-for="post_type in post_types"
         class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-        <NavLink :href="route('admin.posts.index') + '?type=' + post_type.type" :active="checkPostActive(post_type.type)">
+        <NavLink :href="route('admin.posts.index') + '?post_type=' + post_type.type" :active="checkPostActive(post_type.type)">
             {{ post_type.labels.name }}
         </NavLink>
     </div>

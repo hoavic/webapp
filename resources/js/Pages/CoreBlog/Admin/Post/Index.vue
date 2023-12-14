@@ -1,26 +1,32 @@
 <script setup>
-import AppLayout from '@/Layouts/AppLayout.vue';
 
+import AppLayout from '@/Layouts/AppLayout.vue';
+import Pagination from '@/Components/Pagination.vue';
+
+import Alert from '@/Pages/CoreBlog/Admin/Alert.vue';
+import PostAction from '@/Pages/CoreBlog/Admin/Post/PostAction.vue';
+import PostTable from '@/Pages/CoreBlog/Admin/Post/PostTable.vue';
 
 const props = defineProps({
-    type: String,
-
+    post_type: String,
+    search: String,
+    posts: Object,
+    errors: Object
 });
 
 </script>
 
 <template>
-    <AppLayout title="Post Index">
-        <template #header>
-            Post Index <span class="text-gray-600">{{ type }}</span>
-        </template>
+    <AppLayout :title="post_type + ' Index'">
 
-        <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
+        <Alert :errors="errors"></Alert>
 
-                </div>
-            </div>
+        <div class="py-8 px-4">
+
+            <PostAction :post_type="post_type" :search="search"/>
+            <PostTable :post_type="post_type" :data="posts"></PostTable>
+            <Pagination :links="posts.links" class="px-4"></Pagination>
+
         </div>
     </AppLayout>
 </template>

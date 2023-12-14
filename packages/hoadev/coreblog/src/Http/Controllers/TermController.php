@@ -7,6 +7,7 @@ use Hoadev\CoreBlog\Models\Taxonomy;
 use Hoadev\CoreBlog\Models\Term;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Inertia\Inertia;
 
 class TermController extends Controller
@@ -65,8 +66,6 @@ class TermController extends Controller
             'taxonomy.parent_id' => 'nullable|integer',
             'taxonomy.count' => 'required|integer',
         ]);
-
-/*         dd($validated); */
 
         $term = Term::create($validated['term']);
 
@@ -163,4 +162,42 @@ class TermController extends Controller
         /* return to_route('terms.index', ['taxonomy='.$request->query('taxonomy', 'category')])->with('success', 'your message,here'); */
         return redirect()->route('admin.terms.index', ['taxonomy='.$request->query('taxonomy', 'category')])->with('message', 'Delete '.$term->name.' Successfully!');
     }
+
+    public function getTermByTaxonomy(Request $request)
+    {
+        $taxonomy = $request->query('taxonomy', 'category');
+        $terms = Term::whereHas('taxonomy', function (Builder $query) use($taxonomy) {
+            $query->where('taxonomy', $taxonomy);
+        })->get();
+
+        return $terms;
+
+/*         return Inertia::render('CoreBlog/Admin/Post/Create', [
+            'data' => $terms
+        ]); */
+    }
+
+    public function storeAndResponse(Request $request)
+    {
+        $validated = $request->validate([
+            'term.name' => 'required|string',
+            'term.slug' => 'nullable|string|unique:terms,slug',
+            'term.group' => 'required|integer',
+            'taxonomy.taxonomy' => 'required|string',
+            'taxonomy.description' => 'nullable|string',
+            'taxonomy.parent_id' => 'nullable|integer',
+            'taxonomy.count' => 'required|integer',
+        ]);
+
+        $term = Term::create($validated['term']);
+
+        $taxonomy = '';
+
+        if ($term) {
+            $taxonomy = $term->taxonomy()->create($validated['taxonomy']);
+        }
+
+        return $taxonomy->load('term');
+    }
+
 }

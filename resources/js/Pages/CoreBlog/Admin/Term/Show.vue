@@ -12,9 +12,17 @@ const props = defineProps({
 <template>
     <GuestLayout title="Post Index">
 
-        <div class="py-8">
+        <header class="entry-header">
             <h1 class="font-bold text-2xl">{{ term.name }}??</h1>
-            {{ term.taxonomy.description }}
-        </div>
+            <div class="taxonomy-description my-4" v-html="term.taxonomy.description"></div>
+        </header>
+
+        <template v-if="term.posts">
+            <article v-for="post in term.posts">
+                {{ post.title }}
+            </article>
+        </template>
+
+
     </GuestLayout>
 </template>

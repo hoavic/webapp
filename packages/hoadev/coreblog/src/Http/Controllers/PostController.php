@@ -17,12 +17,19 @@ class PostController extends Controller
     public function index(Request $request)
     {
 
-        $type = $request->query('type', 'post');
-        $posts = Post::where('type', $type)->get();
-        $allTerms = Taxonomy::where('taxonomy', ['category', 'tag'])->get()->groupBy('taxonomy');
+        $post_type = $request->query('post_type', 'post');
+        $search = $request->query('search');
+
+        $posts = Post::where('type', $post_type)->paginate(10);
+
+        $posts->appends(['post_type' => $post_type]);
+
+        if($search !== null) {
+            $posts->appends(['search' => $search]);
+        }
 
         return Inertia::render('CoreBlog/Admin/Post/Index', [
-            'type' => $type,
+            'post_type' => $post_type,
             'posts' => $posts
         ]);
     }
@@ -32,10 +39,15 @@ class PostController extends Controller
      */
     public function create(Request $request)
     {
-        $type = $request->query('type', 'post');
+        $post_type = $request->query('post_type', 'post');
+
+        $post_types = config('coreblog.post_types');
+
+        $groupTaxonomies = Taxonomy::with(['term', 'ancestors'])->whereIn('taxonomy', $post_types[$post_type]['taxonomies'])->defaultOrder()->get()->groupBy('taxonomy');
 
         return Inertia::render('CoreBlog/Admin/Post/Create', [
-            'type' => $type
+            'post_type' => $post_type,
+            'groupTaxonomies' => $groupTaxonomies
         ]);
     }
 

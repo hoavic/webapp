@@ -34,10 +34,11 @@ trait CoreBlogRoute {
             Route::get('coreblog', CoreBlogController::class); //demo
 
             Route::resource('terms', TermController::class)->except(['show']);
+            Route::get('/terms/by-taxonomy', [TermController::class, 'getTermByTaxonomy'])->name('terms.by-taxonomy');
+            Route::post('/terms/store-and-response', [TermController::class, 'StoreAndResponse'])->name('terms.store-and-response');
 
             Route::resource('posts', PostController::class);
             Route::resource('comments', CommentController::class);
-
 
         });
     }
