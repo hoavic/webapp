@@ -54,7 +54,7 @@ class HandleInertiaRequests extends Middleware
     } */
 
     public function shareInAdmin(Request $request) {
-        if($request->routeIs('admin.*')) {
+        if($request->routeIs('admin.*') || $request->routeIs('profile.*') || $request->routeIs('teams.*') || $request->routeIs('dashboard') ) {
             /* dd(config('coreblog.admin_bar')); */
             return [
                     'admin_bar' => config('coreblog.admin_bar'),

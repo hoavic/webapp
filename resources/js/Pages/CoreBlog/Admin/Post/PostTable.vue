@@ -39,7 +39,7 @@ function destroy(id) {
                         <td class="text-left">{{ index + 1 }}</td>
                         <td class="text-left">
                             <a :href="route('admin.posts.edit', item.id)"
-                                class="font-bold text-blue-900 whitespace-nowrap"><span v-if="item.ancestors.length > 0" class="mr-1">{{ '-'.repeat(item.ancestors.length) }}</span>{{ item.title }}</a>
+                                class="font-bold text-blue-900 whitespace-nowrap">{{ item.title }}</a>
                         </td>
                         <td class="text-gray-600 text-sm">{{ item.name }}</td>
                         <td class="hidden md:table-cell text-gray-600 text-sm">{{ stripHtml(item.excerpt) }}</td>

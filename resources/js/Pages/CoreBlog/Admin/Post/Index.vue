@@ -24,7 +24,7 @@ const props = defineProps({
         <div class="py-8 px-4">
 
             <PostAction :post_type="post_type" :search="search"/>
-            <PostTable :post_type="post_type" :data="posts"></PostTable>
+            <PostTable :post_type="post_type" :data="posts.data"></PostTable>
             <Pagination :links="posts.links" class="px-4"></Pagination>
 
         </div>

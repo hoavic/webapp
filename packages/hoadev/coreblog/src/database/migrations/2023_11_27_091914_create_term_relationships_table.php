@@ -17,8 +17,8 @@ return new class extends Migration
     {
         Schema::create('term_relationships', function (Blueprint $table) {
             $table->foreignIdFor(Post::class);
-            $table->foreignIdFor(Term::class, 'taxonomy_id');
-            $table->string('order');
+            $table->foreignIdFor(Term::class, 'term_id');
+            $table->string('order')->nullable()->default(0);
         });
     }
 

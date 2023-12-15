@@ -1,6 +1,6 @@
 <script setup>
 
-import { onMounted, ref } from 'vue';
+import { onMounted, onUpdated, ref } from 'vue';
 
 import '@/coreblog/tinymce/tinymce';
 import "@/coreblog/tinymce/themes/silver/theme";
@@ -17,6 +17,14 @@ const emit = defineEmits(['update:modelValue']);
 const textarea = ref(null);
 
 onMounted(() => {
+    loadEditor();
+});
+
+onUpdated(() => {
+    loadEditor();
+});
+
+const loadEditor = () => {
     let instance = tinymce.init({
         selector: 'textarea#myeditorinstance', // Replace this CSS selector to match the placeholder element for TinyMCE
         content_css: false,
@@ -29,8 +37,7 @@ onMounted(() => {
             });
         }
     });
-/*     console.log(instance); */
-});
+}
 
 function autoSyncEmit() {
     emit('update:modelValue', tinymce.get("myeditorinstance").getContent());

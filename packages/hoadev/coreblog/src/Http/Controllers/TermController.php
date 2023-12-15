@@ -166,11 +166,16 @@ class TermController extends Controller
     public function getTermByTaxonomy(Request $request)
     {
         $taxonomy = $request->query('taxonomy', 'category');
-        $terms = Term::whereHas('taxonomy', function (Builder $query) use($taxonomy) {
+/*         $terms = Term::whereHas('taxonomy', function (Builder $query) use($taxonomy) {
             $query->where('taxonomy', $taxonomy);
-        })->get();
+        })->get()->groupBy(['taxonomy', 'term_id']); */
+        $taxonomies = Taxonomy::with(['term', 'ancestors'])
+            ->where('taxonomy', $taxonomy)
+            ->defaultOrder()
+            ->get()
+            ->groupBy('term_id');
 
-        return $terms;
+        return $taxonomies;
 
 /*         return Inertia::render('CoreBlog/Admin/Post/Create', [
             'data' => $terms

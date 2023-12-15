@@ -10,8 +10,8 @@ const admin_bar = computed(() => page.props.admin.admin_bar);
 const post_types = computed(() => page.props.admin.post_types);
 const taxonomies = computed(() => page.props.admin.taxonomies);
 
-const checkPostActive = (type) => {
-    if(page.props.type && page.props.type === type) {return true;}
+const checkPostActive = (post_type) => {
+    if(page.props.post_type && page.props.post_type === post_type) {return true;}
     return false;
 }
 

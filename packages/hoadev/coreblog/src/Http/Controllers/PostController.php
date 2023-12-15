@@ -43,7 +43,19 @@ class PostController extends Controller
 
         $post_types = config('coreblog.post_types');
 
-        $groupTaxonomies = Taxonomy::with(['term', 'ancestors'])->whereIn('taxonomy', $post_types[$post_type]['taxonomies'])->defaultOrder()->get()->groupBy('taxonomy');
+        /* $groupTaxonomies = Taxonomy::with(['term', 'ancestors'])->whereIn('taxonomy', $post_types[$post_type]['taxonomies'])->defaultOrder()->get()->groupBy('taxonomy'); */
+
+        $groupTaxonomies = Taxonomy::with(['term', 'ancestors'])
+            ->whereIn('taxonomy', $post_types[$post_type]['taxonomies'])
+            ->defaultOrder()
+            ->get()
+            ->groupBy(['taxonomy', 'term_id']);
+/*             dd($groupTaxonomies); */
+/*         $group = collect();
+
+        foreach($post_types[$post_type]['taxonomies'] as $taxonomy) {
+            $group =
+        } */
 
         return Inertia::render('CoreBlog/Admin/Post/Create', [
             'post_type' => $post_type,
@@ -61,14 +73,23 @@ class PostController extends Controller
             'post.title' => 'required|string',
             'post.excerpt' => 'nullable|string',
             'post.status' => 'required|string',
-            'post.comment_status' => 'required|string',
-            'post.password' => 'required|string',
-            'post.name' => 'required|string|unique:posts',
+            'post.comment_status' => 'nullable|string',
+            'post.password' => 'nullable|string',
+            'post.name' => 'required|string|unique:posts,name',
             'post.parent_id' => 'nullable|string',
             'post.type' => 'required|string',
+            'selectedTerms' => 'array',
         ]);
 
-        $request->user()->posts()->create($validated);
+        $post = $request->user()->posts()->create($validated['post']);
+
+        $termIDs = [];
+
+        foreach($validated['selectedTerms'] as $key => $value) {
+            array_push($termIDs, $value);
+        }
+
+        $post->terms()->sync($validated['selectedTerms']);
 
         return redirect()->route('admin.posts.index');
     }
@@ -88,11 +109,21 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        $type = $post->type;
+
+        $post_types = config('coreblog.post_types');
+
+        $groupTaxonomies = Taxonomy::with(['term', 'ancestors'])
+            ->whereIn('taxonomy', $post_types[$post->type]['taxonomies'])
+            ->defaultOrder()
+            ->get()
+            ->groupBy(['taxonomy', 'term_id']);
+
+        dd($post->terms()->groupBy('taxonomy'))->get();
 
         return Inertia::render('CoreBlog/Admin/Post/Edit', [
-            'type' => $type,
-            'post' => $post
+            'post' => $post,
+            'post_type' => $post->type,
+            'groupTaxonomies' => $groupTaxonomies
         ]);
     }
 

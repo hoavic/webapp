@@ -15,14 +15,7 @@ trait CoreBlogRoute {
     public static function Admin() {
 
         Route::get('/dashboard', function () {
-            return Inertia::render('CoreBlog/Admin/Dashboard', [
-                'admin' => [
-                    'admin_bar' => config('coreblog.admin_bar'),
-                    'menu' => config('coreblog.menu'),
-                    'post_types' => config('coreblog.post_types'),
-                    'taxonomies' => config('coreblog.taxonomies'),
-                ]
-            ]);
+            return Inertia::render('CoreBlog/Admin/Dashboard');
         })->name('dashboard');
 
         Route::name('admin.')->group(function() {
