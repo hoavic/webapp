@@ -1,0 +1,74 @@
+<?php
+
+namespace Hoadev\CoreBlog\Traits\Media;
+
+use Hoadev\CoreBlog\Models\Comment;
+use Hoadev\CoreBlog\Models\Post;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Intervention\Image\ImageManager;
+
+trait HasResponsive {
+
+    /**
+     * $iamge
+     * $
+     */
+    public function storeResponsive($imageData, $parent_dir) {
+
+        $manager = ImageManager::gd();
+        $readed = $manager->read($imageData->getRealPath());
+
+        $dataDemen = getimagesize($imageData);
+        $width = $dataDemen[0];
+        $height = $dataDemen[1];
+
+        if ($width >= 150) {
+
+            $readed->resize('150','150')
+                ->toJpeg()
+                ->save($this->configSavePath($imageData, 'thumbnail'));
+        }
+
+        $readed->scale('300','300')
+            ->toJpeg()
+            ->save($this->configSavePath($imageData, 'medium'));
+
+        $readed->scale('768','768')
+            ->toJpeg()
+            ->save($this->configSavePath($imageData, 'large'));
+
+        $readed->scale('1024','1024')
+            ->toJpeg()
+            ->save($this->configSavePath($imageData, 'wide'));
+
+        $readed->scale('1280','1280')
+            ->toJpeg()
+            ->save($this->configSavePath($imageData, 'extra'));
+
+/*         return [
+            'thumnail' => $thumbnail,
+            'medium' => $medium,
+            'large' => $large,
+            'extra' => $extra,
+            'wide' => $wide
+        ]; */
+    }
+
+    public function saveByWidth($sizeName = ' thumbnail', $width, $height) {
+        $path = $this->configSavePath($imageData, 'extra');
+    }
+
+    public function configSavePath($image, $sizeName) {
+        return public_path('uploads/media/').str_replace('.', '_'.$sizeName.'.', $image->getClientOriginalName());
+    }
+
+
+/*     public function addSizeToFileName($image, $sizeName = 'thumbnail', $parent_dir) : string {
+        $before = '';
+        if($parent_dir) {
+            $before = $parent_dir.'/';
+        }
+        return $before.str_replace('.', '_'.$sizeName.'.', $image->getClientOriginalName());
+    } */
+
+}

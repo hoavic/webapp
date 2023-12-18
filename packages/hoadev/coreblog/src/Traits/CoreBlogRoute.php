@@ -2,6 +2,7 @@
 
 namespace Hoadev\CoreBlog\Traits;
 
+use Hoadev\CoreBlog\Http\Controllers\MediaController;
 use Hoadev\CoreBlog\Http\Controllers\CommentController;
 use Hoadev\CoreBlog\Http\Controllers\CoreBlogController;
 use Hoadev\CoreBlog\Http\Controllers\PermalinkController;
@@ -29,6 +30,8 @@ trait CoreBlogRoute {
             Route::resource('terms', TermController::class)->except(['show']);
             Route::get('/terms/by-taxonomy', [TermController::class, 'getTermByTaxonomy'])->name('terms.by-taxonomy');
             Route::post('/terms/store-and-response', [TermController::class, 'StoreAndResponse'])->name('terms.store-and-response');
+
+            Route::resource('medias', MediaController::class);
 
             Route::resource('posts', PostController::class);
             Route::resource('comments', CommentController::class);
