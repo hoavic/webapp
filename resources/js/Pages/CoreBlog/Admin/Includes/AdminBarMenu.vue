@@ -45,4 +45,11 @@ const checkTermActive = (taxomomy) => {
             {{ taxonomy.labels.name }}
         </NavLink>
     </div>
+
+    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+        <NavLink :href="route('admin.medias.index')" :active="route('admin.medias.index')">
+            Library
+        </NavLink>
+    </div>
+
 </template>

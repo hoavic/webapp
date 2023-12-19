@@ -3,9 +3,11 @@
 namespace Hoadev\CoreBlog\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use Hoadev\CoreBlog\Classes\Image;
 use Hoadev\CoreBlog\Models\Media;
 use Hoadev\CoreBlog\Traits\Media\HasResponsive;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Intervention\Image\ImageManager;
@@ -20,9 +22,17 @@ class MediaController extends Controller
         $media_type = $request->query('media_type', 'image');
 
         $search = $request->query('search');
-
+/*
         $medias = Media::where('mime_type', 'like', $media_type.'%')
-                        ->paginate(20);
+                        ->where('file_name', 'like', '%'.$search.'%')
+                        ->paginate(20); */
+        $currentPage = request()->get('page',1);
+        $medias = Cache::remember('medias_type:'.$media_type.'_search:'.$search.'_page:'.$currentPage, 3600, function() use ($media_type, $search){
+            return Media::where('mime_type', 'like', $media_type.'%')
+                            ->where('file_name', 'like', '%'.$search.'%')
+                            ->latest()
+                            ->paginate(5);
+        });
 
         $medias->appends(['media_type' => $media_type]);
 
@@ -38,6 +48,37 @@ class MediaController extends Controller
         ]);
     }
 
+    public function popup(Request $request)
+    {
+
+        $media_type = $request->query('media_type', 'image');
+
+        $search = $request->query('search');
+        $currentPage = request()->get('page',1);
+/*         $medias = Media::where('mime_type', 'like', $media_type.'%')
+                        ->where('file_name', 'like', '%'.$search.'%')
+                        ->paginate(20); */
+
+        $medias = Cache::remember('medias_type:'.$media_type.'_search:'.$search.'_page:'.$currentPage, 3600, function() use ($media_type, $search){
+            return Media::where('mime_type', 'like', $media_type.'%')
+                            ->where('file_name', 'like', '%'.$search.'%')
+                            ->latest()
+                            ->paginate(5);
+        });
+
+        $medias->appends(['media_type' => $media_type]);
+
+        if($search !== null) {
+            $medias->appends(['search' => $search]);
+        }
+
+        return Inertia::render('CoreBlog/Admin/Media/Popup', [
+            'media_type' => $media_type,
+            'search' => $search,
+            'medias' => $medias,
+            'available_media_types' => array('image', 'video', 'document', 'other')
+        ]);
+    }
 
 
     /**
@@ -51,7 +92,7 @@ class MediaController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): string
+    public function store(Request $request)
     {
 /*         dd($request->file('media')->getClientOriginalName()); */
         $media_type = $request->file('media_type', 'image');
@@ -59,14 +100,14 @@ class MediaController extends Controller
         switch($media_type) {
             case 'image':
 
-                return $this->storeImage($request);
-
+                $this->storeImage($request);
                 break;
+
             default:
                 return null;
                 break;
         }
-
+        session()->flash('message', 'success');
         return redirect()->route('admin.medias.index');
     }
 
@@ -78,20 +119,23 @@ class MediaController extends Controller
             'media' => 'required|file|mimes:jpg,png,webp,gif|max:2048',
         ]);
 
+        $image = new Image();
+        $image->loadFile($request->file('media'));
+        $responsive = $image->setResponsive();
+
 /*         $year = date('Y');
         $month = date('m');
         $parent_dir = 'images/'.$year.'/'.$month; */
 
-        $image = $request->file('media');
+/*         $image = $request->file('media');
         $imageName = $image->getClientOriginalName();
         $mime_type = $image->getClientmimeType();
         $extension = $image->getClientOriginalExtension();//Getting extension
         $imageData = $image->move('uploads/media/', $imageName);//This will store in customize folder
-/*         dd($imageData->getPathname()); */
         $imageSize = $imageData->getSize();
         $dataDemen = getimagesize($imageData);
         $width = $dataDemen[0];
-        $height = $dataDemen[1];
+        $height = $dataDemen[1]; */
 
 /*         $this->storeResponsive($image, $parent_dir, $imageName); */
 
@@ -102,19 +146,19 @@ class MediaController extends Controller
             'model_id' => 0,
             'collection_name' => 'images',
             'name' => $validated['name'],
-            'file_name' => $imageName,
-            'mime_type' => $mime_type,
+            'file_name' => $image->imageName,
+            'mime_type' => $image->mime_type,
             'disk' => 'images',
-            'size' => $imageSize,
+            'size' => $image->size,
             'manipulations' => '',
             'custom_properties' => [
-                'path' => $imageData->getPathname(),
-                'url' => str_replace('\\', '/', $imageData->getPathname()),
-                'width' => $width,
-                'height' => $height,
+                'path' => $image->getPath(),
+                'url' => $image->getUrl(),
+                'width' => $image->width,
+                'height' => $image->height,
             ],
             'generated_conversions' => '',
-            'responsive_images' => '',
+            'responsive_images' => $responsive,
         ]);
 
         /* $media->setResponsive(); */
@@ -124,7 +168,7 @@ class MediaController extends Controller
 
         return $this->scaleJpeg($image, $parent_dir, $imageName); */
 
-        return $imageData->getPathname();
+        return $media;
     }
 
 

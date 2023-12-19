@@ -1,12 +1,13 @@
 <script setup>
 
-import AppLayout from '@/Layouts/AppLayout.vue';
+import PopupLayout from '@/Layouts/PopupLayout.vue';
 import Pagination from '@/Components/Pagination.vue';
 
 import Alert from '@/Pages/CoreBlog/Admin/Alert.vue';
 import MediaUpload from '@/Pages/CoreBlog/Admin/Media/MediaUpload.vue';
 import MediaAction from '@/Pages/CoreBlog/Admin/Media/MediaAction.vue';
 import MediaGrid from '@/Pages/CoreBlog/Admin/Media/MediaGrid.vue';
+
 
 const props = defineProps({
     media_type: String,
@@ -19,7 +20,7 @@ const props = defineProps({
 </script>
 
 <template>
-    <AppLayout :title="media_type + ' Index'">
+    <PopupLayout :title="media_type + ' Index'">
 
         <Alert :errors="errors"></Alert>
 
@@ -42,5 +43,5 @@ const props = defineProps({
 
             </div>
         </div>
-    </AppLayout>
+    </PopupLayout>
 </template>

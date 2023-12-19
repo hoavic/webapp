@@ -27,10 +27,11 @@ trait CoreBlogRoute {
             Route::get('/', function() { return redirect()->route('dashboard'); });
             Route::get('coreblog', CoreBlogController::class); //demo
 
-            Route::resource('terms', TermController::class)->except(['show']);
             Route::get('/terms/by-taxonomy', [TermController::class, 'getTermByTaxonomy'])->name('terms.by-taxonomy');
             Route::post('/terms/store-and-response', [TermController::class, 'StoreAndResponse'])->name('terms.store-and-response');
+            Route::resource('terms', TermController::class)->except(['show']);
 
+            Route::get('/medias/popup', [MediaController::class, 'popup'])->name('medias.popup');
             Route::resource('medias', MediaController::class);
 
             Route::resource('posts', PostController::class);
