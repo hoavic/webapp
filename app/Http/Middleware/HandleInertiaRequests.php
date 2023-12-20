@@ -44,14 +44,18 @@ class HandleInertiaRequests extends Middleware
         ];
     }
 
-/*     public function rootView(Request $request): string
+    public function rootView(Request $request): string
     {
-        if ($request->routeIs('*.show')) {
+        if ($request->routeIs('permalink.*')) {
             return 'layouts.guest';
         }
 
+        if ($request->routeIs('*.popup')) {
+            return 'layouts.popup';
+        }
+
         return $this->rootView;
-    } */
+    }
 
     public function shareInAdmin(Request $request) {
         if($request->routeIs('admin.*') || $request->routeIs('profile.*') || $request->routeIs('teams.*') || $request->routeIs('dashboard') ) {

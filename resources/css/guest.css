@@ -5,16 +5,9 @@
 [x-cloak] {
     display: none;
 }
-
-
-table {
-    border-collapse: collapse;
-}
-
-th, td {
-    padding: 0.5rem 0.8rem;
-    border-bottom: 1px solid;
-    border-top:1px solid;
-    border-color: rgb(209 213 219);
-
-}
+body {font-size: 18px;}
+img {max-width: 100%; height: auto}
+h2, h3, h4, h5, p, ul, ol, blockquote {margin: 1em 0}
+table {border-collapse: collapse;}
+th, td {padding: 0.5em; border: 1px solid #999}
+blockquote {background: #eee; color: #666; padding: 1em; border-radius: 1em}

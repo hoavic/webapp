@@ -31,7 +31,7 @@ class Media extends Model
 
     public function getFullUrl()
     {
-        return config('app.url').'/uploads/media/'.$this->getPath();
+        return config('app.url').$this->getPath();
     }
 
     public function getUrl()
@@ -45,7 +45,7 @@ class Media extends Model
     } */
 
     public function getFullPath() {
-        return public_path('uploads/media/').$this->getPath();
+        return public_path().$this->getPath();
     }
 
     public function getPath()

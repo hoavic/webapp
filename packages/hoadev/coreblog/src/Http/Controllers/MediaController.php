@@ -31,7 +31,7 @@ class MediaController extends Controller
             return Media::where('mime_type', 'like', $media_type.'%')
                             ->where('file_name', 'like', '%'.$search.'%')
                             ->latest()
-                            ->paginate(5);
+                            ->paginate(20);
         });
 
         $medias->appends(['media_type' => $media_type]);
@@ -50,34 +50,48 @@ class MediaController extends Controller
 
     public function popup(Request $request)
     {
+        Inertia::setRootView('layouts.popup');
+        $media_type = $request->query('media_type', 'image');
+
+/*         $search = $request->query('search');
+        $currentPage = request()->get('page',1); */
+
+
+        return Inertia::render('CoreBlog/Admin/Media/Popup', [
+            'media_type' => $media_type,
+/*             'search' => $search, */
+/*             'medias' => Inertia::lazy(fn () => $this->paginateLoad($media_type, $search, $currentPage)), */
+            'available_media_types' => array('image', 'video', 'document', 'other')
+        ]);
+    }
+
+    public function popupData(Request $request) {
 
         $media_type = $request->query('media_type', 'image');
 
         $search = $request->query('search');
-        $currentPage = request()->get('page',1);
-/*         $medias = Media::where('mime_type', 'like', $media_type.'%')
-                        ->where('file_name', 'like', '%'.$search.'%')
-                        ->paginate(20); */
+        $currentPage = $request->query('page', 1);
 
         $medias = Cache::remember('medias_type:'.$media_type.'_search:'.$search.'_page:'.$currentPage, 3600, function() use ($media_type, $search){
             return Media::where('mime_type', 'like', $media_type.'%')
                             ->where('file_name', 'like', '%'.$search.'%')
                             ->latest()
-                            ->paginate(5);
+                            ->paginate(20);
         });
 
-        $medias->appends(['media_type' => $media_type]);
+/*         $medias = Media::where('mime_type', 'like', $media_type.'%')
+                            ->where('file_name', 'like', '%'.$search.'%')
+                            ->latest()
+                            ->paginate(20); */
 
         if($search !== null) {
             $medias->appends(['search' => $search]);
         }
 
-        return Inertia::render('CoreBlog/Admin/Media/Popup', [
-            'media_type' => $media_type,
-            'search' => $search,
-            'medias' => $medias,
-            'available_media_types' => array('image', 'video', 'document', 'other')
-        ]);
+        $medias->appends(['media_type' => $media_type]);
+
+        return $medias;
+
     }
 
 

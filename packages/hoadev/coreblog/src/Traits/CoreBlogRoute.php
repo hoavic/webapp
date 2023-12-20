@@ -7,6 +7,7 @@ use Hoadev\CoreBlog\Http\Controllers\CommentController;
 use Hoadev\CoreBlog\Http\Controllers\CoreBlogController;
 use Hoadev\CoreBlog\Http\Controllers\PermalinkController;
 use Hoadev\CoreBlog\Http\Controllers\PostController;
+use Hoadev\CoreBlog\Http\Controllers\SitemapController;
 use Hoadev\CoreBlog\Http\Controllers\TermController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -32,6 +33,7 @@ trait CoreBlogRoute {
             Route::resource('terms', TermController::class)->except(['show']);
 
             Route::get('/medias/popup', [MediaController::class, 'popup'])->name('medias.popup');
+            Route::get('/medias/popup-data', [MediaController::class, 'popupData'])->name('medias.popup-data');
             Route::resource('medias', MediaController::class);
 
             Route::resource('posts', PostController::class);
@@ -45,6 +47,8 @@ trait CoreBlogRoute {
         Route::get('/', function() {
 
         })->name('home');
+
+        Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap.index');
 
         Route::get('{name}', [PermalinkController::class, 'single'])->name('permalink.single');
 

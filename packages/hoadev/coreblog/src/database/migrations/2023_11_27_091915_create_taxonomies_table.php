@@ -17,7 +17,7 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->foreignIdFor(Term::class);
             $table->string('taxonomy');
-            $table->string('description')->nullable();
+            $table->longText('description')->nullable();
 /*             $table->bigInteger('parent_id')->default(0); */
             $table->bigInteger('count');
             $table->nestedSet();

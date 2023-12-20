@@ -15,7 +15,7 @@ const showingNavigationDropdown = ref(false);
     <div class="min-h-screen justify-between flex flex-col">
         <Head :title="title" />
 
-        <header class="py-2 px-4 flex items-center justify-between lg:justify-start bg-white border-b border-gray-100">
+        <header class="sticky top-0 py-2 px-4 flex items-center justify-between lg:justify-start bg-white border-b border-gray-100">
             <div class="shrink-0 flex items-center">
                 <Link :href="route('dashboard')">
                     <ApplicationMark class="block h-9 w-auto" />
@@ -60,8 +60,8 @@ const showingNavigationDropdown = ref(false);
 
 
         <!-- Page Content -->
-        <div class="flex-1 lg:flex lg:flex-row">
-            <main class="p-4 lg:flex-1">
+        <div class="flex-1 max-w-7xl mx-auto lg:flex lg:flex-row">
+            <main class="p-4 lg:flex-1 lg:px-8">
                 <header v-if="$slots.title" class="">
                     <h1 class="">
                         <slot name="header" />

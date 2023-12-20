@@ -170,11 +170,11 @@ class Image {
     }
 
     public function getPath() : string {
-        return $this->parent_path.'/'.$this->imageName;
+        return '/'.$this->parent_path.$this->imageName;
     }
 
     public function getUrl() : string {
-        return $this->parent_path.'/'.$this->imageName;
+        return '/'.$this->parent_path.$this->imageName;
     }
 
 }
