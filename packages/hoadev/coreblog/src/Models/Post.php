@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-
+use Illuminate\Database\Eloquent\Builder;
 class Post extends Model
 {
     use HasFactory;
@@ -46,6 +46,17 @@ class Post extends Model
     public function comments(): HasMany
     {
         return $this->hasMany(Comment::class);
+    }
+
+    public function getFeatured() {
+        return $this->postMetas()->where('key', 'featured_image')->with('media')->first();
+    }
+
+    public function getRelatedPosts() {
+        $post = $this;
+        return Post::whereHas('terms', function (Builder $query) use($post) {
+            $query->whereIn('id', $post->terms->pluck('id'));
+        })->whereNot('id', $post->id)->get();
     }
 
 }

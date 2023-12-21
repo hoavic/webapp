@@ -15,11 +15,17 @@ class TermMeta extends Model
     public $timestamps = false;
 
     protected $fillable = [
-
+        'key',
+        'value'
     ];
 
     public function term(): BelongsTo
     {
         return $this->belongsTo(Term::class);
+    }
+
+    public function media(): BelongsTo
+    {
+        return $this->belongsTo(Media::class, 'value');
     }
 }

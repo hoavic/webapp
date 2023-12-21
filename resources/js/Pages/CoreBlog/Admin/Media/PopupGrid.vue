@@ -6,6 +6,7 @@ import '@/coreblog/tinymce/tinymce';
 const props = defineProps({
     media_type: String,
     data: Object,
+    parent: String,
 });
 
 const emit = defineEmits('onSelectMedia');
@@ -64,8 +65,12 @@ const getSrcset = (item) => {
 
 
 function selectMedia(item) {
+    if(props.parent === 'featured') {
+        return emit('onSelectMedia', item);
+    }
     tinymce.get("myeditorinstance").insertContent('<img src="' + item.custom_properties.url + '" srcset="' + getSrcset(item) + '" width="' + item.custom_properties.width + '" height="' + item.custom_properties.height + '" loading="lazy" />');
-    emit('onSelectMedia', '<img src="' + item.custom_properties.url + '" srcset="' + getSrcset(item) + '" width="' + item.custom_properties.width + '" height="' + item.custom_properties.height + '" loading="lazy" />');
+/*     emit('onSelectMedia', '<img src="' + item.custom_properties.url + '" srcset="' + getSrcset(item) + '" width="' + item.custom_properties.width + '" height="' + item.custom_properties.height + '" loading="lazy" />'); */
+    emit('onSelectMedia');
 }
 
 </script>

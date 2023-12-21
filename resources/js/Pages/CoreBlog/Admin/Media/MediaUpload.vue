@@ -9,6 +9,8 @@ const props = defineProps({
     media_type: String,
 });
 
+const emit = defineEmits('onUploaded');
+
 const form = useForm({
     media_type: props.media_type,
     media: null,
@@ -26,6 +28,8 @@ function submit() {
         preserveScroll: true,
         onSuccess: (res) => {
             form.reset();
+            console.log('checl upload res');
+            emit('onUploaded');
             showAdd.value = false;
         }
     });

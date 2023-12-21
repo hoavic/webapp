@@ -109,12 +109,12 @@ function manualAdd() {
 </script>
 
 <template>
-    <SecondaryButton type="button" @click.prevent="manualAdd"
+<!--     <SecondaryButton type="button" @click.prevent="manualAdd"
         class="my-6">Add</SecondaryButton>
     <SecondaryButton type="button" @click.prevent="openDialog"
-        class="my-6">Library</SecondaryButton>
+        class="my-6">Library</SecondaryButton> -->
     <SecondaryButton type="button" @click.prevent="showPopup = true"
-        class="my-6">Open</SecondaryButton>
+        class="my-4">Open Library</SecondaryButton>
 
     <textarea ref="textarea" :value="modelValue" id="myeditorinstance" class="max-w-3xl mx-auto"></textarea>
 

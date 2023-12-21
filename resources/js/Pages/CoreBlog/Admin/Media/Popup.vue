@@ -5,9 +5,8 @@ import MediaUpload from '@/Pages/CoreBlog/Admin/Media/MediaUpload.vue';
 import PopupGrid from '@/Pages/CoreBlog/Admin/Media/PopupGrid.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 
-
 const props = defineProps({
-
+    parent: String
 });
 
 const emit = defineEmits('onMediaSelected');
@@ -83,8 +82,16 @@ function searchMedia() {
     loadMedias();
 }
 
-function mediaSelected() {
+function mediaSelected(item) {
+    if(props.parent === 'featured') {
+        return emit('onMediaSelected', item);
+    }
     emit('onMediaSelected');
+}
+
+function handleUploaded() {
+    console.log('handleUploaded');
+    loadMedias();
 }
 
 </script>
@@ -100,7 +107,7 @@ function mediaSelected() {
                             <input type="radio" v-model="react.para.media_type" :value="mt" class="hidden" @change="loadMedias"/>
                         </label>
                     </div>
-                    <MediaUpload :media_type="react.para.media_type"></MediaUpload>
+                    <MediaUpload :media_type="react.para.media_type" @onUploaded="handleUploaded"></MediaUpload>
                 </div>
 
                 <div class="lg:flex-1 lg:px-6">
@@ -116,7 +123,7 @@ function mediaSelected() {
                         </div>
                     </template>
                     <template v-else>
-                        <PopupGrid :media_type="react.para.media_type" :data="react.medias.data" :only="['react.medias']" @onSelectMedia="mediaSelected"></PopupGrid>
+                        <PopupGrid :parent="parent" :media_type="react.para.media_type" :data="react.medias.data" :only="['react.medias']" @onSelectMedia="mediaSelected"></PopupGrid>
                         <div class="px-4 flex flex-row justify-between">
                             <SecondaryButton v-if="react.medias.current_page != 1" type="button" @click.prevent="loadPrev"
                                 class="my-4">Prev</SecondaryButton>

@@ -20,15 +20,15 @@ th, td {
 }
 
 .slide-fade-enter-active {
-    transition: all 50ms ease-out;
+    transition: all 100ms ease-out;
 }
 
 .slide-fade-leave-active {
-    transition: all 100ms ease-in;
+    transition: all 100ms cubic-bezier(1, 0.5, 0.8, 1);
 }
 
 .slide-fade-enter-from,
 .slide-fade-leave-to {
-    transform: translateY(200px);
+    transform: translateY(100px);
     opacity: 0;
 }

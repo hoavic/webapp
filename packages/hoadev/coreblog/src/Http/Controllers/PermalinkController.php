@@ -32,13 +32,18 @@ class PermalinkController extends Controller
             ]);
         }
 
-        $post = Post::whereIn('type', ['post', 'page'])
+        $post = Post::with(['terms'])->whereIn('type', ['post', 'page'])
                         ->where('name', $slug)
                         ->first();
 
         if ($post) {
-            return Inertia::render('CoreBlog/Admin/Post/Show', [
+/*             return Inertia::render('CoreBlog/Admin/Post/Show', [
                 'post' => $post
+            ]); */
+
+            return view('coreblog::guest.post.default', [
+                'post' => $post,
+                'relatedPosts' => $post->getRelatedPosts()
             ]);
         }
 
@@ -50,7 +55,7 @@ class PermalinkController extends Controller
 
         if($type === 'post' || $type === 'page') {return redirect()->route('permalink.single', $name); }
 
-        $post = Post::where('type', $type)
+        $post = Post::with(['terms'])->where('type', $type)
                         ->where('name', $name)
                         ->first();
 

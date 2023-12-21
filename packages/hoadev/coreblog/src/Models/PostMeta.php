@@ -15,11 +15,17 @@ class PostMeta extends Model
     public $timestamps = false;
 
     protected $fillable = [
-
+        'key',
+        'value'
     ];
 
     public function post(): BelongsTo
     {
         return $this->belongsTo(Post::class);
+    }
+
+    public function media(): BelongsTo
+    {
+        return $this->belongsTo(Media::class, 'value');
     }
 }

@@ -8,6 +8,7 @@ import TermNonHierarchial from './TermNonHierarchial.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import Alert from '../Alert.vue';
 import autoSlug from '../../Includes/auto-slug';
+import FeaturedImage from '../Includes/FeaturedImage.vue';
 
 const page = usePage();
 
@@ -16,26 +17,41 @@ const props = defineProps({
     post_type: String,
     allTerms: Object,
     groupTaxonomies: Object,
+    selectedTerms: Object,
+    metas: Object,
+    featured: Object,
     errors: Object
 });
 
 const form = reactive({
     post: props.post,
-    selectedTerms: configSelectedTerms()
+    selectedTerms: props.selectedTerms,
+    metas: props.metas
 });
 /* console.log(page.props.admin.post_types[props.post_type].taxonomies); */
 //first time
-function configSelectedTerms() {
+/* function configSelectedTerms() {
     let selectedTerms = new Object;
     for(let i = 0; i < page.props.admin.post_types[props.post_type].taxonomies.length; i++) {
         selectedTerms[page.props.admin.post_types[props.post_type].taxonomies[i]] = [];
         console.log(page.props.admin.post_types[props.post_type]);
     }
     return selectedTerms;
+} */
+
+function configMedia() {
+    if(!props.featured) {return null}
+    return featured.media;
 }
 
-function submit() {
-    router.patch(route('admin.posts.update'), form);
+function updatePost() {
+    router.patch(route('admin.posts.update', props.post.id), form);
+}
+
+function updatePostAndClose() {
+    router.patch(route('admin.posts.update', props.post.id), form, {
+        onSuccess: (page) => router.visit(route('admin.posts.index'))
+    });
 }
 
 </script>
@@ -46,7 +62,7 @@ function submit() {
         <Alert :errors="errors"></Alert>
 
         <div class="">
-            <form @submit.prevent="submit">
+            <form @submit.prevent="updatePost">
                 <div class="lg:flex lg:flex-row">
 
                     <!-- Main -->
@@ -59,7 +75,7 @@ function submit() {
                         <div class="my-6 lg:mx-6">
 <!--                             <textarea v-model="form.post.content" name="content" placeholder="Content..."
                                 class="w-full text-lg border border-gray-300 rounded-lg"></textarea> -->
-                            <Editor v-model="form.post.content" class="min-h-[600px]"></Editor>
+                            <Editor v-model="form.post.content" ></Editor>
                         </div>
 
                         {{ form }}
@@ -70,8 +86,8 @@ function submit() {
                     <div class="lg:w-[300px] lg:pb-20">
 
                         <div class="fixed flex flex-row gap-2 bottom-0 m-6">
-                            <SecondaryButton type="button" class="capitalize">Save as Draft</SecondaryButton>
-                            <PrimaryButton>Create</PrimaryButton>
+                            <SecondaryButton type="button" class="capitalize whitespace-nowrap" @click.prevent="updatePostAndClose">Update & Close</SecondaryButton>
+                            <PrimaryButton>Update</PrimaryButton>
                         </div>
 
                         <div class="m-6">
@@ -94,11 +110,13 @@ function submit() {
                                 class="w-full text-lg border border-gray-300 rounded-lg"/>
                         </div> -->
 
+                        <FeaturedImage v-model="form.metas.featured_image" :media="configMedia"></FeaturedImage>
+
                         <div v-for="(group, groupKey, i) in groupTaxonomies" :key="i" class="m-6">
                             <template v-if="$page.props.admin.taxonomies[groupKey].hierarchical">
                                 <label>Select {{ groupKey }}:</label>
-                                <select v-model="form.selectedTerms[groupKey]" required
-                                    class="w-full text-lg border border-gray-300 rounded-lg">
+                                <select v-model="form.selectedTerms[groupKey]" required multiple
+                                    class="w-full h-48 text-lg border border-gray-300 rounded-lg">
                                     <option v-for="(option, optionKey, j) in group" :key="optionKey" :value="optionKey"><template v-if="option[0].ancestors.length > 0" class="mr-1">{{ '-'.repeat(option[0].ancestors.length) + ' ' }}</template>{{ option[0].term.name }}</option>
                                 </select>
                             </template>
