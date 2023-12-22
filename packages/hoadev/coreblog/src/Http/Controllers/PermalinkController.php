@@ -26,9 +26,9 @@ class PermalinkController extends Controller
                     ->first();
 
         if($term) {
-            return Inertia::render('CoreBlog/Admin/Term/Show', [
-                'taxonomy' => 'category',
-                'term' => $term->load(['termMetas', 'taxonomy']),
+            return view('coreblog::guest.term.default', [
+                'term' => $term,
+                'posts' => $term->posts()->where('status', 'published')->get()
             ]);
         }
 
@@ -82,9 +82,9 @@ class PermalinkController extends Controller
                         ->first();
 
         if($term) {
-            return Inertia::render('CoreBlog/Admin/Term/Show', [
-                'taxonomy' => $type,
-                'term' => $term->load(['termMetas', 'taxonomy']),
+            return view('coreblog::guest.term.default', [
+                'term' => $term,
+                'posts' => $term->posts()->where('status', 'published')->get()
             ]);
         }
 
@@ -103,9 +103,9 @@ class PermalinkController extends Controller
                         ->first();
         /* dd($term->parseSlug()); */
         if($term && $term->parseSlug() === '/'.$parent.'/'.$slug) {
-            return Inertia::render('CoreBlog/Admin/Term/Show', [
-                'taxonomy' => $type,
-                'term' => $term->load(['termMetas', 'taxonomy']),
+            return view('coreblog::guest.term.default', [
+                'term' => $term,
+                'posts' => $term->posts()->where('status', 'published')->get()
             ]);
         }
 
@@ -125,9 +125,9 @@ class PermalinkController extends Controller
 
 
         if($term && $term->parseSlug() === '/'.$parent.'/'.$slug) {
-            return Inertia::render('CoreBlog/Admin/Term/Show', [
-                'taxonomy' => 'category',
-                'term' => $term->load(['termMetas', 'taxonomy']),
+            return view('coreblog::guest.term.default', [
+                'term' => $term,
+                'posts' => $term->posts()->where('status', 'published')->get()
             ]);
         }
 
@@ -146,9 +146,9 @@ class PermalinkController extends Controller
                         ->first();
         /* dd($term->parseSlug()); */
         if($term && $term->parseSlug() === '/'.$grand.'/'.$parent.'/'.$slug) {
-            return Inertia::render('CoreBlog/Admin/Term/Show', [
-                'taxonomy' => $type,
-                'term' => $term->load(['termMetas', 'taxonomy']),
+            return view('coreblog::guest.term.default', [
+                'term' => $term,
+                'posts' => $term->posts()->where('status', 'published')->get()
             ]);
         }
 
@@ -165,9 +165,9 @@ class PermalinkController extends Controller
                         ->first();
         /* dd($term->parseSlug()); */
         if($term && $term->parseSlug() === '/'.$grand.'/'.$parent.'/'.$slug) {
-            return Inertia::render('CoreBlog/Admin/Term/Show', [
-                'taxonomy' => 'category',
-                'term' => $term->load(['termMetas', 'taxonomy']),
+            return view('coreblog::guest.term.default', [
+                'term' => $term,
+                'posts' => $term->posts()->where('status', 'published')->get()
             ]);
         }
 

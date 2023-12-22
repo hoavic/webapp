@@ -145,14 +145,17 @@ class PostController extends Controller
 
         }
 
+        $metas = $post->postMetas->pluck('value', 'key');
+        if(!isset($metas['featured_image'])) {$metas['featured_image'] = "";}
+
         /* dd($selectedTerms); */
         return Inertia::render('CoreBlog/Admin/Post/Edit', [
             'post' => $post,
             'post_type' => $post->type,
             'groupTaxonomies' => $groupTaxonomies,
             'selectedTerms' => $selectedTerms,
-            'metas' => $post->postMetas->pluck('value', 'key'),
-            'featured' => $post->getFeatured()
+            'metas' => $metas,
+            'featured_image' => $post->getFeaturedImageUrl()
         ]);
     }
 
@@ -172,9 +175,19 @@ class PostController extends Controller
             'post.parent_id' => 'nullable|string',
             'post.type' => 'required|string',
             'selectedTerms' => 'array',
+            'metas' => 'array',
+            'metas.featured_image' => 'nullable|integer',
         ]);
 
         $post->update($validated['post']);
+
+        foreach($validated['metas'] as $key => $value) {
+            if($meta = $post->postMetas()->where('key', $key)->first()) {
+                dd($key);
+                $meta->update(['value' => $value]);
+                $meta->save();
+            }
+        }
 
         $termIDs = [];
         foreach($validated['selectedTerms'] as $key => $value) {

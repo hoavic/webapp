@@ -38,6 +38,10 @@ class Post extends Model
         return $this->hasMany(PostMeta::class);
     }
 
+/*     public function postMetasArr() {
+        return $this->postMetas->pluck('value', 'key');
+    } */
+
     public function terms(): BelongsToMany
     {
         return $this->belongsToMany(Term::class, 'term_relationships');
@@ -49,7 +53,33 @@ class Post extends Model
     }
 
     public function getFeatured() {
-        return $this->postMetas()->where('key', 'featured_image')->with('media')->first();
+        return $this->postMetas->where('key', 'featured_image')->load('media')->first();
+    }
+
+    public function getFeaturedImageUrl($size = 'thumbnail') {
+        if(!$this->getFeatured()) {return;}
+        return $this->getFeatured()->media->responsive_images[$size];
+    }
+
+    public function getExcerpt($limit = 50) {
+        if(!$this->excerpt) {
+            return $this->limit_words(strip_tags($this->content), $limit);
+        }
+        return $this->excerpt;
+    }
+
+    function limit_words($words, $limit, $append = ' ...') {
+            // Add 1 to the specified limit becuase arrays start at 0
+            $limit = $limit+1;
+            // Store each individual word as an array element
+            // Up to the limit
+            $words = explode(' ', $words, $limit);
+            // Shorten the array by 1 because that final element will be the sum of all the words after the limit
+            array_pop($words);
+            // Implode the array for output, and append an ellipse
+            $words = implode(' ', $words) . $append;
+            // Return the result
+            return $words;
     }
 
     public function getRelatedPosts() {

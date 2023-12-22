@@ -4,6 +4,7 @@ namespace Hoadev\CoreBlog\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
@@ -29,6 +30,11 @@ class Term extends Model
     public function termMetas(): HasMany
     {
         return $this->hasMany(TermMeta::class);
+    }
+
+    public function posts(): BelongsToMany
+    {
+        return $this->belongsToMany(Post::class, 'term_relationships');
     }
 
     public function getPermalink() {

@@ -3,25 +3,32 @@ import { ref, reactive } from 'vue';
 import Popup from '../Media/Popup.vue';
 
 const props = defineProps({
-    modelValue: String,
-    media: Object
+    modelValue: Number,
+    preview:  String
 });
 
 let showPopupFeatured = ref(false);
 const featured = reactive({
     id: props.modelValue,
-    media: props.media,
+    preview: props.preview,
 });
 
 const emit = defineEmits(['update:modelValue']);
+
+function fixUrl() {
+    if(featured.preview && featured.preview.charAt(0) !== '/') {
+        return '/' + featured.preview;
+    }
+    return featured.preview;
+}
 
 function handleMediaSelected(item) {
 /*     console.log(item); */
     featured.id = item.id;
     if(item.custom_properties.url.charAt(0) !== '/') {
-        featured.media = item;
+        featured.preview = '/' + item.custom_properties.url;
     } else {
-        featured.media = item;
+        featured.preview = item.custom_properties.url;
     }
 
     emit('update:modelValue', featured.id);
@@ -40,7 +47,7 @@ function handleMediaSelected(item) {
                 class="w-full aspect-video bg-gray-300 rounded-lg drop-shadow-lg">
 
                 <template v-if="featured.id">
-                    <img :src="featured.media.custom_properties.url" class="rounded-lg"/>
+                    <img :src="fixUrl()" class="rounded-lg"/>
                     <!-- <input type="text" :value="featured.id" /> -->
                 </template>
 
@@ -49,7 +56,7 @@ function handleMediaSelected(item) {
                 </template>
             </button>
         </p>
-<!--         {{ featured }} -->
+        {{ featured }}
         <Transition name="slide-fade">
             <div v-if="showPopupFeatured" class="fixed top-0 bottom-0 left-0 right-0 flex flex-col bg-white border border-gray-300 rounded-lg drop-shadow-lg z-50">
                 <div class="p-1 flex justify-end bg-blue-900 text-white rounded-t-lg">

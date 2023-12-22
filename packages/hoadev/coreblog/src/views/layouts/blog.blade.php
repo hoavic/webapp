@@ -15,29 +15,20 @@
     </head>
     <body class="font-sans antialiased flex flex-col min-h-screen">
 
-        <header class="site-header sticky top-0 w-full py-2 px-4 flex items-center bg-gray-100 drop-shadow-lg">
+        <header class="site-header sticky top-0 w-full bg-gray-100 drop-shadow-lg">
             @include('coreblog::layouts.blog.header')
         </header>
 
         <div class="w-full max-w-7xl h-auto mx-auto">
+            @if (strpos(Route::current()->getName(), 'permalink') !== false)
+                @include('coreblog::layouts.blog.breadcrums')
+            @endif
 
-            @include('coreblog::layouts.blog.breadcrums')
-
-            <div class="flex lg:flex-row gap-4">
-
-                <main class="flex-1">
-                    @hasSection('post_title')
-                        <h1 class="text-2xl font-bold">@yield('post_title')</h1>
-                    @endif
-
-                    @yield('content')
-                </main>
-
-                <aside class="w-full lg:w-[320px]">
-                    @include('coreblog::layouts.blog.aside')
-                </aside>
-
-            </div>
+            @if(isset($contentStyle))
+                @include('coreblog::layouts.blog.content.'.$contentStyle)
+            @else
+                @include('coreblog::layouts.blog.content.default')
+            @endif
 
         </div>
 

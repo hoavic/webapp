@@ -5,6 +5,7 @@ namespace Hoadev\CoreBlog\Traits;
 use Hoadev\CoreBlog\Http\Controllers\MediaController;
 use Hoadev\CoreBlog\Http\Controllers\CommentController;
 use Hoadev\CoreBlog\Http\Controllers\CoreBlogController;
+use Hoadev\CoreBlog\Http\Controllers\HomeController;
 use Hoadev\CoreBlog\Http\Controllers\PermalinkController;
 use Hoadev\CoreBlog\Http\Controllers\PostController;
 use Hoadev\CoreBlog\Http\Controllers\SitemapController;
@@ -44,9 +45,7 @@ trait CoreBlogRoute {
 
     public static function Guest() {
 
-        Route::get('/', function() {
-
-        })->name('home');
+        Route::get('/', [HomeController::class, 'default'])->name('home');
 
         Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap.index');
 

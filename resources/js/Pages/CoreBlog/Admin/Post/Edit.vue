@@ -19,10 +19,9 @@ const props = defineProps({
     groupTaxonomies: Object,
     selectedTerms: Object,
     metas: Object,
-    featured: Object,
+    featured_image: String,
     errors: Object
 });
-
 const form = reactive({
     post: props.post,
     selectedTerms: props.selectedTerms,
@@ -38,11 +37,6 @@ const form = reactive({
     }
     return selectedTerms;
 } */
-
-function configMedia() {
-    if(!props.featured) {return null}
-    return featured.media;
-}
 
 function updatePost() {
     router.patch(route('admin.posts.update', props.post.id), form);
@@ -110,7 +104,7 @@ function updatePostAndClose() {
                                 class="w-full text-lg border border-gray-300 rounded-lg"/>
                         </div> -->
 
-                        <FeaturedImage v-model="form.metas.featured_image" :media="configMedia"></FeaturedImage>
+                        <FeaturedImage v-model="form.metas.featured_image" :preview="featured_image"></FeaturedImage>
 
                         <div v-for="(group, groupKey, i) in groupTaxonomies" :key="i" class="m-6">
                             <template v-if="$page.props.admin.taxonomies[groupKey].hierarchical">

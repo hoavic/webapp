@@ -3,6 +3,7 @@
 @section('post_title', $post->title)
 
 @section('content')
+
     {!! $post->content !!}
 
     @if ($relatedPosts)

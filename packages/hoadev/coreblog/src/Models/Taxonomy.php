@@ -42,4 +42,20 @@ class Taxonomy extends Model
     {
         return $this->children()->with('childrenRecursive');
     } */
+
+    public function getPermalink() {
+        if ($this->taxonomy === 'category') {
+            return $this->parseSlug();
+        }
+        return $this->taxonomy.'/'.$this->parseSlug();
+    }
+
+    public function parseSlug() {
+        $ancestors = $this->ancestors;
+        $slug = '';
+        foreach($ancestors as $ancestor) {
+            $slug = $slug.'/'.$ancestor->term->slug;
+        }
+        return $slug.'/'.$this->term->slug;
+    }
 }
