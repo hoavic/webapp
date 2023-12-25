@@ -38,7 +38,7 @@
     <ul x-ref="scroller" class="relative w-full m-0 flex gap-4 snap-x snap-mandatory overflow-x-auto">
         @foreach ($slidePosts as $slidePost)
             <li class="snap-start shrink-0">
-                <a href="" title="" class="">
+                <a href="{{ $slidePost->getPermalink() }}" title="{{ $slidePost->title }}" class="">
                     @if($slidePost->getFeatured())
                         <img src="{{ $slidePost->getFeaturedImageUrl('medium') }}"
                             alt="Go to {{ $slidePost->title }}"

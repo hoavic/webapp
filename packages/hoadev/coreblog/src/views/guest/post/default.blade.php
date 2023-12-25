@@ -2,6 +2,17 @@
 
 @section('post_title', $post->title)
 
+@if ($post->terms && $post->terms->count() > 0)
+    @section('post_meta')
+        @foreach ($post->terms as $term)
+            <div class="flex gap-2">
+                <a href="{{ $term->getPermalink() }}" class="block text-blue-800 hover:text-blue-950 hover:underline">{{ $term->name }}</a>
+            </div>
+        @endforeach
+    @endsection
+@endif
+
+
 @section('content')
 
     {!! $post->content !!}

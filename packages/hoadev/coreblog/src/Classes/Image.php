@@ -74,38 +74,42 @@ class Image {
     }
 
     public function setMediumSize() {
-        if($this->width >= $this->height) {
+/*         if($this->width >= $this->height) {
             $medium = $this->resize_to_width(300, $this->imageData, $this->width, $this->height);
         } else {
             $medium = $this->resize_to_height(300, $this->imageData, $this->width, $this->height);
-        }
+        } */
+        $medium = $this->resize_to_width(300, $this->imageData, $this->width, $this->height);
         return $this->saveImage($medium, 'medium_');
     }
 
     public function setLargeSize() {
-        if($this->width >= $this->height) {
+/*         if($this->width >= $this->height) {
             $large = $this->resize_to_width(768, $this->imageData, $this->width, $this->height);
         } else {
             $large = $this->resize_to_height(768, $this->imageData, $this->width, $this->height);
-        }
+        } */
+        $large = $this->resize_to_width(768, $this->imageData, $this->width, $this->height);
         return $this->saveImage($large, 'large_');
     }
 
     public function setExtraSize() {
-        if($this->width >= $this->height) {
+/*         if($this->width >= $this->height) {
             $extra = $this->resize_to_width(1024, $this->imageData, $this->width, $this->height);
         } else {
             $extra = $this->resize_to_height(1024, $this->imageData, $this->width, $this->height);
-        }
+        } */
+        $extra = $this->resize_to_width(1024, $this->imageData, $this->width, $this->height);
         return $this->saveImage($extra, 'extra_');
     }
 
     public function setWideSize() {
-        if($this->width >= $this->height) {
+/*         if($this->width >= $this->height) {
             $wide = $this->resize_to_width(1280, $this->imageData, $this->width, $this->height);
         } else {
             $wide = $this->resize_to_height(1280, $this->imageData, $this->width, $this->height);
-        }
+        } */
+        $wide = $this->resize_to_width(1280, $this->imageData, $this->width, $this->height);
         return $this->saveImage($wide, 'wide_');
     }
 

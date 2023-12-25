@@ -2,6 +2,7 @@
 
 namespace Hoadev\CoreBlog\Models;
 
+use Hoadev\CoreBlog\Traits\Seo\WithSeoTermFunc;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -10,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Term extends Model
 {
-    use HasFactory;
+    use HasFactory, WithSeoTermFunc;
 
     protected $table = 'terms';
 
@@ -41,7 +42,7 @@ class Term extends Model
         if ($this->taxonomy->taxonomy === 'category') {
             return $this->parseSlug();
         }
-        return $this->taxonomy->taxonomy.'/'.$this->parseSlug();
+        return '/'.$this->taxonomy->taxonomy.$this->parseSlug();
     }
 
     public function parseSlug() {
@@ -51,5 +52,27 @@ class Term extends Model
             $slug = $slug.'/'.$ancestor->term->slug;
         }
         return $slug.'/'.$this->slug;
+    }
+
+    public function getExcerpt($limit = 50, $append = ' ...') {
+        if(!$this->taxonomy->description) {
+            return '';
+        }
+        return $this->limit_words(strip_tags($this->taxonomy->description), $limit, $append);
+
+    }
+
+    function limit_words($words, $limit, $append = ' ...') {
+            // Add 1 to the specified limit becuase arrays start at 0
+            $limit = $limit+1;
+            // Store each individual word as an array element
+            // Up to the limit
+            $words = explode(' ', $words, $limit);
+            // Shorten the array by 1 because that final element will be the sum of all the words after the limit
+            array_pop($words);
+            // Implode the array for output, and append an ellipse
+            $words = implode(' ', $words) . $append;
+            // Return the result
+            return $words;
     }
 }

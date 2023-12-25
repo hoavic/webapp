@@ -1,26 +1,34 @@
 @extends('coreblog::layouts.blog')
 
-{{-- @section('post_title', $post->title) --}}
+@section('term_name', $term->name)
 
 @section('content')
 
-    {!! $term->name !!}
+{!! $term->taxonomy->description !!}
 {{--
     {{ $posts }} --}}
 
-    <div class="">
+    <div class="md:p-4 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
         @if ($posts && $posts->count() > 0)
             @foreach ($posts as $post)
-                <article>
-                    <header>
-
-                    </header>
-                    <div class="entry-summary my-2">
-                        {{ $post->getExcerpt() }}
+                <article class="border border-gray-200">
+                    <div class="">
+                        @if ($post->getFeatured())
+                            <a href="{{ $post->getpermalink() }}"><img src="{{ $post->getFeaturedImageUrl('large') }}" alt="{{ $post->title }}" class="m-0"></a>
+                        @endif
+                    </div>
+                    <div class="">
+                        <h2 class="font-bold text-blue-800">
+                            <a href="{{ $post->getpermalink() }}">{{ $post->title }}</a>
+                        </h2>
+                        <p class="entry-summary">
+                            {{ $post->getExcerpt(20) }}
+                        </p>
                     </div>
                 </article>
             @endforeach
         @endif
-
     </div>
+
+    {{ $posts->links() }}
 @endsection

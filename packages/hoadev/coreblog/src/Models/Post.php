@@ -3,6 +3,7 @@
 namespace Hoadev\CoreBlog\Models;
 
 use App\Models\User;
+use Hoadev\CoreBlog\Traits\Seo\WithSeoPostFunc;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Builder;
 class Post extends Model
 {
-    use HasFactory;
+    use HasFactory, WithSeoPostFunc;
 
     protected $table = 'posts';
 
@@ -53,17 +54,62 @@ class Post extends Model
     }
 
     public function getFeatured() {
-        return $this->postMetas->where('key', 'featured_image')->load('media')->first();
+        return $this->postMetas->where('key', 'featured_image')->first();
     }
 
     public function getFeaturedImageUrl($size = 'thumbnail') {
         if(!$this->getFeatured()) {return;}
-        return $this->getFeatured()->media->responsive_images[$size];
+        $prefix = '';
+        if(mb_substr($this->getFeatured()->media->responsive_images[$size], 0 , 1) !== '/') {$prefix = '/';}
+        return $prefix.$this->getFeatured()->media->responsive_images[$size];
     }
 
-    public function getExcerpt($limit = 50) {
+    public function getFeaturedImage($size = 'thumbnail', $alt = '', $classes = '', $loading = 'lazy') {
+        $featured = $this->getFeatured();
+        if(!$featured) {return;}
+        return '<img src="'.$featured->media->responsive_images[$size].'"
+                    alt="'.$alt.'"
+                    width="'.$featured->media->custom_properties['width'].'"
+                    height="'.$featured->media->custom_properties['height'].'"
+                    srcset="'.$this->getFeaturedImageSrcset().'"
+                    loading="'.$loading.'"
+                    class="'.$classes.'" />';
+    }
+
+    public function getFeaturedImageSrcset() {
+
+        $featured = $this->getFeatured();
+        if(!$featured->media->responsive_images) {return null;}
+
+        $srcset = [];
+
+        if(isset($featured->media->responsive_images['thumbnail'])) {
+            $srcset[] = '/'.$featured->media->responsive_images['thumbnail'].' 150w';
+        }
+
+        if(isset($featured->media->responsive_images['medium'])) {
+            $srcset[] = '/'.$featured->media->responsive_images['medium'].' 300w';
+        }
+
+        if(isset($featured->media->responsive_images['large'])) {
+            $srcset[] = '/'.$featured->media->responsive_images['large'].' 768w';
+        }
+
+        if(isset($featured->media->responsive_images['extra'])) {
+            $srcset[] = '/'.$featured->media->responsive_images['extra'].' 1024w';
+        }
+
+        if(isset($featured->media->responsive_images['wide'])) {
+            $srcset[] = '/'.$featured->media->responsive_images['wide'].' 1280w';
+        }
+
+        return join(', ', $srcset);
+    }
+
+
+    public function getExcerpt($limit = 50, $append = ' ...') {
         if(!$this->excerpt) {
-            return $this->limit_words(strip_tags($this->content), $limit);
+            return $this->limit_words(strip_tags($this->content), $limit, $append);
         }
         return $this->excerpt;
     }
@@ -87,6 +133,13 @@ class Post extends Model
         return Post::whereHas('terms', function (Builder $query) use($post) {
             $query->whereIn('id', $post->terms->pluck('id'));
         })->whereNot('id', $post->id)->get();
+    }
+
+    public function getPermalink() {
+        if ($this->type === 'post' || $this->type === 'page') {
+            return '/'.$this->name;
+        }
+        return '/'.$this->type.'/'.$this->name;
     }
 
 }

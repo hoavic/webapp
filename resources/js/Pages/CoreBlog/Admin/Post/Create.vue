@@ -32,7 +32,7 @@ const form = reactive({
         type: props.post_type,
     },
     metas: {
-        featured_image: '',
+        featured_image: [],
     },
     selectedTerms: configSelectedTerms()
 });
@@ -121,7 +121,7 @@ function saveAsDraft() {
                                 class="w-full text-lg border border-gray-300 rounded-lg"/>
                         </div> -->
 
-                        <FeaturedImage v-model="form.metas.featured_image" ></FeaturedImage>
+                        <FeaturedImage v-model="form.metas.featured_image[0]" ></FeaturedImage>
 
                         <div v-for="(group, groupKey, i) in groupTaxonomies" :key="i" class="m-6">
                             <template v-if="$page.props.admin.taxonomies[groupKey].hierarchical">

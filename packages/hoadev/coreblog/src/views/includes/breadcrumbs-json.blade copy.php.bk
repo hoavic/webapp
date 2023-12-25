@@ -1,0 +1,11 @@
+@isset($breadcrumbs)
+
+        @php
+            $json =  json_encode($breadcrumbs->breadcrumbs)->toString();
+            $replaced = str_replace('"type"', '"@type"', $json);
+            $replaced = str_replace('"context"', '"@context"', $json);
+            echo '<script type="application/ld+json">'.$json.'</script>';
+        @endphp
+
+
+@endisset

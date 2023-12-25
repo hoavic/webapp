@@ -3,38 +3,35 @@ import { ref, reactive } from 'vue';
 import Popup from '../Media/Popup.vue';
 
 const props = defineProps({
-    modelValue: Object,
+    modelValue: String,
+    preview:  String
 });
 
 let showPopupFeatured = ref(false);
-const react = reactive({
-    featured: configFeaturedClass()
+const featured = reactive({
+    id: props.modelValue,
+    preview: props.preview,
 });
 
 const emit = defineEmits(['update:modelValue']);
 
-function configFeaturedClass() {
-    if(props.modelValue && props.modelValue.hasOwnProperty('id')) {return props.modelValue}
-
-    return {
-        key: 'featured_image',
-        value: '',
-        media: {}
-    };
-}
-
 function fixUrl() {
-    if(react.featured.media.hasOwnProperty('responsive_images') && react.featured.media.responsive_images.medium.charAt(0) !== '/') {
-        return '/' + react.featured.media.responsive_images.medium;
+    if(featured.preview && featured.preview.charAt(0) !== '/') {
+        return '/' + featured.preview;
     }
-    return '';
+    return featured.preview;
 }
 
 function handleMediaSelected(item) {
 /*     console.log(item); */
-    react.featured.media = item;
-    react.featured.value = item.id;
-    emit('update:modelValue', react.featured);
+    featured.id = item.id;
+    if(item.custom_properties.url.charAt(0) !== '/') {
+        featured.preview = '/' + item.custom_properties.url;
+    } else {
+        featured.preview = item.custom_properties.url;
+    }
+
+    emit('update:modelValue', featured.id);
     showPopupFeatured.value = false;
 }
 
@@ -49,7 +46,7 @@ function handleMediaSelected(item) {
             <button type="button" @click.prevent="showPopupFeatured = true"
                 class="w-full aspect-video bg-gray-300 rounded-lg drop-shadow-lg">
 
-                <template v-if="react.featured.media.hasOwnProperty('responsive_images')">
+                <template v-if="featured.id">
                     <img :src="fixUrl()" class="rounded-lg"/>
                     <!-- <input type="text" :value="featured.id" /> -->
                 </template>
@@ -59,7 +56,7 @@ function handleMediaSelected(item) {
                 </template>
             </button>
         </p>
-        {{ react.featured }}
+        {{ featured }}
         <Transition name="slide-fade">
             <div v-if="showPopupFeatured" class="fixed top-0 bottom-0 left-0 right-0 flex flex-col bg-white border border-gray-300 rounded-lg drop-shadow-lg z-50">
                 <div class="p-1 flex justify-end bg-blue-900 text-white rounded-t-lg">

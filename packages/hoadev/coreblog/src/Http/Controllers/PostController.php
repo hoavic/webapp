@@ -81,15 +81,18 @@ class PostController extends Controller
             'post.type' => 'required|string',
             'selectedTerms' => 'array',
             'metas' => 'array',
-            'metas.featured_image' => 'nullable|integer',
         ]);
 
         $post = $request->user()->posts()->create($validated['post']);
 
-        $post->postMetas()->create([
+/*         $post->postMetas()->create([
             'key' => 'featured_image',
             'value' => $validated['metas']['featured_image']
-        ]);
+        ]); */
+        // handle all metas
+        foreach($validated['metas'] as $key => $metasGroup) {
+            $post->postMetas()->create($metasGroup[0]);
+        }
 
         $termIDs = [];
         foreach($validated['selectedTerms'] as $key => $value) {
@@ -145,8 +148,8 @@ class PostController extends Controller
 
         }
 
-        $metas = $post->postMetas->pluck('value', 'key');
-        if(!isset($metas['featured_image'])) {$metas['featured_image'] = "";}
+        $metas = $post->postMetas->groupBy('key');
+        if(!isset($metas['featured_image'])) {$metas['featured_image'] = [];}
 
         /* dd($selectedTerms); */
         return Inertia::render('CoreBlog/Admin/Post/Edit', [
@@ -155,7 +158,7 @@ class PostController extends Controller
             'groupTaxonomies' => $groupTaxonomies,
             'selectedTerms' => $selectedTerms,
             'metas' => $metas,
-            'featured_image' => $post->getFeaturedImageUrl()
+            'featured_image' => $post->getFeaturedImageUrl('medium')
         ]);
     }
 
@@ -176,17 +179,25 @@ class PostController extends Controller
             'post.type' => 'required|string',
             'selectedTerms' => 'array',
             'metas' => 'array',
-            'metas.featured_image' => 'nullable|integer',
         ]);
 
         $post->update($validated['post']);
 
-        foreach($validated['metas'] as $key => $value) {
+/*         foreach($validated['metas'] as $key => $value) {
             if($meta = $post->postMetas()->where('key', $key)->first()) {
                 dd($key);
                 $meta->update(['value' => $value]);
                 $meta->save();
             }
+        } */
+        // handle all metas
+        foreach($validated['metas'] as $key => $metasGroup) {
+            if(isset($metasGroup[0]['id'])) {
+                $post->postMetas()->update(collect($metasGroup[0])->except('media')->toArray());
+            } else {
+                $post->postMetas()->create(collect($metasGroup[0])->except('media')->toArray());
+            }
+
         }
 
         $termIDs = [];

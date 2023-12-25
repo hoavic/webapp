@@ -15,10 +15,7 @@ trait HasResponsive {
      */
     public function setResponsive() {
 
-        $manager = ImageManager::gd();
-        dd($this->custom_properties);
-        $readed = $manager->read($this->media->getFullPath());
-        dd($readed);
+
     }
 
 }
