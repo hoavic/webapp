@@ -31,7 +31,8 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/",
-            "Hoadev\\CoreBlog\\": "packages/hoadev/coreblog/src"
+            "Hoadev\\CoreBlog\\": "packages/hoadev/coreblog/src",
+            "Hoadev\\CoreShop\\": "packages/hoadev/coreshop/src"
         }
     },
     "autoload-dev": {

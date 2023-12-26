@@ -1,16 +1,15 @@
 <?php
 
-namespace Hoadev\CoreBlog\Http\Controllers;
+namespace Hoadev\CoreShop\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Hoadev\CoreBlog\Models\Post;
 use Hoadev\CoreBlog\Models\Taxonomy;
-use Hoadev\CoreBlog\Models\Term;
-use Illuminate\Database\Eloquent\Builder;
+use Hoadev\CoreShop\Models\Product;
+use Hoadev\CoreShop\Models\Variant;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class PostController extends Controller
+class ProductController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,50 +17,36 @@ class PostController extends Controller
     public function index(Request $request)
     {
 
-        $post_type = $request->query('post_type', 'post');
-        if($post_type = 'product') { return redirect()->route('admin.products.index'); }
-
         $search = $request->query('search');
 
-        $posts = Post::where('type', $post_type)->paginate(10);
-
-        $posts->appends(['post_type' => $post_type]);
+        $products = Product::where('type', 'product')->paginate(10);
 
         if($search !== null) {
-            $posts->appends(['search' => $search]);
+            $products->appends(['search' => $search]);
         }
 
-        return Inertia::render('CoreBlog/Admin/Post/Index', [
-            'post_type' => $post_type,
-            'posts' => $posts
+        return Inertia::render('CoreShop/Admin/Product/Index', [
+            'post_type' => 'product',
+            'posts' => $products
         ]);
     }
 
-    /**
+/**
      * Show the form for creating a new resource.
      */
     public function create(Request $request)
     {
-        $post_type = $request->query('post_type', 'post');
-        if($post_type = 'product') { return redirect()->route('admin.products.create'); }
+        $post_type = $request->query('post_type', 'product');
 
         $post_types = config('coreblog.post_types');
-
-        /* $groupTaxonomies = Taxonomy::with(['term', 'ancestors'])->whereIn('taxonomy', $post_types[$post_type]['taxonomies'])->defaultOrder()->get()->groupBy('taxonomy'); */
 
         $groupTaxonomies = Taxonomy::with(['term', 'ancestors'])
             ->whereIn('taxonomy', $post_types[$post_type]['taxonomies'])
             ->defaultOrder()
             ->get()
             ->groupBy(['taxonomy', 'term_id']);
-/*             dd($groupTaxonomies); */
-/*         $group = collect();
 
-        foreach($post_types[$post_type]['taxonomies'] as $taxonomy) {
-            $group =
-        } */
-
-        return Inertia::render('CoreBlog/Admin/Post/Create', [
+        return Inertia::render('CoreShop/Admin/Product/Create', [
             'post_type' => $post_type,
             'groupTaxonomies' => $groupTaxonomies
         ]);
@@ -84,93 +69,85 @@ class PostController extends Controller
             'post.type' => 'required|string',
             'selectedTerms' => 'array',
             'metas' => 'array',
+            'variants' => 'array',
+            'variants.*.name' => 'string|nullable',
+            'variants.*.quantity' => 'integer|nullable',
+            'variants.*.price' => 'integer|nullable',
         ]);
 
-        $post = $request->user()->posts()->create($validated['post']);
+        $product = $request->user()->products()->create($validated['post']);
 
-/*         $post->postMetas()->create([
-            'key' => 'featured_image',
-            'value' => $validated['metas']['featured_image']
-        ]); */
         // handle all metas
         foreach($validated['metas'] as $key => $metasGroup) {
-            if(isset($metasGroup) && $metasGroup != []) {
-                $post->postMetas()->create($metasGroup[0]);
+            if(isset($metasGroup[0]['key'])) {
+                $product->postMetas()->create($metasGroup[0]);
             }
         }
 
+        //Store Terms
         $termIDs = [];
         foreach($validated['selectedTerms'] as $key => $value) {
             foreach($value as $item) {
                 $termIDs[] = $item;
             }
         }
-        $post->terms()->sync($termIDs);
+        $product->terms()->sync($termIDs);
 
-        return redirect()->route('admin.posts.index');
+        //Store Variant
+        $product->variants()->createMany($validated['variants']);
+
+        return redirect()->route('admin.products.index');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Post $post)
+    public function show(Product $product)
     {
-        return Inertia::render('CoreBlog/Admin/Post/Show', [
-            'post' => $post
-        ]);
+        //
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Post $post)
+    public function edit(Product $product)
     {
-        if($post->type = 'product') { return redirect()->route('admin.products.edit', $post); }
         $post_types = config('coreblog.post_types');
 
         $groupTaxonomies = Taxonomy::with(['term', 'ancestors'])
-            ->whereIn('taxonomy', $post_types[$post->type]['taxonomies'])
+            ->whereIn('taxonomy', $post_types[$product->type]['taxonomies'])
             ->defaultOrder()
             ->get()
             ->groupBy(['taxonomy', 'term_id']);
 
-         $selectedTermsObject = $post->terms->load('taxonomy')->groupBy('taxonomy.taxonomy');
-/*        $selectedTerms = [];
-        foreach($selectedTermsObject as $key => $value) {
-            foreach($value as $child) {
-                $selectedTerms[$key][] = $child->id;
-            }
-        } */
+        $selectedTermsObject = $product->terms->load('taxonomy')->groupBy('taxonomy.taxonomy');
 
         $selectedTerms = [];
-        /* dd($post_types[$post->type]['taxonomies']); */
-        foreach($post_types[$post->type]['taxonomies'] as $tax) {
+        foreach($post_types[$product->type]['taxonomies'] as $tax) {
             if(isset($selectedTermsObject[$tax])) {
                 $selectedTerms[$tax] = $selectedTermsObject[$tax]->pluck('id');
             } else {
                 $selectedTerms[$tax] = [];
             }
-
         }
 
-        $metas = $post->postMetas->groupBy('key');
+        $metas = $product->postMetas->groupBy('key');
         if(!isset($metas['featured_image'])) {$metas['featured_image'] = [];}
 
-        /* dd($selectedTerms); */
-        return Inertia::render('CoreBlog/Admin/Post/Edit', [
-            'post' => $post,
-            'post_type' => $post->type,
+        return Inertia::render('CoreShop/Admin/Product/Edit', [
+            'post' => $product->load('variants'),
+            'post_type' => $product->type,
             'groupTaxonomies' => $groupTaxonomies,
             'selectedTerms' => $selectedTerms,
             'metas' => $metas,
-            'featured_image' => $post->getFeaturedImageUrl('medium')
+            'featured_image' => $product->getFeaturedImageUrl('medium')
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Post $post)
+    public function update(Request $request, Product $product)
     {
         $validated = $request->validate([
             'post.content'  => 'nullable|string',
@@ -179,14 +156,18 @@ class PostController extends Controller
             'post.status' => 'required|string',
             'post.comment_status' => 'nullable|string',
             'post.password' => 'nullable|string',
-            'post.name' => 'required|string|unique:posts,name,'.$post->id,
+            'post.name' => 'required|string|unique:posts,name,'.$product->id,
             'post.parent_id' => 'nullable|string',
             'post.type' => 'required|string',
             'selectedTerms' => 'array',
             'metas' => 'array',
+            'variants' => 'array',
+            'variants.*.name' => 'string|nullable',
+            'variants.*.quantity' => 'integer|nullable',
+            'variants.*.price' => 'integer|nullable',
         ]);
 
-        $post->update($validated['post']);
+        $product->update($validated['post']);
 
 /*         foreach($validated['metas'] as $key => $value) {
             if($meta = $post->postMetas()->where('key', $key)->first()) {
@@ -197,12 +178,12 @@ class PostController extends Controller
         } */
         // handle all metas
         foreach($validated['metas'] as $key => $metasGroup) {
-            if(isset($metasGroup[0]['id'])) {
-                $post->postMetas()->update(collect($metasGroup[0])->except('media')->toArray());
+/*             if(isset($metasGroup[0]['id'])) {
+                $product->postMetas()->update(collect($metasGroup[0])->except('media')->toArray());
             } else {
-                $post->postMetas()->create(collect($metasGroup[0])->except('media')->toArray());
-            }
-
+                $product->postMetas()->create(collect($metasGroup[0])->except('media')->toArray());
+            } */
+            $product->postMetas()->updateOrCreate(collect($metasGroup[0])->except('media')->toArray());
         }
 
         $termIDs = [];
@@ -211,18 +192,31 @@ class PostController extends Controller
                 $termIDs[] = $item;
             }
         }
-        $post->terms()->sync($termIDs);
+        $product->terms()->sync($termIDs);
+
+        //Store Variant
+        $variantIds = [];
+        foreach($validated['variants'] as $variant) {
+
+            if(isset($variant['id'])) {
+                $realVariant = $product->variants()->update($variant);
+            } else {
+                $realVariant = $product->variants()->create($variant);
+            }
+            $variantIds[] = $realVariant->id;
+        }
+        dd($variantIds);
+        Variant::whereNotIn('id', $variantIds)->delete();
 
         session()->flash('message', 'Update successfully!');
-        /* return redirect()->route('admin.posts.index'); */
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Post $post)
+    public function destroy(Product $product)
     {
-        $post->delete();
+        $product->delete();
 
         return redirect()->route('admin.posts.index');
     }

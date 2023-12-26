@@ -171,6 +171,7 @@ return [
         App\Providers\FortifyServiceProvider::class,
         App\Providers\JetstreamServiceProvider::class,
         \Hoadev\CoreBlog\Providers\CoreBlogProvider::class,
+        \Hoadev\CoreShop\Providers\CoreShopProvider::class,
     ])->toArray(),
 
     /*

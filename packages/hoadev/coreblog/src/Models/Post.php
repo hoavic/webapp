@@ -10,9 +10,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 class Post extends Model
 {
-    use HasFactory, WithSeoPostFunc;
+    use HasFactory, SoftDeletes, WithSeoPostFunc;
 
     protected $table = 'posts';
 
@@ -36,7 +38,7 @@ class Post extends Model
 
     public function postMetas(): HasMany
     {
-        return $this->hasMany(PostMeta::class);
+        return $this->hasMany(PostMeta::class, 'post_id');
     }
 
 /*     public function postMetasArr() {
@@ -45,12 +47,12 @@ class Post extends Model
 
     public function terms(): BelongsToMany
     {
-        return $this->belongsToMany(Term::class, 'term_relationships');
+        return $this->belongsToMany(Term::class, 'term_relationships', 'post_id');
     }
 
     public function comments(): HasMany
     {
-        return $this->hasMany(Comment::class);
+        return $this->hasMany(Comment::class, 'post_id');
     }
 
     public function getFeatured() {

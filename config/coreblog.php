@@ -59,6 +59,24 @@ return [
             'has_archive' => true,
         ],
 
+        'product' => [
+            'type' => 'product',
+            'labels' => [
+                'name' => 'Products',
+                'singular_name' => 'Product',
+            ],
+            'description' => '',
+            'public' => true,
+            'hierarchical' => true,
+            'exclude_from_search' => false,
+            'show_in_menu' => true,
+            'show_in_admin_bar' => true,
+            'taxonomies' => [
+                'product_category'
+            ],
+            'has_archive' => true,
+        ],
+
 /*         'custom' => [
             'type' => 'custom',
             'labels' => [
@@ -109,6 +127,20 @@ return [
             'show_in_admin_bar' => false,
         ],
 
+        'product_category' => [
+            'taxonomy' => 'product_category',
+            'labels' => [
+                'name' => 'Product Categories',
+                'singular_name' => 'Product Category',
+            ],
+            'description' => '',
+            'public' => true,
+            'hierarchical' => true,
+            'exclude_from_search' => false,
+            'show_in_menu' => true,
+            'show_in_admin_bar' => true,
+        ],
+
         'custom_tax' => [
             'taxonomy' => 'custom_tax',
             'labels' => [
@@ -123,7 +155,6 @@ return [
             'show_in_admin_bar' => true,
         ],
     ]
-
 
 
 ];

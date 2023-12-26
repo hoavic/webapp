@@ -1,0 +1,15 @@
+{
+    "name": "hoadev/coreshop",
+    "autoload": {
+        "psr-4": {
+            "Hoadev\\Coreshop\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "hoavic",
+            "email": "oceo.info@gmail.com"
+        }
+    ],
+    "require": {}
+}

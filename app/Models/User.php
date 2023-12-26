@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use Hoadev\CoreBlog\Traits\WithPostRelationship;
+use Hoadev\CoreShop\Traits\WithProductRelationship;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -19,7 +20,7 @@ class User extends Authenticatable
     use HasProfilePhoto;
     use Notifiable;
     use TwoFactorAuthenticatable;
-    use WithPostRelationship;
+    use WithPostRelationship, WithProductRelationship;
 
     /**
      * The attributes that are mass assignable.
