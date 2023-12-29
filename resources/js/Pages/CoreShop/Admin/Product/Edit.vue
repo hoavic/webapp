@@ -10,6 +10,7 @@ import Alert from '@/Pages/CoreBlog/Admin/Alert.vue';
 import autoSlug from '@/Pages/CoreBlog/Includes/auto-slug';
 import FeaturedImage from '@/Pages/CoreBlog/Admin/Includes/FeaturedImage.vue';
 import SimpleProduct from './Variant/SimpleProduct.vue';
+import SimpleEditor from '@/Pages/CoreBlog/Admin/Includes/SimpleEditor.vue';
 
 const page = usePage();
 
@@ -57,7 +58,7 @@ function updatePostAndClose() {
 
         <Alert :errors="errors"></Alert>
 
-        <div class="">
+        <div class="lg:max-w-7xl mx-auto">
             <form @submit.prevent="updatePost">
                 <div class="lg:flex lg:flex-row">
 
@@ -70,9 +71,10 @@ function updatePostAndClose() {
 
                         <div class="m-2 lg:m-6">
                             <label>
-                                Excerpt:
-                                <textarea v-model="form.post.excerpt" name="excerpt" placeholder="Excerpt..."
-                                    class="w-full text-lg border border-gray-300 rounded-lg"></textarea>
+                                Short Description::
+                                <!-- <textarea v-model="form.post.excerpt" name="excerpt" placeholder="Excerpt..."
+                                    class="w-full text-lg border border-gray-300 rounded-lg"></textarea> -->
+                                <SimpleEditor v-model="form.post.excerpt"></SimpleEditor>
                             </label>
 
                         </div>

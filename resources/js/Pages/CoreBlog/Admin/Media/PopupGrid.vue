@@ -2,14 +2,22 @@
 import { useForm } from '@inertiajs/vue3';
 import prettyBytes from 'pretty-bytes';
 import '@/coreblog/tinymce/tinymce';
+import { reactive } from 'vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
 
 const props = defineProps({
     media_type: String,
     data: Object,
     parent: String,
+    limitMedia: Number
 });
 
-const emit = defineEmits('onSelectMedia');
+const emit = defineEmits('onConfirmMedias');
+
+const react = reactive({
+    selectedMedias: [],
+    limitMedia: props.limitMedia
+});
 
 const formDel = useForm({
     name: props.media_type
@@ -64,13 +72,44 @@ const getSrcset = (item) => {
 } */
 
 
-function selectMedia(item) {
-    if(props.parent === 'featured') {
-        return emit('onSelectMedia', item);
+function selectMedia(media) {
+
+    if(react.selectedMedias.includes(media)) {
+        let index = react.selectedMedias.indexOf(media);
+        if (index > -1) { // only splice array when item is found
+            react.selectedMedias.splice(media, 1); // 2nd parameter means remove one item only
+        }
+        return;
     }
-    tinymce.get("myeditorinstance").insertContent('<img src="' + item.custom_properties.url + '" srcset="' + getSrcset(item) + '" width="' + item.custom_properties.width + '" height="' + item.custom_properties.height + '" loading="lazy" />');
+
+    if(props.parent === 'featured') {
+        react.selectedMedias = []
+        react.selectedMedias.push(media);
+        return;
+    }
+
+    if(react.selectedMedias.length >= react.limitMedia) {
+        alert("Tối đa chọn " + react.limitMedia + " file.");
+        return;
+    }
+
+    react.selectedMedias.push(media);
+}
+
+function confirmMedias() {
+    if(props.parent === 'featured') {
+        emit('onConfirmMedias', react.selectedMedias);
+        react.selectedMedias = [];
+        return;
+    }
+    if(react.selectedMedias.length === 0) {return}
+    react.selectedMedias.forEach((media) => {
+        tinymce.get("myeditorinstance").insertContent('<img src="' + media.custom_properties.url + '" srcset="' + getSrcset(media) + '" width="' + media.custom_properties.width + '" height="' + media.custom_properties.height + '" loading="lazy" />');
+    });
+    /* tinymce.get("myeditorinstance").insertContent('<img src="' + item.custom_properties.url + '" srcset="' + getSrcset(item) + '" width="' + item.custom_properties.width + '" height="' + item.custom_properties.height + '" loading="lazy" />'); */
 /*     emit('onSelectMedia', '<img src="' + item.custom_properties.url + '" srcset="' + getSrcset(item) + '" width="' + item.custom_properties.width + '" height="' + item.custom_properties.height + '" loading="lazy" />'); */
-    emit('onSelectMedia');
+    react.selectedMedias = [];
+    emit('onConfirmMedias');
 }
 
 </script>
@@ -87,7 +126,8 @@ function selectMedia(item) {
                     @click.prevent="selectMedia(item)"
                     :width="item.custom_properties.width"
                     :height="item.custom_properties.height"
-                    class="aspect-square"/>
+                    :class="react.selectedMedias.includes(item) ? 'border-4 border-blue-400 rounded-lg' : ''"
+                    class="aspect-square transition-all duration-75 ease-in-out"/>
 
                 <div class="text-gray-600 text-sm break-all">{{ item.file_name }}</div>
                 <div class="text-xs text-gray-400">{{ prettyBytes(item.size) }}</div>
@@ -99,6 +139,12 @@ function selectMedia(item) {
                 <span class="text-center text-sm text-gray-500">There is no item. Please, add new one!</span>
             </div>
         </template>
+
+        <div class="fixed bottom-0 left-0 right-0 py-2 px-4 flex flex-col gap-2 md:flex-row items-center justify-between bg-white border-t border-gray-300 z-50">
+            <span class="block">Selected: {{ react.selectedMedias.length }} file.</span>
+            <PrimaryButton type="button" @click.prevent="confirmMedias"
+                class="">Xác nhận</PrimaryButton>
+        </div>
     </div>
 
 </template>

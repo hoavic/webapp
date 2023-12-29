@@ -72,7 +72,8 @@ return [
             'show_in_menu' => true,
             'show_in_admin_bar' => true,
             'taxonomies' => [
-                'product_category'
+                'product_category',
+                'brand'
             ],
             'has_archive' => true,
         ],
@@ -132,6 +133,20 @@ return [
             'labels' => [
                 'name' => 'Product Categories',
                 'singular_name' => 'Product Category',
+            ],
+            'description' => '',
+            'public' => true,
+            'hierarchical' => true,
+            'exclude_from_search' => false,
+            'show_in_menu' => true,
+            'show_in_admin_bar' => true,
+        ],
+
+        'brand' => [
+            'taxonomy' => 'brand',
+            'labels' => [
+                'name' => 'Brands',
+                'singular_name' => 'Brand',
             ],
             'description' => '',
             'public' => true,

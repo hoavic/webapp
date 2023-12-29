@@ -71,6 +71,8 @@ class ProductController extends Controller
             'metas' => 'array',
             'variants' => 'array',
             'variants.*.name' => 'string|nullable',
+            'variants.*.sku' => 'string|nullable',
+            'variants.*.barcode' => 'string|nullable',
             'variants.*.quantity' => 'integer|nullable',
             'variants.*.price' => 'integer|nullable',
         ]);
@@ -162,7 +164,12 @@ class ProductController extends Controller
             'selectedTerms' => 'array',
             'metas' => 'array',
             'variants' => 'array',
+            'variants.*.id' => 'integer|nullable',
+            'variants.*.post_id' => 'integer|nullable',
+            'variants.*.stock_id' => 'integer|nullable',
             'variants.*.name' => 'string|nullable',
+            'variants.*.sku' => 'string|nullable',
+            'variants.*.barcode' => 'string|nullable',
             'variants.*.quantity' => 'integer|nullable',
             'variants.*.price' => 'integer|nullable',
         ]);
@@ -197,12 +204,13 @@ class ProductController extends Controller
         //Store Variant
         $variantIds = [];
         foreach($validated['variants'] as $variant) {
-
+           /*  dd($variant); */
             if(isset($variant['id'])) {
                 $realVariant = $product->variants()->update($variant);
             } else {
                 $realVariant = $product->variants()->create($variant);
             }
+            dd($realVariant);
             $variantIds[] = $realVariant->id;
         }
         dd($variantIds);

@@ -55,7 +55,7 @@ function updatePostAndClose() {
 
         <Alert :errors="errors"></Alert>
 
-        <div class="">
+        <div class="lg:max-w-7xl mx-auto">
             <form @submit.prevent="updatePost">
                 <div class="lg:flex lg:flex-row">
 

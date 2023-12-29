@@ -6,7 +6,7 @@
     @section('post_meta')
         @foreach ($post->terms as $term)
             <div class="flex gap-2">
-                <a href="{{ $term->getPermalink() }}" class="block text-blue-800 hover:text-blue-950 hover:underline">{{ $term->name }}</a>
+                <a href="{{ $term->getPermalink() }}" class="block hover:underline">{{ $term->name }}</a>
             </div>
         @endforeach
     @endsection

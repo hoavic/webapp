@@ -3,7 +3,7 @@
         showNav: false,
     }"
     x-init=""
-    class="py-2 px-4 lg:flex lg:items-center">
+    class="py-1 px-4 lg:flex lg:items-center">
 
     <div class="flex items-center justify-between">
         @include('coreblog::layouts.blog.logo')

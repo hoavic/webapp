@@ -26,7 +26,7 @@ class MediaController extends Controller
         $medias = Media::where('mime_type', 'like', $media_type.'%')
                         ->where('file_name', 'like', '%'.$search.'%')
                         ->paginate(20); */
-        $currentPage = request()->get('page',1);
+        $currentPage = $request->query('page', 1);
         $medias = Cache::tags(['medias'])->remember('medias_type:'.$media_type.'_search:'.$search.'_page:'.$currentPage, 3600, function() use ($media_type, $search){
             return Media::where('mime_type', 'like', $media_type.'%')
                             ->where('file_name', 'like', '%'.$search.'%')
@@ -72,7 +72,7 @@ class MediaController extends Controller
         $search = $request->query('search');
         $currentPage = $request->query('page', 1);
 
-        $medias = Cache::tags(['medias'])->remember('medias_type:'.$media_type.'_search:'.$search.'_page:'.$currentPage, 3600, function() use ($media_type, $search){
+        $medias = Cache::tags(['medias'])->remember('medias_popup_type:'.$media_type.'_search:'.$search.'_page:'.$currentPage, 3600, function() use ($media_type, $search){
             return Media::where('mime_type', 'like', $media_type.'%')
                             ->where('file_name', 'like', '%'.$search.'%')
                             ->latest()

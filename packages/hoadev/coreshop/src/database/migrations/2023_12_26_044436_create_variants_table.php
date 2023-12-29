@@ -18,6 +18,8 @@ return new class extends Migration
             $table->foreignIdFor(Product::class);
             $table->foreignIdFor(Stock::class)->nullable()->default(0);
             $table->string('name')->nullable();
+            $table->string('sku')->nullable();
+            $table->string('barcode')->nullable();
             $table->integer('quantity')->nullable()->default(0);
             $table->integer('price')->nullable()->default(0);
             $table->timestamps();

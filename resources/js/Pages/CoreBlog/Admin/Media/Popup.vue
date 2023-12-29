@@ -6,10 +6,11 @@ import PopupGrid from '@/Pages/CoreBlog/Admin/Media/PopupGrid.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 
 const props = defineProps({
-    parent: String
+    parent: String,
+    limitMedia: Number
 });
 
-const emit = defineEmits('onMediaSelected');
+const emit = defineEmits('onMediasSelected');
 
 let react = reactive({
     medias: undefined,
@@ -82,11 +83,11 @@ function searchMedia() {
     loadMedias();
 }
 
-function mediaSelected(item) {
+function mediasSelected(medias) {
     if(props.parent === 'featured') {
-        return emit('onMediaSelected', item);
+        return emit('onMediasSelected', medias);
     }
-    emit('onMediaSelected');
+    emit('onMediasSelected');
 }
 
 function handleUploaded() {
@@ -123,7 +124,7 @@ function handleUploaded() {
                         </div>
                     </template>
                     <template v-else>
-                        <PopupGrid :parent="parent" :media_type="react.para.media_type" :data="react.medias.data" :only="['react.medias']" @onSelectMedia="mediaSelected"></PopupGrid>
+                        <PopupGrid :parent="parent" :media_type="react.para.media_type" :data="react.medias.data" :limit-media="props.limitMedia" :only="['react.medias']" @onConfirmMedias="mediasSelected"></PopupGrid>
                         <div class="px-4 flex flex-row justify-between">
                             <SecondaryButton v-if="react.medias.current_page != 1" type="button" @click.prevent="loadPrev"
                                 class="my-4">Prev</SecondaryButton>

@@ -1,23 +1,10 @@
 <script setup>
-import { useForm } from '@inertiajs/vue3';
-import { getPermalink } from './mediaPermalink.js';
-import { stripHtml } from '../../Includes/global';
 import prettyBytes from 'pretty-bytes';
 
 const props = defineProps({
     media_type: String,
     data: Object,
 });
-
-const formDel = useForm({
-    name: props.media_type
-});
-
-function destroy(id) {
-    if (confirm("Are you sure you want to Delete")) {
-        formDel.delete(route("admin.medias.destroy", id));
-    }
-}
 
 function getUrl(item, size = '') {
     if(size != '' && item.responsive_images[size]) {

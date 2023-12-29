@@ -18,6 +18,8 @@
 }
 
 body {font-size: 18px;}
+main a {color: #b87e34;}
+main a:hover {color: #0e723c;}
 img {max-width: 100%; height: auto; margin: 1em 0;}
 h2, h3, h4, h5, p, ul, ol, blockquote {margin: 1em}
 table {border-collapse: collapse;}

@@ -13,7 +13,7 @@ class Variant extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'id', 'post_id', 'name', 'quantity', 'price'
+        'id', 'post_id', 'stock_id', 'name', 'sku', 'barcode', 'quantity', 'price'
     ];
 
     public function product() : BelongsTo

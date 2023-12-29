@@ -49,5 +49,5 @@ function syncVariant() {
         </div>
 
     </div>
-
+{{ react.variant }}
 </template>

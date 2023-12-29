@@ -34,7 +34,7 @@ function submit() {
             </ul>
         </div>
 
-        <div class="py-8">
+        <div class="py-8 lg:max-w-7xl mx-auto">
             <div class="lg:flex lg:flex-row">
 
                 <div class="lg:flex-1 lg:px-6">

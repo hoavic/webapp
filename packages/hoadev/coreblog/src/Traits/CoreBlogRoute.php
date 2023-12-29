@@ -33,9 +33,9 @@ trait CoreBlogRoute {
             Route::post('/terms/store-and-response', [TermController::class, 'StoreAndResponse'])->name('terms.store-and-response');
             Route::resource('terms', TermController::class)->except(['show']);
 
-            Route::get('/medias/popup', [MediaController::class, 'popup'])->name('medias.popup');
-            Route::get('/medias/popup-data', [MediaController::class, 'popupData'])->name('medias.popup-data');
             Route::resource('medias', MediaController::class);
+            Route::get('/medias-popup', [MediaController::class, 'popup'])->name('medias.popup');
+            Route::get('/medias-popup-data', [MediaController::class, 'popupData'])->name('medias.popup-data');
 
             Route::resource('posts', PostController::class);
             Route::resource('comments', CommentController::class);

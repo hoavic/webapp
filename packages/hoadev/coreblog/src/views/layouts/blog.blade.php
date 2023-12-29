@@ -20,9 +20,13 @@
     </head>
     <body class="font-sans antialiased flex flex-col min-h-screen">
 
-        <header class="site-header sticky top-0 w-full bg-gray-100 drop-shadow-lg">
+        <header class="site-header sticky top-0 w-full bg-white shadow">
             @include('coreblog::layouts.blog.header')
         </header>
+
+        <div class="bg-[#0e723c]">
+            <img src="/uploads/banner-21x9.png" alt="banner" width="21" height="9" loading="lazy" class="w-full max-w-7xl mx-auto my-0"/>
+        </div>
 
         <div class="w-full max-w-7xl h-auto mx-auto">
 {{--             @if (strpos(Route::current()->getName(), 'permalink') !== false)
@@ -37,7 +41,7 @@
 
         </div>
 
-        <footer class="mt-auto p-4 bg-slate-900 text-gray-400">
+        <footer class="mt-auto p-4 bg-yellow-700 text-gray-100">
             @include('coreblog::layouts.blog.footer')
         </footer>
 

@@ -88,6 +88,8 @@ const loadEditor = () => {
             'td' : ''
         },
         toolbar_sticky: true,
+        promotion: false,
+        branding: false
     });
 }
 
@@ -98,7 +100,7 @@ function autoSyncEmit() {
 function openDialog() {
     tinymce.activeEditor.windowManager.openUrl({
         title: 'Library',
-        url: 'http://webapp.test/admin/medias/popup'
+        url: 'http://webapp.test/admin/medias-popup'
     });
 }
 
@@ -128,7 +130,7 @@ function manualAdd() {
                     </svg>
                 </button>
             </div>
-            <Popup class="flex-1" @onMediaSelected="showPopup = false"></Popup>
+            <Popup class="flex-1" limit-media="10" @onMediasSelected="showPopup = false"></Popup>
         </div>
     </Transition>
 

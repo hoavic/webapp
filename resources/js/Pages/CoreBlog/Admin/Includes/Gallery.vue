@@ -1,74 +1,65 @@
 <script setup>
 import { ref, reactive } from 'vue';
-import Popup from '../Media/Popup.vue';
+
 
 const props = defineProps({
-    modelValue: Object,
+    modelValue: Object
 });
+
+const emit = defineEmits('update:modelValue');
 
 let showPopupFeatured = ref(false);
+
 const react = reactive({
-    featured: configFeaturedClass()
+    gallery: configGallery()
 });
 
-const emit = defineEmits(['update:modelValue']);
-
-function configFeaturedClass() {
+function configGallery() {
     if(props.modelValue && props.modelValue.hasOwnProperty('id')) {return props.modelValue}
 
     return {
-        key: 'featured_image',
-        value: '',
-        media: {}
+        key: 'gallery',
+        value: [],
     };
 }
 
 function fixUrl() {
-    if(react.featured.media.hasOwnProperty('responsive_images') && react.featured.media.responsive_images.medium.charAt(0) !== '/') {
+    if(react.gallery.media.hasOwnProperty('responsive_images') && react.featured.media.responsive_images.medium.charAt(0) !== '/') {
         return '/' + react.featured.media.responsive_images.medium;
     }
     return '';
 }
 
-/* function handleMediaSelected(item) {
-    react.featured.media = item;
-    react.featured.value = item.id;
-    emit('update:modelValue', react.featured);
-    showPopupFeatured.value = false;
-} */
-
-function handleMediasSelected(medias) {
-
-    if(medias.length > 0) {
-        react.featured.media = medias[0];
-        react.featured.value = medias[0].id;
+function handleMediaSelected(item) {
+/*     console.log(item); */
+    if(!react.gallery.value.includes(item)) {
+        react.gallery.value.push(item);
     }
-    emit('update:modelValue', react.featured);
+
+    emit('update:modelValue', react.gallery);
     showPopupFeatured.value = false;
 }
 
 </script>
 
-
 <template>
 
-    <div class="m-6">
-        <h3 class="my-2">Featured Image</h3>
-        <p>
-            <button type="button" @click.prevent="showPopupFeatured = true"
-                class="w-full aspect-video bg-gray-300 rounded-lg drop-shadow-lg">
+    <div class="">
 
-                <template v-if="react.featured.media.hasOwnProperty('responsive_images')">
-                    <img :src="fixUrl()" class="rounded-lg"/>
-                    <!-- <input type="text" :value="featured.id" /> -->
-                </template>
+        <div class="flex items-center justify-between">
+            <span>Gallery</span>
+            <button type="button" @click.prevent=""
+                class="py-2 px-4 bg-gray-500 text-white rounded-full">Add an Image</button>
+        </div>
 
-                <template v-else>
-                    <span class="block ">Select an image</span>
-                </template>
-            </button>
-        </p>
-        <!-- {{ react.featured }} -->
+        <div v-if="react.gallery.value" class="grid grid-cols-2">
+
+            <img v-for="imageObj in react.gallery.value" :src="imageObj.custom_properties.url" class=""/>
+
+        </div>
+
+
+        <!-- {{ react.gallery }} -->
         <Transition name="slide-fade">
             <div v-if="showPopupFeatured" class="fixed top-0 bottom-0 left-0 right-0 flex flex-col bg-white border border-gray-300 rounded-lg drop-shadow-lg z-50">
                 <div class="p-1 flex justify-end bg-blue-900 text-white rounded-t-lg">
@@ -79,9 +70,10 @@ function handleMediasSelected(medias) {
                         </svg>
                     </button>
                 </div>
-                <Popup parent="featured" class="flex-1" :limit-media="1" @onMediasSelected="handleMediasSelected"></Popup>
+                <Popup parent="featured" class="flex-1" @onMediaSelected="handleMediaSelected"></Popup>
             </div>
         </Transition>
+
     </div>
 
 </template>

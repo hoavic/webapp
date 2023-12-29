@@ -21,7 +21,7 @@ const props = defineProps({
 
         <Alert :errors="errors"></Alert>
 
-        <div class="py-8 px-4">
+        <div class="py-8 px-4 lg:px-8">
 
             <ProductAction :post_type="post_type" :search="search"/>
             <ProductTable :post_type="post_type" :data="posts.data"></ProductTable>

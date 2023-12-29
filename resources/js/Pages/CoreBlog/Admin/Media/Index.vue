@@ -23,7 +23,7 @@ const props = defineProps({
 
         <Alert :errors="errors"></Alert>
 
-        <div class="py-8">
+        <div class="py-8 lg:px-8">
             <div class="lg:flex lg:flex-row">
 
                 <div class="w-full lg:w-[200px]">

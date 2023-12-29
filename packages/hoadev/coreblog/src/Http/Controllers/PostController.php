@@ -19,7 +19,7 @@ class PostController extends Controller
     {
 
         $post_type = $request->query('post_type', 'post');
-        if($post_type = 'product') { return redirect()->route('admin.products.index'); }
+        if($post_type === 'product') { return redirect()->route('admin.products.index'); }
 
         $search = $request->query('search');
 
@@ -43,7 +43,7 @@ class PostController extends Controller
     public function create(Request $request)
     {
         $post_type = $request->query('post_type', 'post');
-        if($post_type = 'product') { return redirect()->route('admin.products.create'); }
+        if($post_type === 'product') { return redirect()->route('admin.products.create'); }
 
         $post_types = config('coreblog.post_types');
 
@@ -125,7 +125,7 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        if($post->type = 'product') { return redirect()->route('admin.products.edit', $post); }
+        if($post->type === 'product') { return redirect()->route('admin.products.edit', $post); }
         $post_types = config('coreblog.post_types');
 
         $groupTaxonomies = Taxonomy::with(['term', 'ancestors'])
