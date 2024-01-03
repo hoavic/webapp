@@ -2,6 +2,7 @@
 
 namespace Hoadev\CoreBlog\Traits\Guest;
 
+use Hoadev\CoreBlog\Classes\Breadcrumbs;
 use Hoadev\CoreBlog\Classes\MetaTags;
 use Hoadev\CoreBlog\Models\Term;
 use Illuminate\Database\Eloquent\Builder;
@@ -24,11 +25,14 @@ trait PermalinkWithTerm {
 
             $meta_tags = new MetaTags();
             $meta_tags->importFromTerm($term);
+            $breadcrumbs = new Breadcrumbs();
+            $breadcrumbs->importFromTerm($term);
 
             return view('coreblog::guest.term.default', [
                 'term' => $term,
                 'posts' => $this->listPostsWithPaginate($term),
-                'meta_tags' => $meta_tags
+                'meta_tags' => $meta_tags,
+                'breadcrumbs' => $breadcrumbs
             ]);
 
         }
@@ -37,7 +41,7 @@ trait PermalinkWithTerm {
     }
 
     public static function listPostsWithPaginate(Term $term) {
-        return $term->posts()->where('status', 'published')->with(['postMetas.media'])->paginate(2);
+        return $term->posts()->where('status', 'published')->with(['postMetas.media'])->paginate(10);
     }
 
 }

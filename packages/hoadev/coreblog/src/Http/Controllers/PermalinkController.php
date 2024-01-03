@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 class PermalinkController extends Controller
 {
 
-    use PermalinkWithTerm, PermalinkWithPost, PermalinkWithTerm;
+    use PermalinkWithTerm, PermalinkWithPost;
 
     public function single(Request $request, $slug)
     {

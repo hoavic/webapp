@@ -8,6 +8,7 @@ class Image {
 
     public $parent_path;
     public $image;
+    public string $name;
     public string $imageName;
     public $size;
     public $width;
@@ -27,6 +28,7 @@ class Image {
         $this->height = $dataDemen[1];
         $this->mime_type = $image->getClientmimeType();
         $this->extension = $image->getClientOriginalExtension();//Getting extension
+        $this->name = str_replace($this->extension, '', $this->imageName);
         $this->loadImageData();
     }
 
@@ -160,7 +162,7 @@ class Image {
 
         }elseif ($this->mime_type ===  'image/png') {
 
-            imagepng($new_image, $path, $quality);
+            imagepng($new_image, $path, $quality/10);
 
         } elseif ($this->mime_type ===  'image/gif') {
 

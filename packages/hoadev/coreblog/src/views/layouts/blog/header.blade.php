@@ -1,9 +1,21 @@
 <div
     x-data="{
         showNav: false,
+        atTop: false,
+        checkTop() {
+            if (window.pageYOffset > $refs.elemettop.offsetTop) {
+                this.atTop = true;
+            } else {
+                this.atTop = false;
+            }
+        }
     }"
+    x-ref="elemettop"
     x-init=""
-    class="py-1 px-4 lg:flex lg:items-center">
+    :class="{ 'lg:opacity-90': atTop }"
+{{--     @scroll.window="atTop = (window.pageYOffset <= 0) ? false : true" --}}
+    @scroll.window="checkTop()"
+    class="relative w-full max-w-7xl h-auto mx-auto py-1 px-4 lg:flex lg:items-center">
 
     <div class="flex items-center justify-between">
         @include('coreblog::layouts.blog.logo')
@@ -16,11 +28,15 @@
             </svg>
         </button>
     </div>
-
+    <div x-show="showNav" @click="showNav = false" class="fixed top-0 bottom-0 right-0 left-0 bg-gray-900/20"></div>
     <nav
-        :class="showNav ? 'block' : 'hidden lg:block'"
+        :class="showNav ? 'visible' : 'unvisible lg:visible'"
         class="flex-1">
-        @include('coreblog::layouts.blog.nav')
+        <div
+            :class="showNav ? 'left-0' : '-left-96 lg:left-0'"
+            class="bg-white fixed lg:relative top-0 py-4 lg:py-0 w-72 max-w-9/12 h-screen lg:h-auto transition-all">
+            @include('coreblog::layouts.blog.nav')
+        </div>
     </nav>
 
 </div>

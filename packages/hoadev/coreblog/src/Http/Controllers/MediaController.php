@@ -5,12 +5,9 @@ namespace Hoadev\CoreBlog\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Hoadev\CoreBlog\Classes\Image;
 use Hoadev\CoreBlog\Models\Media;
-use Hoadev\CoreBlog\Traits\Media\HasResponsive;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
-use Intervention\Image\ImageManager;
 
 class MediaController extends Controller
 {
@@ -131,37 +128,26 @@ class MediaController extends Controller
 
         $validated = $request->validate([
             'media_type' => 'required|string',
-            'name' => 'required|unique:media,name',
-            'media' => 'required|file|mimes:jpg,png,webp,gif|max:2048',
+            'file_names.*' => 'required|string|unique:media,file_name',
+            'medias'    => 'array',
+            'media.*' => 'required|file|mimes:jpg,png,webp,gif|max:2048',
         ]);
 
+        foreach($request->file('medias') as $media) {
+            $this->handleImageUpload($media);
+        }
+    }
+
+    public function handleImageUpload($media) {
         $image = new Image();
-        $image->loadFile($request->file('media'));
+        $image->loadFile($media);
         $responsive = $image->setResponsive();
-
-/*         $year = date('Y');
-        $month = date('m');
-        $parent_dir = 'images/'.$year.'/'.$month; */
-
-/*         $image = $request->file('media');
-        $imageName = $image->getClientOriginalName();
-        $mime_type = $image->getClientmimeType();
-        $extension = $image->getClientOriginalExtension();//Getting extension
-        $imageData = $image->move('uploads/media/', $imageName);//This will store in customize folder
-        $imageSize = $imageData->getSize();
-        $dataDemen = getimagesize($imageData);
-        $width = $dataDemen[0];
-        $height = $dataDemen[1]; */
-
-/*         $this->storeResponsive($image, $parent_dir, $imageName); */
-
-/*         dd(storage_path('app/'.$path)); */
 
         $media = Media::create([
             'model_type' => 'Hoadev\CoreBlog\Models\Post',
             'model_id' => 0,
             'collection_name' => 'images',
-            'name' => $validated['name'],
+            'name' => $image->name, //name
             'file_name' => $image->imageName,
             'mime_type' => $image->mime_type,
             'disk' => 'images',
@@ -176,26 +162,7 @@ class MediaController extends Controller
             'generated_conversions' => '',
             'responsive_images' => $responsive,
         ]);
-
-        /* $media->setResponsive(); */
-
-
-/*         $fullPath = storage_path().'/app/'.$parent_dir.'/thumbnail_'.$imageName;
-
-        return $this->scaleJpeg($image, $parent_dir, $imageName); */
-
-        return $media;
     }
-
-
-
-/*     public function scaleToJpeg($manager, $image, $parent_dir, $width, $height, $sizeName) {
-        $manager->read($image->getRealPath())
-            ->scale($width, $height)
-            ->toJpeg()
-            ->save(storage_path('app').'/'.$parent_dir.'/'.$this->addSizeToFileName($image->getClientOriginalName(), $sizeName));
-    } */
-
 
     /**
      * Display the specified resource.
@@ -210,7 +177,9 @@ class MediaController extends Controller
      */
     public function edit(Media $media)
     {
-        //
+        return Inertia::render('CoreBlog/Admin/Media/Edit', [
+            'media' => $media,
+        ]);
     }
 
     /**

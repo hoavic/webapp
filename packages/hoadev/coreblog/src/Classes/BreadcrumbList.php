@@ -3,6 +3,7 @@
 namespace Hoadev\CoreBlog\Classes;
 
 use Hoadev\CoreBlog\Models\Post;
+use Hoadev\CoreBlog\Models\Taxonomy;
 use Hoadev\CoreBlog\Models\Term;
 
 class BreadcrumbList
@@ -33,5 +34,15 @@ class BreadcrumbList
         $this->itemListElement[] = $itemElement;
     }
 
+/*     public function setEndpointByTerm(Term $term)
+    {
+        $itemElement = new ItemListElement($this->counter, $term->name, $term->getPermalink());
+        $this->itemListElement[] = $itemElement;
+    } */
 
+    public function setEndpointByTaxonomy(Taxonomy $taxonomy)
+    {
+        $itemElement = new ItemListElement($this->counter, $taxonomy->term->name, $taxonomy->getPermalink());
+        $this->itemListElement[] = $itemElement;
+    }
 }

@@ -23,7 +23,10 @@ class PostController extends Controller
 
         $search = $request->query('search');
 
-        $posts = Post::where('type', $post_type)->paginate(10);
+        $posts = Post::where('type', $post_type)
+                        ->where('title', 'like', '%'.$search.'%')
+                        ->latest()
+                        ->paginate(10);
 
         $posts->appends(['post_type' => $post_type]);
 
@@ -106,6 +109,10 @@ class PostController extends Controller
             }
         }
         $post->terms()->sync($termIDs);
+
+        if($post->status === 'draft') {
+            return redirect()->route('admin.posts.edit', $post);
+        }
 
         return redirect()->route('admin.posts.index');
     }
@@ -197,12 +204,13 @@ class PostController extends Controller
         } */
         // handle all metas
         foreach($validated['metas'] as $key => $metasGroup) {
-            if(isset($metasGroup[0]['id'])) {
-                $post->postMetas()->update(collect($metasGroup[0])->except('media')->toArray());
-            } else {
-                $post->postMetas()->create(collect($metasGroup[0])->except('media')->toArray());
+            if(isset($metasGroup[0])) {
+                if(isset($metasGroup[0]['id'])) {
+                    $post->postMetas()->update(collect($metasGroup[0])->except('media')->toArray());
+                } else {
+                    $post->postMetas()->create(collect($metasGroup[0])->except('media')->toArray());
+                }
             }
-
         }
 
         $termIDs = [];

@@ -20,18 +20,20 @@
     </head>
     <body class="font-sans antialiased flex flex-col min-h-screen">
 
-        <header class="site-header sticky top-0 w-full bg-white shadow">
+        <header class="site-header sticky top-0 w-full bg-white shadow-lg">
             @include('coreblog::layouts.blog.header')
         </header>
 
-        <div class="bg-[#0e723c]">
-            <img src="/uploads/banner-21x9.png" alt="banner" width="21" height="9" loading="lazy" class="w-full max-w-7xl mx-auto my-0"/>
-        </div>
+        @if (Route::current()->getName() === 'home')
+            <div class="bg-[#0e723c]">
+                <img src="/uploads/banner-21x9.png" alt="banner" width="21" height="9" loading="lazy" class="w-full max-w-7xl mx-auto my-0"/>
+            </div>
+        @endif
 
         <div class="w-full max-w-7xl h-auto mx-auto">
-{{--             @if (strpos(Route::current()->getName(), 'permalink') !== false)
-                @include('coreblog::layouts.blog.breadcrumbs', ['data' => ''])
-            @endif --}}
+            @if (strpos(Route::current()->getName(), 'permalink') !== false)
+                @include('coreblog::layouts.blog.breadcrumbs')
+            @endif
 
             @if(isset($contentStyle))
                 @include('coreblog::layouts.blog.content.'.$contentStyle)
@@ -41,7 +43,7 @@
 
         </div>
 
-        <footer class="mt-auto p-4 bg-yellow-700 text-gray-100">
+        <footer class="mt-auto py-4 bg-yellow-700 text-gray-100">
             @include('coreblog::layouts.blog.footer')
         </footer>
 

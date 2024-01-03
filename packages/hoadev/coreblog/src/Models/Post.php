@@ -130,11 +130,11 @@ class Post extends Model
             return $words;
     }
 
-    public function getRelatedPosts() {
+    public function getRelatedPosts($limit = 6) {
         $post = $this;
         return Post::whereHas('terms', function (Builder $query) use($post) {
             $query->whereIn('id', $post->terms->pluck('id'));
-        })->whereNot('id', $post->id)->get();
+        })->whereNot('id', $post->id)->limit($limit)->latest()->get();
     }
 
     public function getPermalink() {

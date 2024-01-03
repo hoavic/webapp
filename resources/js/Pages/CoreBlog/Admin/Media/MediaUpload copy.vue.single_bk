@@ -48,13 +48,17 @@ function onFileChange($event) {
 </script>
 
 <template>
+
     <div class="">
 
-        <button type="button" class="fixed right-4 bottom-4 mx-4 p-2 bg-white text-blue-900 border border-blue-900 rounded-full drop-shadow-lg opacity-75" @click.prevent="showAdd = true">
+        <button type="button" class="fixed right-4 bottom-24 mx-4 p-2 bg-white text-blue-900 border border-blue-900 rounded-full drop-shadow-lg opacity-75" @click.prevent="showAdd = true">
             <svg class="w-8 h-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M9 22 C0 23 1 12 9 13 6 2 23 2 22 10 32 7 32 23 23 22 M11 18 L16 14 21 18 M16 14 L16 29"></path></svg>
         </button>
 
-        <div ref="uploadElement" class="fixed bottom-0 w-full p-4 bg-white border-t border-gray-300" :class="showAdd ? 'block' : 'hidden'">
+        <Transition name="slide-up">
+
+
+        <div ref="uploadElement" class="fixed bottom-0 w-full p-4 bg-white border-t border-gray-300 z-50" v-if="showAdd">
             <form @submit.prevent="submit" class="relative max-w-5xl mx-auto">
                 <h2 class="my-4 font-bold text-xl">Upload New {{ media_type }}</h2>
                 <button type="button" @click.prevent="showAdd = false"
@@ -80,6 +84,8 @@ function onFileChange($event) {
                 </div>
             </form>
         </div>
+
+    </Transition>
 
     </div>
 

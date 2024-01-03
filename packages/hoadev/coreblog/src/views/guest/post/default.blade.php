@@ -2,13 +2,20 @@
 
 @section('post_title', $post->title)
 
+@php
+    if ($post->type === 'page') {
+        $contentStyle = 'no-sidebar';
+    }
+@endphp
+
+
 @if ($post->terms && $post->terms->count() > 0)
     @section('post_meta')
-        @foreach ($post->terms as $term)
-            <div class="flex gap-2">
+        <div class="flex gap-2">
+            @foreach ($post->terms as $term)
                 <a href="{{ $term->getPermalink() }}" class="block hover:underline">{{ $term->name }}</a>
-            </div>
-        @endforeach
+            @endforeach
+        </div>
     @endsection
 @endif
 
@@ -17,12 +24,19 @@
 
     {!! $post->content !!}
 
-    @if ($relatedPosts)
-        <h2 class="my-4 font-bold">Related Posts</h2>
-        <ul>
+    @if ($post->type !== 'page' && $relatedPosts->count() > 0)
+        <h2 class="my-6 mx-4 font-bold uppercase text-green-800">Related Posts</h2>
+        <ul class="grid grid-cols-2 md:grid-cols-3 gap-4 lg:gap-y-6">
             @foreach ($relatedPosts as $relatedPost)
                 <li>
-                    <a href="{{ $relatedPost->name }}">{{ $relatedPost->title }}</a>
+                    <a href="{{ $relatedPost->name }}">
+                        @if ($relatedPost->getFeatured())
+                            {!! $relatedPost->getFeaturedImage('medium', $relatedPost->title, 'my-0 rounded-lg') !!}
+                        @else
+                            <span class="aspect-video bg-gray-200 block rounded-lg"></span>
+                        @endif
+                        <span class="font-bold text-slate-900">{{ $relatedPost->title }}</span>
+                    </a>
                 </li>
             @endforeach
         </ul>
