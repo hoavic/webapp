@@ -1,7 +1,7 @@
 <script setup>
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
-import { usePage, router, useForm } from '@inertiajs/vue3';
+import { router } from '@inertiajs/vue3';
 import { reactive } from 'vue'
 import Editor from '@/Pages/CoreBlog/Admin/Includes/Editor.vue';
 import TermNonHierarchial from './TermNonHierarchial.vue';
@@ -9,8 +9,6 @@ import SecondaryButton from '@/Components/SecondaryButton.vue';
 import Alert from '../Alert.vue';
 import autoSlug from '../../Includes/auto-slug';
 import FeaturedImage from '../Includes/FeaturedImage.vue';
-
-const page = usePage();
 
 const props = defineProps({
     post: Object,
@@ -27,16 +25,6 @@ const form = reactive({
     selectedTerms: props.selectedTerms,
     metas: props.metas
 });
-/* console.log(page.props.admin.post_types[props.post_type].taxonomies); */
-//first time
-/* function configSelectedTerms() {
-    let selectedTerms = new Object;
-    for(let i = 0; i < page.props.admin.post_types[props.post_type].taxonomies.length; i++) {
-        selectedTerms[page.props.admin.post_types[props.post_type].taxonomies[i]] = [];
-        console.log(page.props.admin.post_types[props.post_type]);
-    }
-    return selectedTerms;
-} */
 
 function updatePost() {
     form.post.status = 'published';
@@ -56,7 +44,6 @@ function updatePostAndClose() {
         onSuccess: (page) => router.visit(route('admin.posts.index') + '?post_type=' + props.post_type)
     }
     sendUpdate(options);
-
 }
 
 function sendUpdate(options = {}) {
@@ -82,12 +69,8 @@ function sendUpdate(options = {}) {
                         </div>
 
                         <div class="my-6 lg:mx-6">
-<!--                             <textarea v-model="form.post.content" name="content" placeholder="Content..."
-                                class="w-full text-lg border border-gray-300 rounded-lg"></textarea> -->
                             <Editor v-model="form.post.content" ></Editor>
                         </div>
-
-                        {{ form }}
 
                     </div>
 
@@ -116,12 +99,6 @@ function sendUpdate(options = {}) {
                             <input type="text" v-model="form.post.name" name="name" placeholder="slug..."
                                 class="w-full text-sm text-gray-600 border border-gray-300 rounded-lg"/>
                         </div>
-
-<!--                         <div class="m-6">
-                            <label>Featured Image</label>
-                            <input v-model="" name="featured_image"
-                                class="w-full text-lg border border-gray-300 rounded-lg"/>
-                        </div> -->
 
                         <FeaturedImage v-model="form.metas.featured_image[0]" :preview="featured_image"></FeaturedImage>
 

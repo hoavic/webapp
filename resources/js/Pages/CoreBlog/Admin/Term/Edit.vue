@@ -4,7 +4,7 @@ import AppLayout from '@/Layouts/AppLayout.vue';
 import { useForm } from '@inertiajs/vue3';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import Editor from '@/Pages/CoreBlog/Admin/Includes/Editor.vue';
-import { stripHtml } from '@/Pages/CoreBlog/Includes/global.js';
+/* import { stripHtml } from '@/Pages/CoreBlog/Includes/global.js'; */
 
 const props = defineProps({
     taxonomy: String,
@@ -60,14 +60,9 @@ function submit() {
 
                         </div>
 
-<!--                         <div class="m-6">
-                            <textarea v-model="form.taxonomy.description" name="description" placeholder="Description..."
-                                class="w-full border border-gray-300 rounded-lg"></textarea>
-                        </div> -->
-
                         <div class="m-6">
                             <Editor v-model="form.taxonomy.description"></Editor>
-                            {{ stripHtml(form.taxonomy.description) }}
+                            <!-- {{ stripHtml(form.taxonomy.description) }} -->
                         </div>
 
                         <div class="m-6">
@@ -80,7 +75,7 @@ function submit() {
 
                 <div class="w-full lg:w-[300px]">
                     <div class="my-8 mx-4 lg:ml-0 lg:mr-8 p-4 text-sm bg-gray-50 border border-gray-300 text-gray-500 rounded-lg">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Et reiciendis omnis ad. Sint laudantium labore, magni, tenetur ipsam nisi nobis doloremque quo deleniti sunt hic autem aliquam impedit, quas maiores?
+                        <!-- Lorem ipsum dolor sit amet consectetur adipisicing elit. Et reiciendis omnis ad. Sint laudantium labore, magni, tenetur ipsam nisi nobis doloremque quo deleniti sunt hic autem aliquam impedit, quas maiores? -->
                     </div>
                 </div>
 

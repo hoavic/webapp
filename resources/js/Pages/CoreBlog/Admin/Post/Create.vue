@@ -36,13 +36,13 @@ const form = reactive({
     },
     selectedTerms: configSelectedTerms()
 });
-/* console.log(page.props.admin.post_types[props.post_type].taxonomies); */
+
 //first time
 function configSelectedTerms() {
     let selectedTerms = new Object;
     for(let i = 0; i < page.props.admin.post_types[props.post_type].taxonomies.length; i++) {
         selectedTerms[page.props.admin.post_types[props.post_type].taxonomies[i]] = [];
-        console.log(page.props.admin.post_types[props.post_type]);
+        /* console.log(page.props.admin.post_types[props.post_type]); */
     }
     return selectedTerms;
 }
@@ -50,10 +50,6 @@ function configSelectedTerms() {
 function submit() {
     form.post.status = 'published';
     router.post(route('admin.posts.store'), form);
-/*     form.post(route('admin.posts.store'), {
-        preserveScroll: true,
-        onSuccess: (res) => {console.log(res);}
-    }); */
 }
 
 function saveAsDraft() {
@@ -84,12 +80,8 @@ function savePost() {
                         </div>
 
                         <div class="my-6 lg:mx-6">
-<!--                             <textarea v-model="form.post.content" name="content" placeholder="Content..."
-                                class="w-full text-lg border border-gray-300 rounded-lg"></textarea> -->
                             <Editor v-model="form.post.content"></Editor>
                         </div>
-
-                        {{ form }}
 
                     </div>
 
@@ -120,12 +112,6 @@ function savePost() {
                             <input type="text" v-model="form.post.name" name="name" placeholder="slug..."
                                 class="w-full text-sm text-gray-600 border border-gray-300 rounded-lg"/>
                         </div>
-
-<!--                         <div class="m-6">
-                            <label>Featured Image</label>
-                            <input v-model="form.featured_image" name="featured_image"
-                                class="w-full text-lg border border-gray-300 rounded-lg"/>
-                        </div> -->
 
                         <FeaturedImage v-model="form.metas.featured_image[0]" ></FeaturedImage>
 

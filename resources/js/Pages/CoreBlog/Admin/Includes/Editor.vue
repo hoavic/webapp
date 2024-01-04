@@ -95,6 +95,7 @@ const loadEditor = () => {
         promotion: false,
         branding: false,
         convert_urls: false,
+        deprecation_warnings: false
     });
 }
 
@@ -135,7 +136,7 @@ function manualAdd() {
                     </svg>
                 </button>
             </div>
-            <Popup class="flex-1" :limitMedia="10" @onMediasSelected="showPopup = false"></Popup>
+            <Popup class="flex-1" :limitMedia="10" @on-medias-selected="showPopup = false"></Popup>
         </div>
     </Transition>
 

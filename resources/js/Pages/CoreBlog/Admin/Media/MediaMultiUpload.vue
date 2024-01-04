@@ -12,7 +12,7 @@ const props = defineProps({
     media_type: String,
 });
 
-const emit = defineEmits('onUploaded');
+const emit = defineEmits(['confirmUploaded']);
 
 const form = useForm({
     media_type: props.media_type,
@@ -36,8 +36,7 @@ function submit() {
         },
         onSuccess: (res) => {
             form.reset();
-            console.log('checl upload res');
-            emit('onUploaded');
+            emit('confirmUploaded');
             showAdd.value = false;
         }
     });
@@ -52,7 +51,6 @@ function onFileChange($event) {
         urlPreviews = [];
         form.file_names = [];
         Array.from(form.medias).forEach((media) => {
-
             form.file_names.push(media.name);
             urlPreviews.push(URL.createObjectURL(media));
         });

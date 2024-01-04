@@ -1,6 +1,6 @@
 <script setup>
 
-import { onMounted, reactive, ref } from 'vue';
+import { onMounted, reactive } from 'vue';
 import MediaMultiUpload from '@/Pages/CoreBlog/Admin/Media/MediaMultiUpload.vue';
 import PopupGrid from '@/Pages/CoreBlog/Admin/Media/PopupGrid.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
@@ -10,7 +10,7 @@ const props = defineProps({
     limitMedia: Number
 });
 
-const emit = defineEmits('onMediasSelected');
+const emit = defineEmits(['onMediasSelected']);
 
 let react = reactive({
     medias: undefined,
@@ -25,11 +25,9 @@ let react = reactive({
 
 onMounted(() => {
     if(!react.medias) {
-        console.log('mounred');
         axios.get(route('admin.medias.popup-data')).then(response => {
             /* console.log(response.data); */
             react.medias = response.data;
-            console.log(react.medias);
         }).catch(error => {
             console.error(error);
         });
@@ -37,9 +35,7 @@ onMounted(() => {
 });
 
 function loadMedias() {
-    console.log('medias loaded');
     let link = react.url + '?media_type=' + react.para.media_type + '&search=' + react.para.search + '&page=' + react.para.page;
-    console.log(link);
     axios.get(link).then(response => {
         /* console.log(response.data); */
         react.medias = response.data;
@@ -55,10 +51,8 @@ function loadMore() {
     react.para.page = react.para.page + 1;
 
     let link = react.url + '?media_type=' + react.para.media_type + '&search=' + react.para.search + '&page=' + react.para.page;
-    console.log(link);
     axios.get(link).then(response => {
         react.medias.data.push(...response.data.data);
-        console.log(react.medias);
     }).catch(error => {
         console.error(error);
     });
@@ -71,11 +65,9 @@ function loadPrev() {
 }
 
 function loadNext() {
-
     if(react.medias.current_page >= react.medias.last_page) {return}
     react.para.page = react.para.page + 1;
     loadMedias();
-
 }
 
 function searchMedia() {
@@ -91,7 +83,6 @@ function mediasSelected(medias) {
 }
 
 function handleUploaded() {
-    console.log('handleUploaded');
     loadMedias();
 }
 
@@ -108,7 +99,7 @@ function handleUploaded() {
                             <input type="radio" v-model="react.para.media_type" :value="mt" class="hidden" @change="loadMedias"/>
                         </label>
                     </div>
-                    <MediaMultiUpload :media_type="react.para.media_type" @onUploaded="handleUploaded"></MediaMultiUpload>
+                    <MediaMultiUpload :media_type="react.para.media_type" @confirm-uploaded="handleUploaded"></MediaMultiUpload>
                 </div>
 
                 <div class="lg:flex-1 lg:px-6">
@@ -124,7 +115,7 @@ function handleUploaded() {
                         </div>
                     </template>
                     <template v-else>
-                        <PopupGrid :parent="parent" :media_type="react.para.media_type" :data="react.medias.data" :limit-media="props.limitMedia" :only="['react.medias']" @onConfirmMedias="mediasSelected"></PopupGrid>
+                        <PopupGrid :parent="parent" :media_type="react.para.media_type" :data="react.medias.data" :limit-media="props.limitMedia" :only="['react.medias']" @on-confirm-medias="mediasSelected"></PopupGrid>
                         <div class="px-4 flex flex-row gap-4 justify-center">
                             <SecondaryButton v-if="react.medias.current_page != 1" type="button" @click.prevent="loadPrev"
                                 class="my-4">Prev</SecondaryButton>

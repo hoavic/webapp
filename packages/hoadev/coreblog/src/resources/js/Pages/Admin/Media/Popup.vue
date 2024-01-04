@@ -124,7 +124,7 @@ function handleUploaded() {
                         </div>
                     </template>
                     <template v-else>
-                        <PopupGrid :parent="parent" :media_type="react.para.media_type" :data="react.medias.data" :limit-media="props.limitMedia" :only="['react.medias']" @onConfirmMedias="mediasSelected"></PopupGrid>
+                        <PopupGrid :parent="parent" :media_type="react.para.media_type" :data="react.medias.data" :limit-media="props.limitMedia" :only="['react.medias']" @on-confirm-medias="mediasSelected"></PopupGrid>
                         <div class="px-4 flex flex-row gap-4 justify-center">
                             <SecondaryButton v-if="react.medias.current_page != 1" type="button" @click.prevent="loadPrev"
                                 class="my-4">Prev</SecondaryButton>

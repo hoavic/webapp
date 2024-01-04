@@ -12,7 +12,7 @@ const props = defineProps({
     limitMedia: Number
 });
 
-const emit = defineEmits('onConfirmMedias');
+const emit = defineEmits(['onConfirmMedias']);
 
 const react = reactive({
     selectedMedias: [],

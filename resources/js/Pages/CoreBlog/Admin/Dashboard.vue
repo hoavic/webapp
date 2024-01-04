@@ -1,6 +1,10 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
-import Welcome from '@/Components/Welcome.vue';
+
+const props = defineProps({
+
+});
+
 </script>
 
 <template>
@@ -13,8 +17,12 @@ import Welcome from '@/Components/Welcome.vue';
 
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
+                <div class="p-8 bg-green-100 text-green-800 overflow-hidden shadow-lg sm:rounded-lg">
+                    <h2>Hi <strong>{{ $page.props.auth.user.name }}</strong>!</h2>
+                </div>
 
+                <div class="p-8 bg-gray-100 text-yellow-800 overflow-hidden sm:rounded-lg">
+                    <h2>It is under development ...</h2>
                 </div>
             </div>
         </div>

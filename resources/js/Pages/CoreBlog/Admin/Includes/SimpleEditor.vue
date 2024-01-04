@@ -75,7 +75,9 @@ const loadEditor = () => {
             'alignright alignjustify | bullist numlist link | ',
         min_height: 250,
         max_width: 768,
-        branding: false
+        branding: false,
+        convert_urls: false,
+        deprecation_warnings: false
     });
 }
 
