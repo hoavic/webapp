@@ -23,7 +23,7 @@
     </section>
 
     <section class="my-4 px-4">
-        <h2 class="font-bold">Newest Posts</h2>
+        <h2 class="mx-0 font-bold uppercase text-yellow-800">Newest Posts</h2>
         @include('coreblog::includes.post-slide', ['slidePosts' => $newestPosts])
     </section>
 

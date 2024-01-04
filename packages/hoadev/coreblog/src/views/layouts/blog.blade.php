@@ -11,6 +11,9 @@
         <!-- Fonts -->
 {{--         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" /> --}}
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
 
         <!-- Scripts -->
         @vite(['resources/js/blog.js', 'resources/css/blog.css'])
@@ -18,16 +21,50 @@
             @include('coreblog::includes.breadcrumbs-json')
         @endif
     </head>
-    <body class="font-sans antialiased flex flex-col min-h-screen">
+    <body class="antialiased flex flex-col min-h-screen">
 
-        <header class="site-header sticky top-0 w-full bg-white shadow-lg">
+        <header class="site-header sticky top-0 w-full bg-white shadow-lg z-40">
             @include('coreblog::layouts.blog.header')
         </header>
 
         @if (Route::current()->getName() === 'home')
-            <div class="bg-[#0e723c]">
-                <img src="/uploads/banner-21x9.png" alt="banner" width="21" height="9" loading="lazy" class="w-full max-w-7xl mx-auto my-0"/>
-            </div>
+
+            {{-- <div
+                x-data="{
+                    sliderWid: 0,
+                    sliderScrollWid: 0,
+                    currentPosSlide: 0,
+                    calcWid() {
+                        this.sliderWid = screen.width;
+                        this.sliderScrollWid = $refs.myslider.scrollWidth;
+                        console.log(this.sliderScrollWid);
+                    }
+                }"
+                x-init="calcWid()"
+                class="relative">
+
+                <div x-ref="myslider" class="w-full flex h-auto whitespace-nowrap overflow-x-auto">
+                    <div id="item-1" class="inline-block min-w-full">
+                        <img src="/uploads/banner-2.png" alt="banner" width="21" height="9" loading="lazy" class="w-full my-0"/>
+                    </div>
+                    <div id="item-2" class="inline-block min-w-full">
+                        <img src="/uploads/banner-1.png" alt="banner" width="21" height="9" loading="lazy" class="w-full my-0"/>
+                    </div>
+                </div>
+
+                <div class="absolute bottom-0 right-0">
+                    <button type="button"
+                        class="py-2 px-4 bg-gray-500 rounded-lg">Next</button>
+                </div>
+
+            </div> --}}
+
+            @include('coreblog::includes.slider')
+
+            @include('coreblog::includes.promotion')
+
+            @include('coreblog::includes.pickup')
+
         @endif
 
         <div class="w-full max-w-7xl h-auto mx-auto">
@@ -43,7 +80,7 @@
 
         </div>
 
-        <footer class="mt-auto py-4 bg-yellow-700 text-gray-100">
+        <footer class="mt-auto py-4 bg-gradient-to-r from-white to-yellow-600/20 text-red-900 border-t border-yellow-800 shadow-lg">
             @include('coreblog::layouts.blog.footer')
         </footer>
 

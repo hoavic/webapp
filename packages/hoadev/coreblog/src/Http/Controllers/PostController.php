@@ -114,7 +114,7 @@ class PostController extends Controller
             return redirect()->route('admin.posts.edit', $post);
         }
 
-        return redirect()->route('admin.posts.index');
+        return redirect()->route('admin.posts.index', ['post_type' => $post->type]);
     }
 
     /**
