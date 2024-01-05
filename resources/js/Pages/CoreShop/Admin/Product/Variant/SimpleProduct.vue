@@ -1,6 +1,6 @@
 <script setup>
 
-import { reactive } from 'vue';
+import { onMounted, reactive } from 'vue';
 
 const props = defineProps({
     modelValue: Object,
@@ -12,6 +12,10 @@ const emit = defineEmits('update:modelValue');
 const react = reactive({
     variant: configVariant()
 });
+
+/* onMounted(() => {
+    syncVariant();
+}); */
 
 function configVariant() {
     if(props.modelValue != null && props.modelValue.hasOwnProperty('id')) {return props.modelValue}
@@ -49,5 +53,5 @@ function syncVariant() {
         </div>
 
     </div>
-{{ react.variant }}
+
 </template>

@@ -4,6 +4,7 @@ namespace Hoadev\CoreBlog\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Hoadev\CoreBlog\Models\Post;
+use Hoadev\CoreBlog\Models\PostMeta;
 use Hoadev\CoreBlog\Models\Taxonomy;
 use Hoadev\CoreBlog\Models\Term;
 use Illuminate\Database\Eloquent\Builder;
@@ -205,16 +206,17 @@ class PostController extends Controller
         // handle all metas
         foreach($validated['metas'] as $key => $metasGroup) {
             if(isset($metasGroup[0])) {
-                $post->postMetas()->updateOrCreate([
-                    'id' => $metasGroup[0]['id'],
-                    'key' => $metasGroup[0]['key'],
-                    'value' => $metasGroup[0]['value'],
-                ]);
-/*                 if(isset($metasGroup[0]['id'])) {
-                    $post->postMetas()->update(collect($metasGroup[0])->except('media')->toArray());
+                if(isset($metasGroup[0]["id"])) {
+                    $post->postMetas()->update([
+                        'key' => $metasGroup[0]["key"],
+                        'value' => $metasGroup[0]["value"],
+                    ]);
                 } else {
-                    $post->postMetas()->create(collect($metasGroup[0])->except('media')->toArray());
-                } */
+                    $post->postMetas()->create([
+                        'key' => $metasGroup[0]["key"],
+                        'value' => $metasGroup[0]["value"],
+                    ]);
+                }
             }
         }
 

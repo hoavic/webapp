@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('variants', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignIdFor(Product::class);
+            $table->foreignIdFor(Product::class, 'post_id');
             $table->foreignIdFor(Stock::class)->nullable()->default(0);
             $table->string('name')->nullable();
             $table->string('sku')->nullable();

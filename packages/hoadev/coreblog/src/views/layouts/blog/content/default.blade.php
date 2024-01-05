@@ -14,7 +14,7 @@
 
         @hasSection('term_name')
             <header class="">
-                <h1 class="m-4 text-2xl lg:text-3xl font-bold text-green-800">@yield('term_name')</h1>
+                <h1 class="mx-4 my-6 text-2xl lg:text-3xl font-bold text-green-800">@yield('term_name')</h1>
             </header>
         @endif
 

@@ -8,6 +8,7 @@ import "@/coreblog/tinymce/icons/default/icons";
 import "@/coreblog/tinymce/skins/ui/oxide/skin.css";
 import '@/coreblog/tinymce/models/dom/model';
 
+import '@/coreblog/tinymce/plugins/quickbars/plugin';
 import '@/coreblog/tinymce/plugins/autolink/plugin';
 import '@/coreblog/tinymce/plugins/link/plugin';
 import '@/coreblog/tinymce/plugins/advlist/plugin';
@@ -57,6 +58,8 @@ onUpdated(() => {
 const loadEditor = () => {
     editor = tinymce.init({
         selector: 'textarea#myeditorinstance', // Replace this CSS selector to match the placeholder element for TinyMCE
+        language: 'vi_VN',
+        entity_encoding : "raw",
         content_css: false,
         skin: false,
         content_style: 'body { font-family: Arial, Helvetica, sans-serif; line-height: 1.5; font-size:18px; max-width: 768px; margin: 0 auto; padding: 1em 0; color: #333; } img {max-width: 100%; height: auto} figcaption {color: #999;font-size: 0.9em} h2, h3, h4, h5, p, ul, ol, blockquote, figure, figcaption {margin: 1em 0} table {border-collapse: collapse;} th, td {padding: 0.5em; border: 1px solid #999} blockquote {background: #eee; color: #666; padding: 1em; border-radius: 1em}',
@@ -68,15 +71,13 @@ const loadEditor = () => {
             });
         },
         plugins: [
-            'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+            'quickbars', 'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
             'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
             'insertdatetime', 'media', 'table', 'help', 'wordcount', 'autoresize'
         ],
-        toolbar: 'undo redo | blocks | ' +
-            'bold italic backcolor | alignleft aligncenter ' +
-            'alignright alignjustify | bullist numlist outdent indent | ' +
-            'blockquote link image code | ' +
-            'removeformat | help',
+        toolbar1: 'undo redo | blocks | alignleft aligncenter ' +
+            'alignright alignjustify bullist numlist link unlink | blockquote image media table',
+        toolbar2: 'bold italic underline strikethrough | forecolor  backcolor removeformat charmap | print code fullscreen help',
         min_height: 600,
         max_width: 768,
         image_dimensions: false,
@@ -95,7 +96,9 @@ const loadEditor = () => {
         promotion: false,
         branding: false,
         convert_urls: false,
-        deprecation_warnings: false
+        deprecation_warnings: false,
+        quickbars_insert_toolbar: false,
+        quickbars_selection_toolbar: 'h2 h3 bold italic underline | bullist numlist |  quicklink',
     });
 }
 

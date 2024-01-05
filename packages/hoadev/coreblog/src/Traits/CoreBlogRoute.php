@@ -49,6 +49,8 @@ trait CoreBlogRoute {
 
         Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap.index');
 
+        Route::get('{post_type}', [PermalinkController::class, 'archive'])->name('permalink.archive')->whereIn('post_type', ['post', 'product']);
+
         Route::get('{name}', [PermalinkController::class, 'single'])->name('permalink.single');
 
         Route::get('{type}/{name}', [PermalinkController::class, 'post'])->name('permalink.post')->whereIn('type', ['post', 'page', 'news', 'blog']);

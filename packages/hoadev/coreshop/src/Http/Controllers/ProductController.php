@@ -19,7 +19,10 @@ class ProductController extends Controller
 
         $search = $request->query('search');
 
-        $products = Product::where('type', 'product')->paginate(10);
+        $products = Product::where('type', 'product')
+                        ->where('title', 'like', '%'.$search.'%')
+                        ->latest()
+                        ->paginate(10);
 
         if($search !== null) {
             $products->appends(['search' => $search]);
@@ -106,7 +109,9 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        //
+        return Inertia::render('CoreBlog/Admin/Post/Show', [
+            'post' => $product
+        ]);
     }
 
     /**
@@ -176,21 +181,21 @@ class ProductController extends Controller
 
         $product->update($validated['post']);
 
-/*         foreach($validated['metas'] as $key => $value) {
-            if($meta = $post->postMetas()->where('key', $key)->first()) {
-                dd($key);
-                $meta->update(['value' => $value]);
-                $meta->save();
-            }
-        } */
         // handle all metas
         foreach($validated['metas'] as $key => $metasGroup) {
-/*             if(isset($metasGroup[0]['id'])) {
-                $product->postMetas()->update(collect($metasGroup[0])->except('media')->toArray());
-            } else {
-                $product->postMetas()->create(collect($metasGroup[0])->except('media')->toArray());
-            } */
-            $product->postMetas()->updateOrCreate(collect($metasGroup[0])->except('media')->toArray());
+            if(isset($metasGroup[0])) {
+                if(isset($metasGroup[0]["id"])) {
+                    $product->postMetas()->update([
+                        'key' => $metasGroup[0]["key"],
+                        'value' => $metasGroup[0]["value"],
+                    ]);
+                } else {
+                    $product->postMetas()->create([
+                        'key' => $metasGroup[0]["key"],
+                        'value' => $metasGroup[0]["value"],
+                    ]);
+                }
+            }
         }
 
         $termIDs = [];
@@ -205,16 +210,17 @@ class ProductController extends Controller
         $variantIds = [];
         foreach($validated['variants'] as $variant) {
            /*  dd($variant); */
-            if(isset($variant['id'])) {
-                $realVariant = $product->variants()->update($variant);
+            if(isset($variant["id"])) {
+                $product->variants()->update($variant);
+                $variantIds[] = $variant["id"];
             } else {
                 $realVariant = $product->variants()->create($variant);
+                $variantIds[] = $realVariant->id;
             }
-            dd($realVariant);
-            $variantIds[] = $realVariant->id;
+            /* $realVariant = $product->variants()->updateOrCreate($variant); */
         }
-        dd($variantIds);
-        Variant::whereNotIn('id', $variantIds)->delete();
+
+        Product::find($product->id)->variants()->whereNotIn('id', $variantIds)->delete();
 
         session()->flash('message', 'Update successfully!');
     }

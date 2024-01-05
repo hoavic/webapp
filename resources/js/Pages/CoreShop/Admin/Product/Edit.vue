@@ -1,7 +1,7 @@
 <script setup>
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
-import { usePage, router, useForm } from '@inertiajs/vue3';
+import { router } from '@inertiajs/vue3';
 import { reactive } from 'vue'
 import Editor from '@/Pages/CoreBlog/Admin/Includes/Editor.vue';
 import TermNonHierarchial from '@/Pages/CoreBlog/Admin/Post/TermNonHierarchial.vue';
@@ -11,8 +11,6 @@ import autoSlug from '@/Pages/CoreBlog/Includes/auto-slug';
 import FeaturedImage from '@/Pages/CoreBlog/Admin/Includes/FeaturedImage.vue';
 import SimpleProduct from './Variant/SimpleProduct.vue';
 import SimpleEditor from '@/Pages/CoreBlog/Admin/Includes/SimpleEditor.vue';
-
-const page = usePage();
 
 const props = defineProps({
     post: Object,
@@ -30,18 +28,8 @@ const form = reactive({
     selectedTerms: props.selectedTerms,
     variants: props.post.variants
 });
-/* console.log(page.props.admin.post_types[props.post_type].taxonomies); */
-//first time
-/* function configSelectedTerms() {
-    let selectedTerms = new Object;
-    for(let i = 0; i < page.props.admin.post_types[props.post_type].taxonomies.length; i++) {
-        selectedTerms[page.props.admin.post_types[props.post_type].taxonomies[i]] = [];
-        console.log(page.props.admin.post_types[props.post_type]);
-    }
-    return selectedTerms;
-} */
 
-function updatePost() {
+/* function updatePost() {
     router.patch(route('admin.products.update', props.post.id), form);
 }
 
@@ -49,7 +37,28 @@ function updatePostAndClose() {
     router.patch(route('admin.products.update', props.post.id), form, {
         onSuccess: (page) => router.visit(route('admin.products.index'))
     });
+} */
+
+function updatePost() {
+    form.post.status = 'published';
+    let options = {
+        onSuccess: (page) => router.visit(route('admin.products.index'))
+    }
+    sendUpdate(options);
 }
+
+
+function updatePostAndClose() {
+    let options = {
+        onSuccess: (page) => router.visit(route('admin.products.index'))
+    }
+    sendUpdate(options);
+}
+
+function sendUpdate(options = {}) {
+    router.patch(route('admin.products.update', props.post.id), form, options);
+}
+
 
 </script>
 
@@ -71,7 +80,7 @@ function updatePostAndClose() {
 
                         <div class="m-2 lg:m-6">
                             <label>
-                                Short Description::
+                                <span class="my-2 block font-bold">Short Description:</span>
                                 <!-- <textarea v-model="form.post.excerpt" name="excerpt" placeholder="Excerpt..."
                                     class="w-full text-lg border border-gray-300 rounded-lg"></textarea> -->
                                 <SimpleEditor v-model="form.post.excerpt"></SimpleEditor>
@@ -79,28 +88,27 @@ function updatePostAndClose() {
 
                         </div>
 
-                        <div class="m-2 lg:m-6">
+                        <div class="mx-2 my-12 lg:mx-6">
                             <label class="flex gap-2 items-center">
-                                <span class="whitespace-nowrap">Select Product Type:</span>
+                                <span class="font-bold whitespace-nowrap">Select Product Type:</span>
                                 <select v-model="form.metas.product_type[0].value" name="product_type"
                                     class="w-full text-lg border border-gray-300 rounded-lg">
                                     <option value="simple">Simple</option>
-                                    <option value="has-variant">Has Variant</option>
-                                    <option value="external-link">External Link</option>
+                     <!--                <option value="has-variant">Has Variant</option>
+                                    <option value="external-link">External Link</option> -->
                                 </select>
                             </label>
 
                             <template v-if="form.metas.product_type[0].value === 'simple'">
-                                <SimpleProduct v-model="form.variants[0]"></SimpleProduct>
+                                <SimpleProduct v-model="form.variants[0]" :product_name="form.post.title"></SimpleProduct>
                             </template>
 
                         </div>
 
                         <div class="my-6 lg:mx-6">
+                            <p class="font-bold">Description:</p>
                             <Editor v-model="form.post.content" ></Editor>
                         </div>
-
-                        {{ form }}
 
                     </div>
 
@@ -108,8 +116,12 @@ function updatePostAndClose() {
                     <div class="lg:w-[300px] lg:pb-20">
 
                         <div class="fixed flex flex-row gap-2 bottom-0 m-6">
-                            <SecondaryButton type="button" class="capitalize whitespace-nowrap" @click.prevent="updatePostAndClose">Update & Close</SecondaryButton>
-                            <PrimaryButton>Update</PrimaryButton>
+                            <SecondaryButton v-if="form.post.status !== 'published'" type="button" @click.prevent="sendUpdate()"
+                                class="capitalize whitespace-nowrap" >Save as {{ form.post.status }}</SecondaryButton>
+                            <SecondaryButton v-if="form.post.status === 'published'" type="button" @click.prevent="updatePostAndClose"
+                                class="capitalize whitespace-nowrap" >Save & Close</SecondaryButton>
+                            <PrimaryButton v-if="form.post.status !== 'published'">Publish</PrimaryButton>
+                            <PrimaryButton v-if="form.post.status === 'published'" @click.prevent="sendUpdate">Save</PrimaryButton>
                         </div>
 
                         <div class="m-6">

@@ -1,12 +1,8 @@
 @extends('coreblog::layouts.blog')
 
-@section('term_name', $term->name)
+@section('term_name', $post_type)
 
 @section('content')
-
-<div class="taxonomy-description">
-    {!! $term->taxonomy->description !!}
-</div>
 
 {{--
     {{ $posts }} --}}

@@ -4,8 +4,10 @@ namespace Hoadev\CoreBlog\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Hoadev\CoreBlog\Classes\MetaTags;
+use Hoadev\CoreBlog\Models\Post;
 use Hoadev\CoreBlog\Traits\Guest\PermalinkWithPost;
 use Hoadev\CoreBlog\Traits\Guest\PermalinkWithTerm;
+use Hoadev\CoreShop\Models\Product;
 use Illuminate\Http\Request;
 
 class PermalinkController extends Controller
@@ -76,6 +78,40 @@ class PermalinkController extends Controller
     public function categoryHasGrand(Request $request, $grand, $parent, $slug)
     {
         return $this->renderTerm($request, $slug);
+    }
+
+    public function archive($post_type) {
+        return $this->renderArchive($post_type);
+    }
+
+    public function renderArchive($post_type) {
+
+        $gb_posts = config('coreblog.post_types');
+
+        if($post_type === 'product') {
+
+            $posts = Product::with(['postMetas.media', 'variants'])
+                ->where('status', 'published')
+                ->where('type', $post_type)
+                ->paginate(10);
+
+            return view('coreblog::guest.archive.product', [
+                'post_type' => strtoupper($gb_posts[$post_type]["labels"]["name"]),
+                'posts' => $posts,
+                'contentStyle' => 'no-sidebar'
+            ]);
+        }
+
+        $posts = Post::with(['postMetas.media'])
+            ->where('status', 'published')
+            ->where('type', $post_type)
+            ->paginate(10);
+
+        return view('coreblog::guest.archive.default', [
+            'post_type' => strtoupper($gb_posts[$post_type]["labels"]["name"]),
+            'posts' => $posts,
+        ]);
+
     }
 
 }

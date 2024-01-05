@@ -1,7 +1,7 @@
 <script setup>
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
-import { usePage, router, useForm } from '@inertiajs/vue3';
+import { usePage, router } from '@inertiajs/vue3';
 import { reactive } from 'vue'
 import Editor from '@/Pages/CoreBlog/Admin/Includes/Editor.vue';
 import TermNonHierarchial from '@/Pages/CoreBlog/Admin/Post/TermNonHierarchial.vue';
@@ -55,16 +55,26 @@ function configSelectedTerms() {
     return selectedTerms;
 }
 
-function submit() {
+/* function submit() {
     router.post(route('admin.products.store'), form);
-/*     form.post(route('admin.posts.store'), {
-        preserveScroll: true,
-        onSuccess: (res) => {console.log(res);}
-    }); */
+}
+ */
+/* function saveAsDraft() {
+    form.post.status = 'draft';
+    router.post(route('admin.products.store'), form);
+} */
+
+function submit() {
+    form.post.status = 'published';
+    router.post(route('admin.products.store'), form);
 }
 
 function saveAsDraft() {
     form.post.status = 'draft';
+    router.post(route('admin.products.store'), form);
+}
+
+function savePost() {
     router.post(route('admin.products.store'), form);
 }
 
@@ -88,22 +98,22 @@ function saveAsDraft() {
 
                         <div class="m-2 lg:m-6">
                             <label>
-                                Short Description::
+                                <span class="my-2 block font-bold">Short Description:</span>
                                 <!-- <textarea v-model="form.post.excerpt" name="excerpt" placeholder="Excerpt..."
                                     class="w-full text-lg border border-gray-300 rounded-lg"></textarea> -->
-                                <SimpleEditor v-model="form.post.excerpt"></SimpleEditor>
+                                <SimpleEditor v-model="form.post.excerpt" :product_name="form.post.title"></SimpleEditor>
                             </label>
 
                         </div>
 
-                        <div class="m-2 lg:m-6">
+                        <div class="mx-2 my-12 lg:mx-6">
                             <label class="flex gap-2 items-center">
-                                <span class="whitespace-nowrap">Select Product Type:</span>
+                                <span class="font-bold whitespace-nowrap">Select Product Type:</span>
                                 <select v-model="form.metas.product_type[0].value" name="product_type"
                                     class="w-full text-lg border border-gray-300 rounded-lg">
                                     <option value="simple">Simple</option>
-                                    <option value="has-variant">Has Variant</option>
-                                    <option value="external-link">External Link</option>
+                <!--                     <option value="has-variant">Has Variant</option>
+                                    <option value="external-link">External Link</option> -->
                                 </select>
                             </label>
 
@@ -114,12 +124,11 @@ function saveAsDraft() {
                         </div>
 
                         <div class="my-6 lg:mx-6">
-<!--                             <textarea v-model="form.post.content" name="content" placeholder="Content..."
-                                class="w-full text-lg border border-gray-300 rounded-lg"></textarea> -->
+                            <p class="font-bold">Description:</p>
                             <Editor v-model="form.post.content"></Editor>
                         </div>
 
-                        {{ form }}
+
 
                     </div>
 
@@ -127,9 +136,10 @@ function saveAsDraft() {
                     <div class="lg:w-[300px] lg:pb-20">
 
                         <div class="fixed flex flex-row gap-2 bottom-0 m-6">
-                            <SecondaryButton type="button" @click.prevent="saveAsDraft"
+                            <SecondaryButton v-if="form.post.status !== 'draft'" type="button" @click.prevent="saveAsDraft"
                                 class="capitalize whitespace-nowrap disabled:bg-gray-300" >Save as Draft</SecondaryButton>
-                            <PrimaryButton :disabled="form.post.status === 'draft'" class="disabled:bg-gray-300">Publish</PrimaryButton>
+                            <PrimaryButton v-if="form.post.status === 'published'">Publish</PrimaryButton>
+                            <PrimaryButton v-if="form.post.status !== 'published'" @click.prevent="savePost">Save</PrimaryButton>
                         </div>
 
                         <div class="m-6">
