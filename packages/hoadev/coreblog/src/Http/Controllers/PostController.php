@@ -205,11 +205,16 @@ class PostController extends Controller
         // handle all metas
         foreach($validated['metas'] as $key => $metasGroup) {
             if(isset($metasGroup[0])) {
-                if(isset($metasGroup[0]['id'])) {
+                $post->postMetas()->updateOrCreate([
+                    'id' => $metasGroup[0]['id'],
+                    'key' => $metasGroup[0]['key'],
+                    'value' => $metasGroup[0]['value'],
+                ]);
+/*                 if(isset($metasGroup[0]['id'])) {
                     $post->postMetas()->update(collect($metasGroup[0])->except('media')->toArray());
                 } else {
                     $post->postMetas()->create(collect($metasGroup[0])->except('media')->toArray());
-                }
+                } */
             }
         }
 

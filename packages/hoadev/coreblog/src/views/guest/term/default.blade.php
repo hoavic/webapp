@@ -4,7 +4,10 @@
 
 @section('content')
 
-{!! $term->taxonomy->description !!}
+<div class="taxonomy-description">
+    {!! $term->taxonomy->description !!}
+</div>
+
 {{--
     {{ $posts }} --}}
 

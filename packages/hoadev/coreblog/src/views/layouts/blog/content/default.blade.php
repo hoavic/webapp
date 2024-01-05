@@ -13,8 +13,8 @@
         @endif
 
         @hasSection('term_name')
-            <header class="px-4">
-                <h1 class="m-4 text-2xl font-bold">@yield('term_name')</h1>
+            <header class="">
+                <h1 class="m-4 text-2xl lg:text-3xl font-bold text-green-800">@yield('term_name')</h1>
             </header>
         @endif
 

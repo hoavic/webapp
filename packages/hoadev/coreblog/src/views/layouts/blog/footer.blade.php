@@ -1,7 +1,7 @@
 <div class="w-full max-w-7xl h-auto mx-auto py-4 grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 text-[16px]">
     <div class="md:px-8 md:col-span-2 md:grid md:grid-cols-5 gap-4 items-center">
         <img src="/uploads/logo-bot-g.png" class="px-10 md:p-4 md:col-span-2"/>
-        <p class="md:col-span-3 md:leading-8">
+        <p class="font-medium md:col-span-3 md:leading-8">
             Vườn sâm Sia Ginseng được thiên nhiên ưu ái ban tặng dòng nước suối trong lành và độ thổ nhưỡng tốt. Chính vì điều đó, chúng tôi tự hào khi mang đến Quý khách hàng những sản phẩm sức khỏe có nguồn gốc từ tự nhiên đạt tiêu chuẩn và chất lượng cao.
         </p>
     </div>
@@ -30,7 +30,7 @@
         <ul>
             <li class="flex gap-2 items-center">
                 <svg class="w-8 h-8" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M19.367 18.102L18 14h-1.5l.833 4H2.667l.833-4H2L.632 18.102C.285 19.146.9 20 2 20h16c1.1 0 1.715-.854 1.367-1.898zM15 5A5 5 0 1 0 5 5c0 4.775 5 10 5 10s5-5.225 5-10zm-7.7.06A2.699 2.699 0 0 1 10 2.361a2.699 2.699 0 1 1 0 5.399 2.7 2.7 0 0 1-2.7-2.7z"></path></svg>
-                <p class="my-2 flex-1">33 Nguyên Hữu Thọ, p. Tân Hưng, Quận 7, Tp. HCM</p>
+                <p class="my-2 flex-1">33 Nguyễn Hữu Thọ, p. Tân Hưng, Quận 7, Tp. HCM</p>
             </li>
             <li class="flex gap-2 items-center">
                 <svg class="w-8 h-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">

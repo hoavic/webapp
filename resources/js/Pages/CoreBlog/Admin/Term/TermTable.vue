@@ -29,7 +29,7 @@ function destroy(id) {
                     <th class="text-left">#</th>
                     <th class="text-left">Name</th>
                     <th>Slug</th>
-                    <th class="hidden md:table-cell">Description</th>
+                    <!-- <th class="hidden md:table-cell">Description</th> -->
                     <th>Count</th>
                     <th>Action</th>
                 </tr>
@@ -43,7 +43,7 @@ function destroy(id) {
                                 class="font-bold text-blue-900 whitespace-nowrap"><span v-if="item.ancestors.length > 0" class="mr-1">{{ '-'.repeat(item.ancestors.length) }}</span>{{ item.term.name }}</a>
                         </td>
                         <td class="text-gray-600 text-sm">{{ item.term.slug }}</td>
-                        <td class="hidden md:table-cell text-gray-600 text-sm">{{ stripHtml(item.description) }}</td>
+   <!--                      <td class="hidden md:table-cell text-gray-600 text-sm">{{ stripHtml(item.description) }}</td> -->
                         <td class="text-sm">{{ item.count }}</td>
                         <td>
                             <div class="flex gap-2 justify-end">

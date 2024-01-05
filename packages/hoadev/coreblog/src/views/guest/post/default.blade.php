@@ -22,7 +22,9 @@
 
 @section('content')
 
-    {!! $post->content !!}
+    <div class="entry-content">
+        {!! $post->content !!}
+    </div>
 
     @if ($post->type !== 'page' && $relatedPosts->count() > 0)
         <h2 class="my-6 mx-4 font-bold uppercase text-green-800">Related Posts</h2>

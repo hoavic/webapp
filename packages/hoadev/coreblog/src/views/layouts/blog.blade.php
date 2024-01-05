@@ -65,6 +65,10 @@
 
             @include('coreblog::includes.pickup')
 
+            @include('coreblog::includes.featured-product')
+
+            @include('coreblog::includes.about-me')
+
         @endif
 
         <div class="w-full max-w-7xl h-auto mx-auto">
@@ -79,6 +83,13 @@
             @endif
 
         </div>
+
+        @if (Route::current()->getName() === 'home')
+
+            @include('coreblog::includes.partner')
+            @include('coreblog::includes.partner-register')
+
+        @endif
 
         <footer class="mt-auto py-4 bg-gradient-to-r from-white to-yellow-600/20 text-red-900 border-t border-yellow-800 shadow-lg">
             @include('coreblog::layouts.blog.footer')
