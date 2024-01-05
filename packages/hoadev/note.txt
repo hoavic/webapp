@@ -1,1 +1,5 @@
 App\Models\User::create(['name'=>'Hoa Thuan Ngo', 'email'=>'thuanhoa72@gmail.com','password'=>bcrypt('Hoa465042312')]);
+
+App\Models\User::create(['name'=>'Nhan vien 01', 'email'=>'nhanvien01.sia@gmail.com','password'=>bcrypt('@NvSiaGinseng001#')]);
+
+App\Models\User::create(['name'=>'Nhan vien 02', 'email'=>'nhanvien02.sia@gmail.com','password'=>bcrypt('@NvSiaGinseng200#')]);
