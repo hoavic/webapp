@@ -10,9 +10,16 @@
 
     <link rel="canonical" href="{{ $meta_tags->canonical }}" />
 
-    @includeIf('coreblog::guest.head.open-graph', ['meta_tags' => $meta_tags])
 
-    @includeIf('coreblog::guest.head.twitter-card', ['meta_tags' => $meta_tags])
+    {{-- Switch case --}}
+    @if (Route::current()->getName() !== 'home')
 
-    @includeIf('coreblog::guest.head.article', ['meta_tags' => $meta_tags])
+        @includeIf('coreblog::guest.head.open-graph', ['meta_tags' => $meta_tags])
+
+        @includeIf('coreblog::guest.head.twitter-card', ['meta_tags' => $meta_tags])
+
+        @includeIf('coreblog::guest.head.article', ['meta_tags' => $meta_tags])
+
+    @endif
+
 @endisset

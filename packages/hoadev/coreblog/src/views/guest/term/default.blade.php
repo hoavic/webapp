@@ -11,7 +11,7 @@
 {{--
     {{ $posts }} --}}
 
-    <div class="md:p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+{{--     <div class="md:p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         @if ($posts && $posts->count() > 0)
             @foreach ($posts as $post)
                 <article class="border border-gray-200">
@@ -21,8 +21,8 @@
                         @endif
                     </div>
                     <div class="">
-                        <h2 class="font-bold text-blue-800">
-                            <a href="{{ $post->getpermalink() }}">{{ $post->title }}</a>
+                        <h2 class="font-bold text-xl text-blue-800">
+                            <a href="{{ $post->getpermalink() }}" class=" no-underline">{{ $post->title }}</a>
                         </h2>
                         <p class="entry-summary">
                             {!! $post->getExcerpt(20) !!}
@@ -31,6 +31,9 @@
                 </article>
             @endforeach
         @endif
+    </div> --}}
+    <div class="p-4">
+        @includeIf('coreblog::guest.list-post.default', ['posts' => $posts])
     </div>
 
     {{ $posts->links() }}

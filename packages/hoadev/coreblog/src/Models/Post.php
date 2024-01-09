@@ -134,7 +134,7 @@ class Post extends Model
         $post = $this;
         return Post::whereHas('terms', function (Builder $query) use($post) {
             $query->whereIn('id', $post->terms->pluck('id'));
-        })->whereNot('id', $post->id)->limit($limit)->latest()->get();
+        })->whereNot('id', $post->id)->where('status', 'published')->limit($limit)->latest()->get();
     }
 
     public function getPermalink() {

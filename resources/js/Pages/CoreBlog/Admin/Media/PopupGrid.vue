@@ -39,26 +39,45 @@ function getUrl(item, size = '') {
 const getSrcset = (item) => {
     let srcset = [];
     if(item.responsive_images.thumbnail) {
-        srcset.push('/' + item.responsive_images.thumbnail + ' 150w');
+        srcset.push('/' + item.responsive_images.thumbnail + ' ' + getSizeFromSrcset(item.responsive_images.thumbnail, '150'));
     }
 
     if(item.responsive_images.medium) {
-        srcset.push('/' + item.responsive_images.medium + ' 300w');
+        srcset.push('/' + item.responsive_images.medium + ' ' + getSizeFromSrcset(item.responsive_images.medium, '300'));
+    }
+
+    if(item.responsive_images.medium_large) {
+        srcset.push('/' + item.responsive_images.medium_large + ' ' + getSizeFromSrcset(item.responsive_images.medium_large, '600'));
     }
 
     if(item.responsive_images.large) {
-        srcset.push('/' + item.responsive_images.large + ' 768w');
-    }
-
-    if(item.responsive_images.extra) {
-        srcset.push('/' + item.responsive_images.extra + ' 1024w');
+        srcset.push('/' + item.responsive_images.large + ' ' + getSizeFromSrcset(item.responsive_images.large, '800'));
     }
 
     if(item.responsive_images.wide) {
-        srcset.push('/' + item.responsive_images.wide + ' 1280w');
+        srcset.push('/' + item.responsive_images.wide + ' ' + getSizeFromSrcset(item.responsive_images.wide, '1200'));
+    }
+
+    if(item.responsive_images.extra) {
+        srcset.push('/' + item.responsive_images.extra + ' ' + getSizeFromSrcset(item.responsive_images.extra, '1500'));
+    }
+
+    if(item.responsive_images.full) {
+        srcset.push('/' + item.responsive_images.full + ' ' + getSizeFromSrcset(item.responsive_images.full, '1920'));
     }
 
     return srcset.join(', ');
+}
+
+function getSizeFromSrcset(srcset, default_size) {
+  let size =  srcset.slice(
+    srcset.lastIndexOf('_') + 1,
+    srcset.lastIndexOf('px.'),
+  );
+  if (size) {
+    return default_size + 'w';
+  }
+  return size + 'w';
 }
 
 /* function selectMedia(src) {
@@ -104,7 +123,7 @@ function confirmMedias() {
     }
     if(react.selectedMedias.length === 0) {return}
     react.selectedMedias.forEach((media) => {
-        tinymce.get("myeditorinstance").insertContent('<img src="' + media.custom_properties.url + '" srcset="' + getSrcset(media) + '" width="' + media.custom_properties.width + '" height="' + media.custom_properties.height + '" loading="lazy" />');
+        tinymce.get("myeditorinstance").insertContent('<img src="' + getUrl(media, 'large') + '" srcset="' + getSrcset(media) + '" width="' + media.custom_properties.width + '" height="' + media.custom_properties.height + '" loading="lazy" />');
     });
     /* tinymce.get("myeditorinstance").insertContent('<img src="' + item.custom_properties.url + '" srcset="' + getSrcset(item) + '" width="' + item.custom_properties.width + '" height="' + item.custom_properties.height + '" loading="lazy" />'); */
 /*     emit('onSelectMedia', '<img src="' + item.custom_properties.url + '" srcset="' + getSrcset(item) + '" width="' + item.custom_properties.width + '" height="' + item.custom_properties.height + '" loading="lazy" />'); */

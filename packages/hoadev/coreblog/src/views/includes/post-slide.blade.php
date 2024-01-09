@@ -35,7 +35,7 @@
     }"
     x-init="setData()"
     class="w-full overflow-x-auto">
-    <ul x-ref="scroller" class="relative w-full m-0 flex gap-4 snap-x snap-mandatory overflow-x-auto">
+    <ul x-ref="scroller" class="relative w-full m-0 flex gap-4 snap-x snap-mandatory overflow-x-auto list-none">
         @foreach ($slidePosts as $slidePost)
             <li class="snap-start shrink-0">
                 <a href="{{ $slidePost->getPermalink() }}" title="{{ $slidePost->title }}" class=" text-green-800 hover:text-yellow-800">

@@ -45,4 +45,5 @@ Route::group([
     CoreBlogRoute::Admin();
 });
 
+CoreShopRoute::Guest();
 CoreBlogRoute::Guest();

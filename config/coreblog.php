@@ -29,6 +29,7 @@ return [
             'labels' => [
                 'name' => 'Posts',
                 'singular_name' => 'Post',
+                'vietsub' => 'Bài viết'
             ],
             'description' => '',
             'public' => true,
@@ -48,6 +49,7 @@ return [
             'labels' => [
                 'name' => 'Pages',
                 'singular_name' => 'Page',
+                'vietsub' => 'Trang'
             ],
             'description' => '',
             'public' => true,
@@ -64,6 +66,7 @@ return [
             'labels' => [
                 'name' => 'Products',
                 'singular_name' => 'Product',
+                'vietsub' => 'Sản phẩm'
             ],
             'description' => '',
             'public' => true,
@@ -105,6 +108,7 @@ return [
             'labels' => [
                 'name' => 'Categories',
                 'singular_name' => 'Category',
+                'vietsub' => 'Chuyên mục'
             ],
             'description' => '',
             'public' => true,
@@ -119,6 +123,7 @@ return [
             'labels' => [
                 'name' => 'Tags',
                 'singular_name' => 'Tag',
+                'vietsub' => 'Từ khóa'
             ],
             'description' => '',
             'public' => true,
@@ -133,6 +138,7 @@ return [
             'labels' => [
                 'name' => 'Product Categories',
                 'singular_name' => 'Product Category',
+                'vietsub' => 'Danh mục sản phẩm'
             ],
             'description' => '',
             'public' => true,
@@ -147,6 +153,7 @@ return [
             'labels' => [
                 'name' => 'Brands',
                 'singular_name' => 'Brand',
+                'vietsub' => 'Thương hiệu'
             ],
             'description' => '',
             'public' => true,
@@ -161,6 +168,7 @@ return [
             'labels' => [
                 'name' => 'Custom Taxonomies',
                 'singular_name' => 'Custom Taxonomy',
+                'vietsub' => 'Custom Taxonomy'
             ],
             'description' => '',
             'public' => true,

@@ -26,4 +26,17 @@ class Variant extends Model
         return $this->belongsToMany(Stock::class);
     }
 
+    //Data format
+
+    public function getPrice($currency = 'đ') {
+        if(!$this->price) {return 'Liên hệ';}
+        if($this->price == 0 || $this->price === "0") {return 'Miễn phí';}
+        return number_format($this->price,0,',','.').' '.$currency;
+    }
+
+    public function getStock() {
+        if(!$this->stock || $this->stock == 0 || $this->price === "0") {return 'Liên hệ';}
+        return number_format($this->stock,0,',','.');
+    }
+
 }

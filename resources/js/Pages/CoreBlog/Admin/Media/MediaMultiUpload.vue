@@ -10,6 +10,18 @@ const page = usePage();
 
 const props = defineProps({
     media_type: String,
+    optimized_for_blog: {
+        default: true,
+        type: Boolean
+    },
+    optimized_for_product: {
+        default: false,
+        type: Boolean
+    },
+    optimized_for_template: {
+        default: false,
+        type: Boolean
+    },
 });
 
 const emit = defineEmits(['confirmUploaded']);
@@ -18,7 +30,10 @@ const form = useForm({
     media_type: props.media_type,
     file_names: [],
     medias: [],
-    multiple_upload: false
+    multiple_upload: false, //chưa dùng
+    optimized_for_blog: props.optimized_for_blog,
+    optimized_for_product: props.optimized_for_product,
+    optimized_for_template: props.optimized_for_template,
 });
 
 let showAdd = ref(false);
@@ -87,6 +102,20 @@ function onFileChange($event) {
                                 class="hidden"/>
                             <span class="block p-16 text-center border border-dashed border-gray-300">Select files To Upload.</span>
                         </label>
+                        <div class="mb-2 text-sm flex gap-x-8 gap-y-2 flex-row flex-wrap">
+                            <label>
+                                Optimized for Blog <input type="checkbox" v-model="form.optimized_for_blog" name="optimized_for_blog" class="rounded" />
+                            </label>
+
+                            <label>
+                                Optimized for Product <input type="checkbox" v-model="form.optimized_for_product" name="optimized_for_product" class="rounded" />
+                            </label>
+
+                            <label>
+                                Optimized for Template <input type="checkbox" v-model="form.optimized_for_template" name="optimized_for_template" class="rounded" />
+                            </label>
+                        </div>
+
 <!--                         <progress v-if="form.processing" :value="form.progress.percentage" max="100" class="my-4 w-full">
                             {{ form.progress.percentage }}%
                         </progress> -->

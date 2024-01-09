@@ -9,7 +9,7 @@ use Hoadev\CoreBlog\Models\Post;
 trait PermalinkWithPost {
 
     public function getPost(array $types, $name) {
-        return Post::with(['terms.taxonomy.ancestors'])->whereIn('type', $types)
+        return Post::with(['postMetas', 'terms.taxonomy.ancestors'])->whereIn('type', $types)
                     ->where('name', $name)
                     ->first();
     }
@@ -25,6 +25,7 @@ trait PermalinkWithPost {
 
             return view('coreblog::guest.post.default', [
                 'post' => $post,
+                'metas' => $post->postMetas->pluck(['value', 'key']),
                 'taxonomies' => $post->terms->groupBy('taxonomy'),
                 'relatedPosts' => $post->getRelatedPosts(),
                 'meta_tags' => $meta_tags,

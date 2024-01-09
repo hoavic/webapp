@@ -21,14 +21,10 @@ class PermalinkController extends Controller
         $term = $this->getTerm($slug);
 
         if($term) {
+
             if($request->getPathInfo() !== $term->parseSlug()) { return redirect($term->parseSlug());}
-            $meta_tags = new MetaTags();
-            $meta_tags->importFromTerm($term);
-            return view('coreblog::guest.term.default', [
-                'term' => $term,
-                'posts' => $this->listPostsWithPaginate($term),
-                'meta_tags' => $meta_tags
-            ]);
+
+            return $this->renderTerm($request, $slug, 'category');
         }
 
         return $this->renderPost(['post', 'page'], $slug);
@@ -96,7 +92,7 @@ class PermalinkController extends Controller
                 ->paginate(10);
 
             return view('coreblog::guest.archive.product', [
-                'post_type' => strtoupper($gb_posts[$post_type]["labels"]["name"]),
+                'post_type' => $gb_posts[$post_type]["labels"]["vietsub"],
                 'posts' => $posts,
                 'contentStyle' => 'no-sidebar'
             ]);
@@ -108,7 +104,7 @@ class PermalinkController extends Controller
             ->paginate(10);
 
         return view('coreblog::guest.archive.default', [
-            'post_type' => strtoupper($gb_posts[$post_type]["labels"]["name"]),
+            'post_type' => $gb_posts[$post_type]["labels"]["vietsub"],
             'posts' => $posts,
         ]);
 

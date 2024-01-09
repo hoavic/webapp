@@ -232,6 +232,6 @@ class ProductController extends Controller
     {
         $product->delete();
 
-        return redirect()->route('admin.posts.index');
+        return redirect()->route('admin.products.index');
     }
 }

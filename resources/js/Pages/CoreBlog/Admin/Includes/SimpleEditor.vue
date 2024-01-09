@@ -56,11 +56,10 @@ onUpdated(() => {
 const loadEditor = () => {
     let instance = tinymce.init({
         selector: 'textarea#simpleinstance', // Replace this CSS selector to match the placeholder element for TinyMCE
-        language: 'vi_VN',
         entity_encoding : "raw",
         content_css: false,
         skin: false,
-        content_style: 'body {font-family: Arial, Helvetica, sans-serif; line-height: 1.5;font-size:18px; max-width: 768px; margin: 0 auto; padding: 1em 0; color: #333; } img {max-width: 100%; height: auto} figcaption {color: #999;font-size: 0.9em} h2, h3, h4, h5, p, ul, ol, blockquote {margin: 1em 0} table {border-collapse: collapse;} th, td {padding: 0.5em; border: 1px solid #999} blockquote {background: #eee; color: #666; padding: 1em; border-radius: 1em}',
+        content_style: 'body {font-family: Arial, Helvetica, sans-serif; line-height: 1.5;font-size:18px; max-width: 768px; margin: 0 auto; padding: 1em; color: #333; } img {max-width: 100%; height: auto} figcaption {color: #999;font-size: 0.9em} h2, h3, h4, h5, p, ul, ol, blockquote {margin: 1em 0} table {border-collapse: collapse;} th, td {padding: 0.5em; border: 1px solid #999} blockquote {background: #eee; color: #666; padding: 1em; border-radius: 1em}',
         setup: (editor) => {
             editor.on("change", (e) => {
 /*                 form.content = tinymce.get("simpleinstance").getContent();
@@ -72,9 +71,9 @@ const loadEditor = () => {
         plugins: [
             'lists', 'link',
         ],
-        toolbar: 'undo redo | ' +
-            'bold italic backcolor | alignleft aligncenter ' +
-            'alignright alignjustify | bullist numlist link | ',
+        toolbar: 'undo redo ' +
+            'bold italic forecolor alignleft aligncenter ' +
+            'alignright alignjustify bullist link',
         min_height: 250,
         max_width: 768,
         branding: false,

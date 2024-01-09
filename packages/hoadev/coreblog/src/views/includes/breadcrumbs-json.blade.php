@@ -9,5 +9,4 @@
             echo '<script type="application/ld+json">'.$replaced.'</script>';
         @endphp
 
-
 @endisset

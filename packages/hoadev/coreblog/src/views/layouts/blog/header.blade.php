@@ -31,7 +31,8 @@
     <div x-show="showNav" @click="showNav = false" class="fixed top-0 bottom-0 right-0 left-0 bg-gray-900/20"></div>
     <nav
         :class="showNav ? 'visible' : 'unvisible lg:visible'"
-        class="flex-1 w-full">
+        class="flex-1 w-full"
+        x-cloak>
         <div
             :class="showNav ? 'left-0' : '-left-96 lg:left-0'"
             class="bg-white fixed lg:relative top-0 py-4 lg:py-0 w-72 lg:w-full max-w-9/12 h-screen lg:h-auto transition-all">

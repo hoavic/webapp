@@ -78,6 +78,10 @@ function savePost() {
     router.post(route('admin.products.store'), form);
 }
 
+function underDev() {
+    alert('Tính năng đang được phát triển!');
+}
+
 </script>
 
 <template>
@@ -96,14 +100,18 @@ function savePost() {
                                 class="w-full text-lg font-bold border border-gray-300 rounded-lg"/>
                         </div>
 
-                        <div class="m-2 lg:m-6">
-                            <label>
-                                <span class="my-2 block font-bold">Short Description:</span>
-                                <!-- <textarea v-model="form.post.excerpt" name="excerpt" placeholder="Excerpt..."
-                                    class="w-full text-lg border border-gray-300 rounded-lg"></textarea> -->
-                                <SimpleEditor v-model="form.post.excerpt" :product_name="form.post.title"></SimpleEditor>
-                            </label>
-
+                        <div class="m-2 lg:m-6 grid gap-4 md:grid-cols-2">
+                            <div  @click.prevent="underDev"
+                                class="">
+                                <span class="my-2 block font-bold">Gallery:</span>
+                                <div class="w-full h-[400px] bg-green-50 border border-green-900/10 rounded-lg"></div>
+                            </div>
+                            <div class="">
+                                <label>
+                                    <span class="my-2 block font-bold">Short Description:</span>
+                                    <SimpleEditor v-model="form.post.excerpt"></SimpleEditor>
+                                </label>
+                            </div>
                         </div>
 
                         <div class="mx-2 my-12 lg:mx-6">
@@ -118,7 +126,7 @@ function savePost() {
                             </label>
 
                             <template v-if="form.metas.product_type[0].value === 'simple'">
-                                <SimpleProduct v-model="form.variants[0]"></SimpleProduct>
+                                <SimpleProduct v-model="form.variants[0]" :product_name="form.post.title"></SimpleProduct>
                             </template>
 
                         </div>
@@ -177,7 +185,6 @@ function savePost() {
                                         <option v-for="(option, optionKey, j) in group" :key="optionKey" :value="optionKey"><template v-if="option[0].ancestors.length > 0" class="mr-1">{{ '-'.repeat(option[0].ancestors.length) + ' ' }}</template>{{ option[0].term.name }}</option>
                                     </select>
                                 </label>
-
                             </template>
                             <template v-else>
                                 <TermNonHierarchial

@@ -1,6 +1,6 @@
 <div class="w-full max-w-7xl h-auto mx-auto py-4 grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 text-[16px]">
     <div class="md:px-8 md:col-span-2 md:grid md:grid-cols-5 gap-4 items-center">
-        <img src="/uploads/logo-bot-g.png" class="px-10 md:p-4 md:col-span-2"/>
+        <img src="/uploads/logo-bot.svg" width="390" height="390" alt="Sâm Sia Ginseng" class="px-10 md:p-4 md:col-span-2" loading="lazy"/>
         <p class="font-medium md:col-span-3 md:leading-8">
             Vườn sâm Sia Ginseng được thiên nhiên ưu ái ban tặng dòng nước suối trong lành và độ thổ nhưỡng tốt. Chính vì điều đó, chúng tôi tự hào khi mang đến Quý khách hàng những sản phẩm sức khỏe có nguồn gốc từ tự nhiên đạt tiêu chuẩn và chất lượng cao.
         </p>

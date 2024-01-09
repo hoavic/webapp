@@ -28,16 +28,16 @@
 
     @if ($post->type !== 'page' && $relatedPosts->count() > 0)
         <h2 class="my-6 mx-4 font-bold uppercase text-green-800">Related Posts</h2>
-        <ul class="grid grid-cols-2 md:grid-cols-3 gap-4 lg:gap-y-6">
+        <ul class="list-none pl-0 grid grid-cols-2 md:grid-cols-3 gap-4 lg:gap-y-6">
             @foreach ($relatedPosts as $relatedPost)
                 <li>
-                    <a href="{{ $relatedPost->name }}">
+                    <a href="{{ $relatedPost->name }}" class="no-underline">
                         @if ($relatedPost->getFeatured())
                             {!! $relatedPost->getFeaturedImage('medium', $relatedPost->title, 'my-0 rounded-lg') !!}
                         @else
                             <span class="aspect-video bg-gray-200 block rounded-lg"></span>
                         @endif
-                        <span class="font-bold text-slate-900">{{ $relatedPost->title }}</span>
+                        <h3 class="mx-0 my-2 text-xl font-bold text-slate-900">{{ $relatedPost->title }}</h3>
                     </a>
                 </li>
             @endforeach

@@ -20,7 +20,7 @@
             </div>
 
             <div class="">
-                <img src="/uploads/cay-sam.svg" alt="cay sam bo chinh" width="200" height="200" class="mx-auto h-56 group-hover:brightness-125 group-hover:scale-125 group-hover:rotate-6 transition-all"/>
+                <img src="/uploads/cay-sam.svg" alt="Giá trị của cây sâm" width="200" height="200" class="mx-auto h-56 group-hover:brightness-125 group-hover:scale-125 group-hover:rotate-6 transition-all"  loading="lazy"/>
             </div>
 
             <div class="text-right">

@@ -131,17 +131,20 @@ class MediaController extends Controller
             'file_names.*' => 'required|string|unique:media,file_name',
             'medias'    => 'array',
             'media.*' => 'required|file|mimes:jpg,png,webp,gif|max:2048',
+            'optimized_for_blog' => 'required|boolean',
+            'optimized_for_product' => 'required|boolean',
+            'optimized_for_template' => 'required|boolean',
         ]);
 
         foreach($request->file('medias') as $media) {
-            $this->handleImageUpload($media);
+            $this->handleImageUpload($media, $validated['optimized_for_blog'], $validated['optimized_for_product'], $validated['optimized_for_template']);
         }
     }
 
-    public function handleImageUpload($media) {
+    public function handleImageUpload($media, $optimized_for_blog = true, $optimized_for_product = false, $optimized_for_template = false) {
         $image = new Image();
-        $image->loadFile($media);
-        $responsive = $image->setResponsive();
+        $image->loadFile($media, 'uploads/media/', true); // convert to webp
+        $responsive = $image->setResponsive($optimized_for_blog, $optimized_for_product, $optimized_for_template);
 
         $media = Media::create([
             'model_type' => 'Hoadev\CoreBlog\Models\Post',
@@ -150,12 +153,14 @@ class MediaController extends Controller
             'name' => $image->name, //name
             'file_name' => $image->imageName,
             'mime_type' => $image->mime_type,
+            /* 'mime_type' => 'image/webp', */
             'disk' => 'images',
             'size' => $image->size,
             'manipulations' => '',
             'custom_properties' => [
                 'path' => $image->getPath(),
                 'url' => $image->getUrl(),
+                'originUrl' => $image->getOriginUrl(),
                 'width' => $image->width,
                 'height' => $image->height,
             ],

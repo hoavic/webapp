@@ -53,7 +53,7 @@ trait CoreBlogRoute {
 
         Route::get('{name}', [PermalinkController::class, 'single'])->name('permalink.single');
 
-        Route::get('{type}/{name}', [PermalinkController::class, 'post'])->name('permalink.post')->whereIn('type', ['post', 'page', 'news', 'blog']);
+        Route::get('{type}/{name}', [PermalinkController::class, 'post'])->name('permalink.post')->whereIn('type', ['custom']);
         Route::get('{type}/{slug}', [PermalinkController::class, 'term'])->name('permalink.term')->whereIn('type', ['category', 'tag']);
 
         Route::get('{parent}/{slug}', [PermalinkController::class, 'categoryHasParent'])->name('permalink.category.hasParent');

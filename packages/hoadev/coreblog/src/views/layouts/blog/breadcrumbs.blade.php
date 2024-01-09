@@ -1,7 +1,7 @@
 {{-- <p class="py-2 text-sm text-gray-500">Home > Phone > iPhone > iPhone 15</p> --}}
 {{-- {{ dd($breadcrumbs) }} --}}
 @isset($breadcrumbs)
-    <ol class="flex flex-wrap items-center text-sm text-gray-500 whitespace-nowrap">
+    <ol class="my-2 flex flex-wrap items-center text-sm text-gray-500 whitespace-nowrap">
         <li>
             <a href="/" class="flex items-center after:content-['>'] after:mx-1 hover:text-green-800" title="Home page">
                 <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -10,10 +10,17 @@
                 </svg>
             </a>
         </li>
+        @isset($post)
+            <li>
+                <a href="{{ config('coreblog.post_types')[$post->type]['type'] ?? '/' }}" class="block py-2 after:content-['>'] after:mx-1 text-yellow-800 hover:text-green-800">
+                    {{ config('coreblog.post_types')[$post->type]['labels']['vietsub'] ?? '' }}
+                </a>
+            </li>
+        @endisset
         @foreach ($breadcrumbs->breadcrumbs[0]->itemListElement as $breadcrumb)
             <li>
                 @if (isset($breadcrumb->item) && !$loop->last)
-                    <a href="{{ $breadcrumb->item }}" class="after:content-['>'] after:mx-1 text-yellow-800 hover:text-green-800">{{ $breadcrumb->name }}</a>
+                    <a href="{{ $breadcrumb->item }}" class="block py-2 after:content-['>'] after:mx-1 text-yellow-800 hover:text-green-800">{{ $breadcrumb->name }}</a>
                 @else
                     {{ $breadcrumb->name }}
                 @endif

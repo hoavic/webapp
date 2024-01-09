@@ -29,7 +29,7 @@ function destroy(id) {
                     <th class="text-left">#</th>
                     <th class="text-left">Title</th>
                     <th>Slug</th>
-                    <th class="hidden md:table-cell">Excerpt</th>
+                    <!-- <th class="hidden md:table-cell">Excerpt</th> -->
                     <th>Action</th>
                 </tr>
             </thead>
@@ -42,7 +42,7 @@ function destroy(id) {
                                 class="text-blue-900 whitespace-nowrap" :class="item.status === 'published' ? 'font-bold' : ''">{{ item.title }}<span v-if="item.status !== 'published'" class="ml-2 italic text-xs text-gray-800">({{ item.status }})</span></a>
                         </td>
                         <td class="text-gray-600 text-sm">{{ item.name }}</td>
-                        <td class="hidden md:table-cell text-gray-600 text-sm">{{ stripHtml(item.excerpt) }}</td>
+                        <!-- <td class="hidden md:table-cell text-gray-600 text-sm">{{ stripHtml(item.excerpt) }}</td> -->
                         <td>
                             <div class="flex gap-2 justify-end">
 

@@ -58,11 +58,11 @@ onUpdated(() => {
 const loadEditor = () => {
     editor = tinymce.init({
         selector: 'textarea#myeditorinstance', // Replace this CSS selector to match the placeholder element for TinyMCE
-        language: 'vi_VN',
         entity_encoding : "raw",
         content_css: false,
         skin: false,
-        content_style: 'body { font-family: Arial, Helvetica, sans-serif; line-height: 1.5; font-size:18px; max-width: 768px; margin: 0 auto; padding: 1em 0; color: #333; } img {max-width: 100%; height: auto} figcaption {color: #999;font-size: 0.9em} h2, h3, h4, h5, p, ul, ol, blockquote, figure, figcaption {margin: 1em 0} table {border-collapse: collapse;} th, td {padding: 0.5em; border: 1px solid #999} blockquote {background: #eee; color: #666; padding: 1em; border-radius: 1em}',
+        /* content_style: 'body { font-family: Arial, Helvetica, sans-serif; line-height: 1.5; font-size:18px; max-width: 768px; margin: 0 auto; padding: 1em 0; color: #333; } img {max-width: 100%; height: auto} figcaption {color: #999;font-size: 0.9em} h2, h3, h4, h5, p {margin: 1em 0} ul, ol, blockquote, figure, figcaption, table {margin: 1.5em 0} table {border-collapse: collapse;} thead {background-color: #166534; color: white;} th, td {padding: 0.5em; border: 1px solid #0e723c} blockquote {background: #f0fdf4; color: #064e3b; padding: 1px 0; border-radius: 1em; border-left: 1px solid; border-bottom: 5px solid; border-top: 1px solid; border-right: 3px solid;}', */
+        content_style: 'body { font-family: Arial, Helvetica, sans-serif; line-height: 1.5; font-size:18px; max-width: 856px; margin: 0 auto; padding: 0; color: #333; } img{display: block;max-width:100%;height:auto;margin:25px 0}h2,h3,h4,h5,p{margin:20px}blockquote,figure{margin:25px 20px}blockquote{background:#f0fdf4;color:#064e3b;padding:1px 0;border-radius:1em;border-left:1px solid;border-bottom:5px solid;border-top:1px solid;border-right:3px solid}.taxonomy-description,.entry-content{font-family:Arial,Helvetica,sans-serif;line-height:1.5;color:#333}figcaption{margin:25px 0;color:#999;font-size:.9em}a{color:#9c6b2c;text-decoration:underline}a:hover{color:#0e723c}h2,h3,h4,h5{font-weight:700}h2{font-size:1.4em}h3{font-size:1.3em}h4,h5{font-size:1.2em}ul,ol{margin:25px 20px;padding-left:25px;list-style:revert-layer}table{margin:25px 20px;border-collapse:collapse}thead{background-color:#166534;color:#fff}th,td{padding:10px;border:1px solid #0e723c}',
         setup: (editor) => {
             editor.on("change", (e) => {
 /*                 form.content = tinymce.get("myeditorinstance").getContent();

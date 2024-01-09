@@ -25,7 +25,7 @@ function configFeaturedClass() {
 
 function fixUrl() {
     if(react.featured.media.hasOwnProperty('responsive_images') && react.featured.media.responsive_images.medium.charAt(0) !== '/') {
-        return '/' + react.featured.media.responsive_images.medium;
+        return '/' + react.featured.media.responsive_images.large;
     }
     return '';
 }

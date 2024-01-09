@@ -40,15 +40,15 @@ function syncVariant() {
 
         <div class="flex flex-col gap-4 md:flex-row text-right">
             <label class="flex gap-2 items-center">
-                Quantity:
-                <input type="number" v-model="react.variant.quantity" @input="syncVariant"
-                    class="w-full text-right border border-gray-300 rounded-lg"/>
-            </label>
-
-            <label class="flex gap-2 items-center">
                 Price:
                 <input type="number" v-model="react.variant.price" @input="syncVariant"
                     class="w-full text-right border border-gray-300 rounded-lg"/>đ
+            </label>
+
+            <label class="flex gap-2 items-center">
+                Quantity:
+                <input type="number" v-model="react.variant.quantity" @input="syncVariant"
+                    class="w-full text-right border border-gray-300 rounded-lg"/>
             </label>
         </div>
 

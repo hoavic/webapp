@@ -35,4 +35,11 @@ class MetaTags {
         $this->canonical = config('app.url').$term->getPermalink();
     }
 
+    public function importManual($title, $description, $canonical)
+    {
+        $this->title = $title;
+        $this->description = $description;
+        $this->canonical = $canonical;
+    }
+
 }

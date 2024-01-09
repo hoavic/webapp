@@ -1,0 +1,92 @@
+<?php
+
+namespace Hoadev\CoreShop\Http\Controllers;
+
+use App\Http\Controllers\Controller;
+use Hoadev\CoreBlog\Classes\Breadcrumbs;
+use Hoadev\CoreBlog\Classes\MetaTags;
+use Hoadev\CoreBlog\Models\Term;
+use Hoadev\CoreShop\Models\Product;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
+
+class PermalinkShopController extends Controller
+{
+
+    public function product($name)
+    {
+        $post = Product::with(['postMetas', 'terms.taxonomy.ancestors', 'variants'])->where('type', 'product')
+                    ->where('name', $name)
+                    ->first();
+        if ($post) {
+
+            $meta_tags = new MetaTags();
+            $meta_tags->importFromPost($post);
+            $breadcrumbs = new Breadcrumbs();
+            $breadcrumbs->importFromPost($post);
+
+            return view('coreshop::guest.product.default', [
+                'post' => $post,
+                'metas' => $post->postMetas->pluck(['value', 'key']),
+                'taxonomies' => $post->terms->groupBy('taxonomy'),
+                'relatedPosts' => $post->getRelatedPosts(),
+                'meta_tags' => $meta_tags,
+                'breadcrumbs' => $breadcrumbs,
+                'contentStyle' => 'shop-sidebar'
+            ]);
+        }
+
+        return redirect()->route('home');
+    }
+
+    public function productCategory(Request $request, $slug)
+    {
+        return $this->renderProductCategory($request, $slug);
+    }
+
+    public function productCategoryHasParent(Request $request, $parent, $slug)
+    {
+        return $this->renderProductCategory($request, $slug);
+    }
+
+    public function productCategoryHasGrand(Request $request, $grand, $parent, $slug)
+    {
+        return $this->renderProductCategory($request, $slug);
+    }
+
+    public function getProductCategory($slug) {
+        return Term::whereHas('taxonomy', function (Builder $query) {
+                        $query->where('taxonomy', 'product_category');
+                    })
+                    ->where('slug', $slug)
+                    ->first();
+    }
+
+    public function renderProductCategory($request, $slug) {
+
+        if($term = $this->getProductCategory($slug)) {
+
+            if($request->getPathInfo() !== $term->getPermalink()) { return redirect($term->getPermalink());}
+
+            $meta_tags = new MetaTags();
+            $meta_tags->importFromTerm($term);
+            $breadcrumbs = new Breadcrumbs();
+            $breadcrumbs->importFromTerm($term);
+
+            return view('coreshop::guest.term.product-category', [
+                'term' => $term,
+                'posts' => $this->listPostsWithPaginate($term),
+                'meta_tags' => $meta_tags,
+                'breadcrumbs' => $breadcrumbs,
+                'contentStyle' => 'no-sidebar'
+            ]);
+
+        }
+
+        return redirect()->route('home');
+    }
+
+    public static function listPostsWithPaginate(Term $term) {
+        return $term->products()->where('status', 'published')->with(['postMetas.media', 'variants'])->paginate(10);
+    }
+}

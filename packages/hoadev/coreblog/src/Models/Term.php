@@ -3,6 +3,7 @@
 namespace Hoadev\CoreBlog\Models;
 
 use Hoadev\CoreBlog\Traits\Seo\WithSeoTermFunc;
+use Hoadev\CoreShop\Models\Product;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -35,7 +36,12 @@ class Term extends Model
 
     public function posts(): BelongsToMany
     {
-        return $this->belongsToMany(Post::class, 'term_relationships');
+        return $this->belongsToMany(Post::class, 'term_relationships', 'post_id');
+    }
+
+    public function products(): BelongsToMany
+    {
+        return $this->belongsToMany(Product::class, 'term_relationships', 'term_id', 'post_id', 'id', 'id', 'posts');
     }
 
     public function getPermalink() {

@@ -8,6 +8,7 @@ class Image {
 
     public $parent_path;
     public $image;
+    public $originImageName;
     public string $name;
     public string $imageName;
     public $size;
@@ -17,23 +18,36 @@ class Image {
     public $extension;
     public $imageData;
 
-    public function loadFile($image, $parent_path = 'uploads/media/')
+    public function loadFile($image, $parent_path = 'uploads/media/', $convert_to_webp = false)
     {
         $this->parent_path = $parent_path;
         $this->image = $image->move($this->parent_path, $image->getClientOriginalName());
-        $this->imageName = $image->getClientOriginalName();
         $this->size = $this->image->getSize();
         $dataDemen = getimagesize($this->image);
         $this->width = $dataDemen[0];
         $this->height = $dataDemen[1];
         $this->mime_type = $image->getClientmimeType();
         $this->extension = $image->getClientOriginalExtension();//Getting extension
-        $this->name = str_replace($this->extension, '', $this->imageName);
         $this->loadImageData();
+        $this->name = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
+        $this->originImageName = $this->name.'.'.$this->extension;
+        if($convert_to_webp) {
+            $this->convertToWebp();
+        } else {
+            $this->imageName = $image->getClientOriginalName();
+        }
+    }
+
+    public function convertToWebp() {
+        $this->mime_type ===  'image/webp';
+        $this->imageName = $this->name.'.webp';
+        $this->extension = '.webp';
+        $this->saveImage($this->imageData);
     }
 
     public function loadImageData()
     {
+
         if ($this->mime_type ===  'image/jpeg') {
 
             $this->imageData = imagecreatefromjpeg($this->image);
@@ -51,15 +65,9 @@ class Image {
             $this->imageData = imagecreatefromgif($this->image);
 
         }
+
     }
 
-/*     public function setThumbnailSize() {
-        $new_width = 150;
-        $new_height = 150;
-        $new_image = imagecreatetruecolor($new_width, $new_height);
-        imagecopyresampled($new_image, $this->imageData, 0, 0, 0, 0, $new_width, $new_height, $this->width, $this->height);
-        $this->saveImage($new_image, 'thumbnail_');
-    } */
     //con loi ko ngay center
     public function setThumbnailSize() {
         $size = min(imagesx($this->imageData), imagesy($this->imageData));
@@ -67,62 +75,84 @@ class Image {
 
         $thumbnail = $this->resize_to_width(150, $croped_image, $size, $size);
 
-        /* $new_width = 200;
-        $new_height = 200;
-        $resized_image = imagecreatetruecolor($new_width, $new_height);
-        imagecopyresampled($resized_image, $croped_image, 0, 0, 0, 0, $new_width, $new_height, $size, $size); */
         imagedestroy($croped_image);
-        return $this->saveImage($thumbnail, 'thumbnail_');
+        return $this->saveImage($thumbnail, '_150px');
     }
 
     public function setMediumSize() {
-/*         if($this->width >= $this->height) {
-            $medium = $this->resize_to_width(300, $this->imageData, $this->width, $this->height);
-        } else {
-            $medium = $this->resize_to_height(300, $this->imageData, $this->width, $this->height);
-        } */
         $medium = $this->resize_to_width(300, $this->imageData, $this->width, $this->height);
-        return $this->saveImage($medium, 'medium_');
+        return $this->saveImage($medium, '_300px');
+    }
+
+    public function setMediumLargeSize() {
+        $medium = $this->resize_to_width(600, $this->imageData, $this->width, $this->height);
+        return $this->saveImage($medium, '_600px');
     }
 
     public function setLargeSize() {
-/*         if($this->width >= $this->height) {
-            $large = $this->resize_to_width(768, $this->imageData, $this->width, $this->height);
-        } else {
-            $large = $this->resize_to_height(768, $this->imageData, $this->width, $this->height);
-        } */
-        $large = $this->resize_to_width(768, $this->imageData, $this->width, $this->height);
-        return $this->saveImage($large, 'large_');
-    }
-
-    public function setExtraSize() {
-/*         if($this->width >= $this->height) {
-            $extra = $this->resize_to_width(1024, $this->imageData, $this->width, $this->height);
-        } else {
-            $extra = $this->resize_to_height(1024, $this->imageData, $this->width, $this->height);
-        } */
-        $extra = $this->resize_to_width(1024, $this->imageData, $this->width, $this->height);
-        return $this->saveImage($extra, 'extra_');
+        $large = $this->resize_to_width(800, $this->imageData, $this->width, $this->height);
+        return $this->saveImage($large, '_800px');
     }
 
     public function setWideSize() {
-/*         if($this->width >= $this->height) {
-            $wide = $this->resize_to_width(1280, $this->imageData, $this->width, $this->height);
-        } else {
-            $wide = $this->resize_to_height(1280, $this->imageData, $this->width, $this->height);
-        } */
-        $wide = $this->resize_to_width(1280, $this->imageData, $this->width, $this->height);
-        return $this->saveImage($wide, 'wide_');
+        $wide = $this->resize_to_width(1200, $this->imageData, $this->width, $this->height);
+        return $this->saveImage($wide, '_1200px');
     }
 
-    public function setResponsive() {
-        return [
-            'thumbnail' => $this->setThumbnailSize(),
-            'medium' => $this->setMediumSize(),
-            'large' => $this->setLargeSize(),
-            'extra' => $this->setExtraSize(),
-            'wide' => $this->setWideSize(),
-        ];
+    public function setExtraSize() {
+        $extra = $this->resize_to_width(1500, $this->imageData, $this->width, $this->height);
+        return $this->saveImage($extra, '_1500px');
+    }
+
+    public function setFullSize() {
+        $extra = $this->resize_to_width(1920, $this->imageData, $this->width, $this->height);
+        return $this->saveImage($extra, '_1920px');
+    }
+
+    public function setResponsive($optimized_for_blog = true, $optimized_for_product = false, $optimized_for_template = false) {
+        $res = [];
+
+        if($this->width >= 150) {
+            $res['thumbnail'] = $this->setThumbnailSize();
+        }
+
+        if($this->width >= 300) {
+            $res['medium'] = $this->setMediumSize();
+        }
+
+        if($optimized_for_blog) {
+
+            if($this->width >= 600) {
+                $res['medium_large'] = $this->setMediumLargeSize();
+            }
+
+            if($this->width >= 800) {
+                $res['large'] = $this->setLargeSize();
+            }
+
+            if($this->width >= 1200) {
+                $res['wide'] = $this->setWideSize();
+            }
+
+        }
+
+        if($optimized_for_product) {
+
+            if($this->width >= 1500) {
+                $res['extra'] = $this->setExtraSize();
+            }
+
+        }
+
+        if($optimized_for_template) {
+
+            if($this->width >= 1920) {
+                $res['full'] = $this->setFullSize();
+            }
+
+        }
+
+        return $res;
     }
 
     //from
@@ -151,9 +181,10 @@ class Image {
     public function saveImage($new_image, $prefix = '', $quality=90)
     {
 
-        $path = $this->parent_path.$prefix.$this->imageName;
+        $path = $this->parent_path.$this->name.$prefix.$this->extension;
 
         if ($this->mime_type ===  'image/jpeg') {
+
             imagejpeg($new_image, $path, $quality);
 
         } elseif ($this->mime_type ===  'image/webp') {
@@ -181,6 +212,10 @@ class Image {
 
     public function getUrl() : string {
         return '/'.$this->parent_path.$this->imageName;
+    }
+
+    public function getOriginUrl() : string {
+        return '/'.$this->parent_path.$this->originImageName;
     }
 
 }

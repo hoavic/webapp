@@ -15,11 +15,17 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
 
+{{--         Favicon --}}
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+        <link rel="manifest" href="/site.webmanifest">
         <!-- Scripts -->
         @vite(['resources/js/blog.js', 'resources/css/blog.css'])
         @if (strpos(Route::current()->getName(), 'permalink') !== false)
             @include('coreblog::includes.breadcrumbs-json')
         @endif
+
     </head>
     <body class="antialiased flex flex-col min-h-screen">
 
@@ -71,7 +77,7 @@
 
         @endif
 
-        <div class="w-full max-w-7xl h-auto mx-auto">
+        <div class="w-full max-w-7xl h-auto mx-auto pb-8">
             @if (strpos(Route::current()->getName(), 'permalink') !== false)
                 @include('coreblog::layouts.blog.breadcrumbs')
             @endif
@@ -91,7 +97,7 @@
 
         @endif
 
-        <footer class="mt-auto py-4 bg-gradient-to-r from-white to-yellow-600/20 text-red-900 border-t border-yellow-800 shadow-lg">
+        <footer class="mt-auto py-4 bg-gradient-to-b md:bg-gradient-to-r from-white to-yellow-600/20 text-red-900 border-t border-yellow-800 shadow-lg">
             @include('coreblog::layouts.blog.footer')
         </footer>
 

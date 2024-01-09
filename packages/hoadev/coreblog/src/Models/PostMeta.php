@@ -21,7 +21,7 @@ class PostMeta extends Model
 
     public function post(): BelongsTo
     {
-        return $this->belongsTo(Post::class);
+        return $this->belongsTo(Post::class, 'post_id');
     }
 
     public function media(): BelongsTo

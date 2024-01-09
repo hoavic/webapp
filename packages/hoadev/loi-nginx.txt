@@ -1,0 +1,4 @@
+	--- 413 Request Entity Too Large ---
+
+    # set client body size to 5M #
+	client_max_body_size 5M;
