@@ -4,7 +4,7 @@
 
 @section('content')
 
-<div class="taxonomy-description">
+<div class="taxonomy-description box-content">
     {!! $term->taxonomy->description !!}
 </div>
 

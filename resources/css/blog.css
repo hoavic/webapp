@@ -33,15 +33,14 @@ img {max-width: 100%; height: auto; margin: 25px 0; display: block;}
 h2, h3, h4, h5, p {margin: 20px}
 blockquote, figure {margin: 25px 20px}
 blockquote {background: #f0fdf4; color: #064e3b; padding: 1px 0; border-radius: 1em; border-left: 1px solid; border-bottom: 5px solid; border-top: 1px solid; border-right: 3px solid;}
-.taxonomy-description,
-.entry-content {font-family: Arial, Helvetica, sans-serif; line-height: 1.5; color:#333}
+.content-box {font-family: Arial, Helvetica, sans-serif; line-height: 1.5; color:#333}
 figcaption { margin: 25px 0; color: #999;font-size: 0.9em}
 
-main a {color: #9c6b2c; text-decoration: underline;}
-main a:hover {color: #0e723c;}
-main h2, main h3, main h4, main h5 {font-weight: bold;}
-main h2 {font-size: 1.4em;} main h3 {font-size: 1.3em;} main h4, main h5 {font-size: 1.2em;}
-main ul, main ol {margin: 25px 20px; padding-left: 25px; list-style: revert-layer;}
-main table {margin: 25px 20px; border-collapse: collapse;}
-main thead {background-color: #166534; color: white;}
-main th, main td {padding: 10px; border: 1px solid #0e723c}
+.content-box a {color: #9c6b2c; text-decoration: underline;}
+.content-box a:hover {color: #0e723c;}
+.content-box h2, .content-box h3, .content-box h4, .content-box h5 {font-weight: bold;}
+.content-box h2 {font-size: 1.4em;} .content-box h3 {font-size: 1.3em;} .content-box h4, .content-box h5 {font-size: 1.2em;}
+.content-box ul, .content-box ol {margin: 25px 20px; padding-left: 25px; list-style: revert-layer;}
+.content-box table {margin: 25px 20px; border-collapse: collapse;}
+.content-box thead {background-color: #166534; color: white;}
+.content-box th, .content-box td {padding: 10px; border: 1px solid #0e723c}

@@ -22,7 +22,7 @@
 
 @section('content')
 
-    <div class="entry-content">
+    <div class="entry-content box-content">
         {!! $post->content !!}
     </div>
 

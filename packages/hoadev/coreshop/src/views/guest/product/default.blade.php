@@ -58,7 +58,7 @@
     </div>
 
     <div class="entry-content">
-        <h2 class="my-6">Mô tả sản phẩm</h2>
+        <h2 class="my-6 text-2xl font-bold uppercase">Mô tả sản phẩm</h2>
         {!! $post->content !!}
     </div>
 

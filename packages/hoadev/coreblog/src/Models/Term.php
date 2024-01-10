@@ -36,13 +36,15 @@ class Term extends Model
 
     public function posts(): BelongsToMany
     {
-        return $this->belongsToMany(Post::class, 'term_relationships', 'post_id');
+        return $this->belongsToMany(Post::class, 'term_relationships', 'term_id', 'post_id', 'id', 'id');
     }
 
     public function products(): BelongsToMany
     {
         return $this->belongsToMany(Product::class, 'term_relationships', 'term_id', 'post_id', 'id', 'id', 'posts');
     }
+
+    // Format Data
 
     public function getPermalink() {
         if ($this->taxonomy->taxonomy === 'category') {

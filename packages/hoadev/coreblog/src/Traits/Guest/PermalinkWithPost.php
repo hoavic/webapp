@@ -5,6 +5,7 @@ namespace Hoadev\CoreBlog\Traits\Guest;
 use Hoadev\CoreBlog\Classes\Breadcrumbs;
 use Hoadev\CoreBlog\Classes\MetaTags;
 use Hoadev\CoreBlog\Models\Post;
+use Illuminate\Support\Facades\View;
 
 trait PermalinkWithPost {
 
@@ -22,6 +23,15 @@ trait PermalinkWithPost {
             $meta_tags->importFromPost($post);
             $breadcrumbs = new Breadcrumbs();
             $breadcrumbs->importFromPost($post);
+
+            if($post->type === 'page' && View::exists('guest.custom-page.'.$name)) {
+                return view('guest.custom-page.'.$name, [
+                    'post' => $post,
+                    'metas' => $post->postMetas->pluck(['value', 'key']),
+                    'meta_tags' => $meta_tags,
+                    'breadcrumbs' => $breadcrumbs
+                ]);
+            }
 
             return view('coreblog::guest.post.default', [
                 'post' => $post,

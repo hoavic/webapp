@@ -47,7 +47,7 @@ class Post extends Model
 
     public function terms(): BelongsToMany
     {
-        return $this->belongsToMany(Term::class, 'term_relationships', 'post_id');
+        return $this->belongsToMany(Term::class, 'term_relationships', 'post_id', 'term_id', 'id', 'id');
     }
 
     public function comments(): HasMany

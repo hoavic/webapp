@@ -27,7 +27,7 @@
                     @if ($product_type)
                         @switch($product_type->value)
                             @case('simple')
-                                <span class="text-red-700 text-xl font-bold">{{ $post->variants[0]->getPrice() }}</span>
+                                @includeIf('coreshop::guest.elements.price.simple-price')
                                 @break
 
                             @default

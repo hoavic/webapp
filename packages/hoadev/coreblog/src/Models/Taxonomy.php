@@ -2,6 +2,7 @@
 
 namespace Hoadev\CoreBlog\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -42,6 +43,17 @@ class Taxonomy extends Model
     {
         return $this->children()->with('childrenRecursive');
     } */
+
+    // Attribute
+
+    protected function count(): Attribute
+    {
+        return Attribute::make(
+            get: fn (string $value) => $this->term->posts->count(),
+        );
+    }
+
+    // Format Data
 
     public function getPermalink() {
         if ($this->taxonomy === 'category') {
