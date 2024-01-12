@@ -42,6 +42,7 @@ return [
                 'tag'
             ],
             'has_archive' => true,
+            'archive_page' => 'blog',
         ],
 
         'page' => [
@@ -58,7 +59,8 @@ return [
             'show_in_menu' => true,
             'show_in_admin_bar' => true,
             'taxonomies' => [],
-            'has_archive' => true,
+            'has_archive' => false,
+            'archive_page' => '',
         ],
 
         'product' => [
@@ -79,6 +81,7 @@ return [
                 'brand'
             ],
             'has_archive' => true,
+            'archive_page' => 'san-pham',
         ],
 
 /*         'custom' => [

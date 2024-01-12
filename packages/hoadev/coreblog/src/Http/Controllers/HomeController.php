@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Hoadev\CoreBlog\Classes\MetaTags;
 use Hoadev\CoreBlog\Models\Post;
 use Hoadev\CoreBlog\Models\Taxonomy;
+use Hoadev\CoreShop\Models\Product;
 
 class HomeController extends Controller
 {
@@ -18,7 +19,8 @@ class HomeController extends Controller
             'newestPosts' => Post::with(['postMetas.media'])->where('status', 'published')->where('type', 'post')->latest()->limit(10)->get(),
             'categories' => Taxonomy::with(['term', 'ancestors'])->where('taxonomy', 'category')->get(),
             'contentStyle' => 'no-sidebar',
-            'meta_tags' => $meta_tags
+            'meta_tags' => $meta_tags,
+            'products' => Product::with(['postMetas.media', 'variants'])->where('status', 'published')->where('type', 'product')->latest()->limit(3)->get(),
         ]);
     }
 

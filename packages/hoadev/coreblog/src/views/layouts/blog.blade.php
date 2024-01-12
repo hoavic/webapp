@@ -92,7 +92,7 @@
 
         @if (Route::current()->getName() === 'home')
 
-            @include('coreblog::includes.partner')
+            {{-- @include('coreblog::includes.partner') --}}
             @include('coreblog::includes.partner-register')
 
         @endif

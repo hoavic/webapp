@@ -7,7 +7,6 @@ import Editor from '@/Pages/CoreBlog/Admin/Includes/Editor.vue';
 import TermNonHierarchial from '@/Pages/CoreBlog/Admin/Post/TermNonHierarchial.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import Alert from '@/Pages/CoreBlog/Admin/Alert.vue';
-import autoSlug from '@/Pages/CoreBlog/Includes/auto-slug';
 import FeaturedImage from '@/Pages/CoreBlog/Admin/Includes/FeaturedImage.vue';
 import SimpleProduct from './Variant/SimpleProduct.vue';
 import SimpleEditor from '@/Pages/CoreBlog/Admin/Includes/SimpleEditor.vue';
@@ -78,7 +77,7 @@ function underDev() {
                     <!-- Main -->
                     <div class="lg:flex-1">
                         <div class="my-6 mx-2 lg:mx-6">
-                            <input type="text" v-model="form.post.title" name="title" @input="form.post.name = autoSlug(form.post.title)" :placeholder="post_type.charAt(0).toUpperCase() + post_type.slice(1) + ' Title...'"
+                            <input type="text" v-model="form.post.title" name="title" placeholder="Title..."
                                 class="w-full text-lg font-bold border border-gray-300 rounded-lg"/>
                         </div>
 

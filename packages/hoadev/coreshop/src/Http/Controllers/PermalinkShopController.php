@@ -22,6 +22,7 @@ class PermalinkShopController extends Controller
 
             $meta_tags = new MetaTags();
             $meta_tags->importFromPost($post);
+
             $breadcrumbs = new Breadcrumbs();
             $breadcrumbs->importFromPost($post);
 

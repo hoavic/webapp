@@ -7,7 +7,6 @@ import Editor from '@/Pages/CoreBlog/Admin/Includes/Editor.vue';
 import TermNonHierarchial from './TermNonHierarchial.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import Alert from '../Alert.vue';
-import autoSlug from '../../Includes/auto-slug';
 import FeaturedImage from '../Includes/FeaturedImage.vue';
 
 const props = defineProps({
@@ -64,7 +63,7 @@ function sendUpdate(options = {}) {
                     <!-- Main -->
                     <div class="lg:flex-1">
                         <div class="my-6 mx-2 lg:mx-6">
-                            <input type="text" v-model="form.post.title" name="title" @input="form.post.name = autoSlug(form.post.title)" :placeholder="post_type.charAt(0).toUpperCase() + post_type.slice(1) + ' Title...'"
+                            <input type="text" v-model="form.post.title" name="title" placeholder="Title..."
                                 class="w-full text-lg font-bold border border-gray-300 rounded-lg"/>
                         </div>
 

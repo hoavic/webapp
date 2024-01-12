@@ -42,7 +42,7 @@ function submit() {
                     <!-- <p>{{ form }}</p> -->
                     <form @submit.prevent="submit">
                         <div class="m-6">
-                            <input type="text" v-model="form.name" name="title" placeholder="Title..." @input="autoslug"
+                            <input type="text" v-model="form.name" name="title" placeholder="Title..."
                                 class="w-full border border-gray-300 rounded-lg"/>
                         </div>
 
