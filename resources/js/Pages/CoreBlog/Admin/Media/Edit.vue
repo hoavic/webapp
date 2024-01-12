@@ -1,22 +1,22 @@
 <script setup>
 
 import AppLayout from '@/Layouts/AppLayout.vue';
-import { useForm } from '@inertiajs/vue3';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
-import Editor from '@/Pages/CoreBlog/Admin/Includes/Editor.vue';
-import { stripHtml } from '@/Pages/CoreBlog/Includes/global.js';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
+import { usePage } from '@inertiajs/vue3';
 
 const props = defineProps({
     taxonomy: String,
     media: Object,
 });
 
-function getUrl(item, size = '') {
+const page = usePage();
+
+const getUrl = (item, size = '') => {
     if(size != '' && item.responsive_images[size]) {
         return '/' + item.responsive_images[size];
     }
-    return '/' + item.custom_properties.url;
+    return item.custom_properties.url;
 }
 
 const getSrcset = (item) => {
@@ -44,6 +44,15 @@ const getSrcset = (item) => {
     return srcset.join(', ');
 }
 
+async function quickCopy(mytext) {
+    try {
+      await navigator.clipboard.writeText(mytext);
+      page.props.flash.message = "Copy successfully!";
+    } catch($e) {
+      alert('Cannot copy');
+    }
+  }
+
 </script>
 
 <template>
@@ -53,23 +62,37 @@ const getSrcset = (item) => {
             <div class="lg:flex lg:flex-row">
 
                 <div class="lg:flex-1 lg:px-6">
-                    <h1 class="mx-6 mb-6 font-bold">Edit {{ media.name }}</h1>
+                    <h1 class="mx-6 mb-6 font-bold break-words">{{ media.name }}</h1>
 
                     <div class="">
-                        <img :src="getUrl(media, 'medium')" :srcset="getSrcset(media)" loading="lazy"/>
+                        <img :src="getUrl(media, 'large')" :srcset="getSrcset(media)" loading="lazy"/>
 
                     </div>
                 </div>
 
-                <div class="w-full lg:w-[300px]">
-                    <p>Filename: {{ media.file_name }}</p>
-                    <p>Mimetype: {{ media.mime_type }}</p>
-                    <p>Size: {{ media.size }}</p>
-                    <p>Time: {{ media.created_at }}</p>
+                <div class="w-full p-4 lg:w-[420px]">
+                    <p class="break-words"><strong>Filename:</strong> {{ media.file_name }}</p>
+                    <p><strong>Mimetype:</strong> {{ media.mime_type }}</p>
+                    <p><strong>Size:</strong> {{ media.size }}</p>
+                    <p><strong>Time:</strong> {{ media.created_at }}</p>
 
-                    <div class="my-4 px-4 flex justify-between">
-                        <SecondaryButton>Show</SecondaryButton>
-                        <PrimaryButton>Delete</PrimaryButton>
+                    <h2 class="my-6 font-bold">Sizes</h2>
+
+                    <label v-for="(lsize, k) in media.responsive_images"
+                        class="block my-4">
+                        <span class="w-full">{{ k }}:</span>
+                        <div class="flex flex-row items-center gap-1">
+                            <input type="text" :name="'size' + k" :value="'/'+lsize"
+                                class=" w-full rounded-lg"/>
+                            <button @click="quickCopy('/' + lsize)" class="py-2 px-4 bg-gray-200 focus:bg-slate-200 focus:text-slate-400 focus:after:content-['✔'] after:text-red-500 rounded-lg">Copy</button>
+                        </div>
+                    </label>
+
+                    <h2 class="my-6 font-bold">Action</h2>
+
+                    <div class="my-4 flex justify-between">
+                        <a :href="getUrl(media)" target="_blank" class="py-2 px-4 font-bold bg-white text-blue-800 border-2 border-blue-800 rounded-full">Show</a>
+                        <PrimaryButton class="bg-red-800">Delete</PrimaryButton>
                     </div>
                 </div>
 

@@ -1,7 +1,7 @@
 <script setup>
 
 import { useForm, usePage } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import Alert from '../Alert.vue';
@@ -34,6 +34,10 @@ const form = useForm({
     optimized_for_blog: props.optimized_for_blog,
     optimized_for_product: props.optimized_for_product,
     optimized_for_template: props.optimized_for_template,
+});
+
+onMounted(() => {
+    if(page.props.post_type != undefined && page.props.post_type === 'product') {form.optimized_for_product = true;}
 });
 
 let showAdd = ref(false);

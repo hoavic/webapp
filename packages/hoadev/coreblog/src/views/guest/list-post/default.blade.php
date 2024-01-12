@@ -11,7 +11,7 @@
                 <h2 class="font-bold leading-4">
                     <a href="{{ $post->getpermalink() }}" class="text-xl no-underline">{{ $post->title }}</a>
                 </h2>
-                <p class="entry-summary">
+                <p class="entry-summary text-gray-600">
                     {!! $post->getExcerpt(20) !!}
                 </p>
             </article>

@@ -3,6 +3,7 @@
 namespace Hoadev\CoreShop\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use Hoadev\CoreBlog\Models\PostMeta;
 use Hoadev\CoreBlog\Models\Taxonomy;
 use Hoadev\CoreShop\Models\Product;
 use Hoadev\CoreShop\Models\Variant;
@@ -137,7 +138,7 @@ class ProductController extends Controller
                 $selectedTerms[$tax] = [];
             }
         }
-
+        $product->load('postMetas');
         $metas = $product->postMetas->groupBy('key');
         if(!isset($metas['featured_image'])) {$metas['featured_image'] = [];}
 
@@ -183,16 +184,18 @@ class ProductController extends Controller
 
         // handle all metas
         foreach($validated['metas'] as $key => $metasGroup) {
-            if(isset($metasGroup[0])) {
-                if(isset($metasGroup[0]["id"])) {
-                    $product->postMetas()->update([
-                        'key' => $metasGroup[0]["key"],
-                        'value' => $metasGroup[0]["value"],
-                    ]);
+            foreach($metasGroup as $meta) {
+                if(isset($meta["id"])) {
+
+                    if($newMeta = PostMeta::find($meta["id"]) ) {
+                        $newMeta->value = $meta["value"];
+                        $newMeta->save();
+                    }
+
                 } else {
                     $product->postMetas()->create([
-                        'key' => $metasGroup[0]["key"],
-                        'value' => $metasGroup[0]["value"],
+                        'key' => $key,
+                        'value' => $meta["value"],
                     ]);
                 }
             }

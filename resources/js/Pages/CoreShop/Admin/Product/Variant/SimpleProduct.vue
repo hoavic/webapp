@@ -18,12 +18,14 @@ const react = reactive({
 }); */
 
 function configVariant() {
-    if(props.modelValue != null && props.modelValue.hasOwnProperty('id')) {return props.modelValue}
-    return {
+    if(props.modelValue != null && props.modelValue.hasOwnProperty('name')) {return props.modelValue}
+    let defaultVar = {
         name: 'Default ' + props.product_name,
         quantity: 0,
         price: 0
-    }
+    };
+    emit('update:modelValue', defaultVar);
+    return defaultVar;
 }
 
 function syncVariant() {

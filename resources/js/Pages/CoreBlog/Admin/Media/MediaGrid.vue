@@ -10,7 +10,7 @@ function getUrl(item, size = '') {
     if(size != '' && item.responsive_images[size]) {
         return '/' + item.responsive_images[size];
     }
-    return '/' + item.custom_properties.url;
+    return item.custom_properties.url;
 }
 
 const getSrcset = (item) => {
