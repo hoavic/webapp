@@ -50,7 +50,7 @@ const getSrcset = (item) => {
                     class="font-bold text-blue-900 whitespace-nowrap">
                     <img :src="getUrl(item, 'medium')" loading="lazy"
                         :srcset="getSrcset(item)"
-                        class="aspect-square"/>
+                        class="aspect-square object-cover "/>
                 </a>
                 <div class="text-gray-600 text-sm break-all">{{ item.file_name }}</div>
                 <div class="text-xs text-gray-400">{{ prettyBytes(item.size) }}</div>

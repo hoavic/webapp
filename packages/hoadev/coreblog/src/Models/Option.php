@@ -14,7 +14,7 @@ class Option extends Model
     public $timestamps = false;
 
     protected $fillable = [
-
+        'id', 'name', 'value', 'autoload'
     ];
 
 }

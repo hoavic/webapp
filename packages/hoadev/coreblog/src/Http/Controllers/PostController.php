@@ -9,6 +9,7 @@ use Hoadev\CoreBlog\Models\Taxonomy;
 use Hoadev\CoreBlog\Models\Term;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
 
 class PostController extends Controller
@@ -114,6 +115,8 @@ class PostController extends Controller
         if($post->status === 'draft') {
             return redirect()->route('admin.posts.edit', $post);
         }
+
+        Cache::tags(['posts'])->flush();
 
         return redirect()->route('admin.posts.index', ['post_type' => $post->type]);
     }
@@ -228,6 +231,8 @@ class PostController extends Controller
         }
         $post->terms()->sync($termIDs);
 
+        Cache::tags(['posts'])->flush();
+
         session()->flash('message', 'Update successfully!');
         /* return redirect()->route('admin.posts.index'); */
     }
@@ -238,6 +243,8 @@ class PostController extends Controller
     public function destroy(Post $post)
     {
         $post->delete();
+
+        Cache::tags(['posts'])->flush();
 
         return redirect()->route('admin.posts.index');
     }

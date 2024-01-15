@@ -8,6 +8,7 @@ use Hoadev\CoreBlog\Models\Term;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
 
 class TermController extends Controller
@@ -22,13 +23,25 @@ class TermController extends Controller
 
         $search = $request->query('search');
 
-        $taxonomies = Taxonomy::with(['term', 'ancestors.term'])
+/*         $taxonomies = Taxonomy::with(['term', 'ancestors.term'])
                         ->where('taxonomy', $taxonomy)
                         ->whereHas('term', function (Builder $query) use($search) {
                             $query->where('name', 'like', '%'.$search.'%');
                         })
                         ->defaultOrder()
-                        ->paginate(10);
+                        ->paginate(10); */
+
+        $currentPage = $request->query('page', 1);
+
+        $taxonomies = Cache::tags(['taxonomies', 'terms'])->remember('taxonomies:'.$taxonomy.':search_'.$search.':page_'.$currentPage, 3600, function() use($taxonomy, $search) {
+            return Taxonomy::with(['term', 'ancestors.term'])
+                            ->where('taxonomy', $taxonomy)
+                            ->whereHas('term', function (Builder $query) use($search) {
+                                $query->where('name', 'like', '%'.$search.'%');
+                            })
+                            ->defaultOrder()
+                            ->paginate(10);
+        });
 
         $taxonomies->appends(['taxonomy' => $taxonomy]);
 
@@ -36,11 +49,18 @@ class TermController extends Controller
             $taxonomies->appends(['search' => $search]);
         }
 
+        $allTaxonomies = Cache::tags(['taxonomies', 'terms'])->remember('all_taxonomies:'.$taxonomy, 3600, function() use($taxonomy, $search) {
+            return Taxonomy::with(['term', 'ancestors.term'])
+                            ->where('taxonomy', $taxonomy)
+                            ->defaultOrder()
+                            ->get();
+        });
+
         return Inertia::render('CoreBlog/Admin/Term/Index', [
             'taxonomy' => $taxonomy,
             'search' => $search,
             'taxonomies' => $taxonomies,
-            'allTaxonomies' => Taxonomy::with(['term', 'ancestors'])->where('taxonomy', $taxonomy)->defaultOrder()->get()
+            'allTaxonomies' => $allTaxonomies
         ]);
     }
 
@@ -72,7 +92,7 @@ class TermController extends Controller
         if ($term) {
             $term->taxonomy()->create($validated['taxonomy']);
         }
-
+        Cache::tags(['terms'])->flush();
         /* return to_route('terms.index', ['taxonomy='.$validated['taxonomy']['taxonomy']]); */
         return redirect()->route('admin.terms.index', ['taxonomy='.$validated['taxonomy']['taxonomy']])->with('message', 'Add '.$term->name.' Successfully!');
     }
@@ -150,7 +170,7 @@ class TermController extends Controller
             $parent->prependNode($taxonomy);
         }
 
-
+        Cache::tags(['terms'])->flush();
         /* return to_route('terms.index', ['taxonomy='.$validated['taxonomy']['taxonomy']]); */
         return redirect()->route('admin.terms.index', ['taxonomy='.$validated['taxonomy']['taxonomy']])->with('message', 'Update '.$term->name.' Successfully!');
     }
@@ -163,6 +183,7 @@ class TermController extends Controller
         $taxonomy = $term->taxonomy;
         if($term->delete()) {$taxonomy->delete();}
 
+        Cache::tags(['terms'])->flush();
         /* return to_route('terms.index', ['taxonomy='.$request->query('taxonomy', 'category')])->with('success', 'your message,here'); */
         return redirect()->route('admin.terms.index', ['taxonomy='.$request->query('taxonomy', 'category')])->with('message', 'Delete '.$term->name.' Successfully!');
     }
@@ -206,6 +227,7 @@ class TermController extends Controller
             $taxonomy = $term->taxonomy()->create($validated['taxonomy']);
         }
 
+        Cache::tags(['terms'])->flush();
         return $taxonomy->load('term');
     }
 

@@ -60,6 +60,30 @@ class PermalinkController extends Controller
         return $this->renderTerm($request, $slug);
     }
 
+    public function termHasGrand(Request $request, $type, $grand, $parent, $slug)
+    {
+
+        if($type === 'category') {return redirect()->route('permalink.single', $slug); }
+
+        return $this->renderTerm($request, $slug, $type);
+
+    }
+
+    public function categoryHasGrand(Request $request, $grand, $parent, $slug)
+    {
+        return $this->renderTerm($request, $slug);
+    }
+
+
+    public function termOne(Request $request, $type = null, $parent = null, $slug)
+    {
+
+        if($type === 'category') {return redirect()->route('permalink.single', $slug); }
+
+
+        return $this->renderTerm($request, $slug, $type);
+
+    }
 
     public function archive($post_type) {
         return $this->renderArchive($post_type);
@@ -69,32 +93,18 @@ class PermalinkController extends Controller
 
         $gb_posts = config('coreblog.post_types');
 
-        $product_slug = config('coreblog.post_types.product.archive_page') ?? $post_type === config('coreblog.post_types.product.type');
-
-        if($post_type === $product_slug) {
+        if($post_type === 'product') {
 
             $posts = Product::with(['postMetas.media', 'variants'])
                 ->where('status', 'published')
-                ->where('type', 'product')
+                ->where('type', $post_type)
                 ->paginate(10);
 
             return view('coreblog::guest.archive.product', [
-                'post_label' => config('coreblog.post_types.product.labels.vietsub'),
+                'post_type' => $gb_posts[$post_type]["labels"]["vietsub"],
                 'posts' => $posts,
                 'contentStyle' => 'no-sidebar'
             ]);
-        }
-        $post_label = '';
-
-        foreach ($gb_posts as $gb_post) {
-            if($gb_post['archive_page'] === $post_type) {
-                $post_label = $gb_post['labels']['vietsub'];
-                break;
-            }
-            if($gb_post['type'] === $post_type) {
-                $post_label = $gb_post['labels']['vietsub'];
-                break;
-            }
         }
 
         $posts = Post::with(['postMetas.media'])
@@ -103,7 +113,7 @@ class PermalinkController extends Controller
             ->paginate(10);
 
         return view('coreblog::guest.archive.default', [
-            'post_label' => $post_label,
+            'post_type' => $gb_posts[$post_type]["labels"]["vietsub"],
             'posts' => $posts,
         ]);
 

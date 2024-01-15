@@ -12,8 +12,8 @@
         </li>
         @isset($post)
             <li>
-                <a href="{{ config('coreblog.post_types')[$post->type]['type'] ?? '/' }}" class="block py-2 after:content-['>'] after:mx-1 text-yellow-800 hover:text-green-800">
-                    {{ config('coreblog.post_types')[$post->type]['labels']['vietsub'] ?? '' }}
+                <a href="/{{ config('coreblog.post_types.'.$post->type.'.rewrite') ?? config('coreblog.post_types.'.$post->type.'.type') }}" class="block py-2 after:content-['>'] after:mx-1 text-yellow-800 hover:text-green-800">
+                    {{ config('coreblog.post_types.'.$post->type.'.labels.vietsub') ?? 'Posts Type' }}
                 </a>
             </li>
         @endisset

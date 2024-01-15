@@ -12,7 +12,7 @@ trait PermalinkWithTerm {
 
     public function renderTerm($request, $slug, $taxonomy = 'category') {
 
-        if($term = $this->getTerm($slug)) {
+        if($term = $this->getTerm($request, $slug, $taxonomy)) {
 
             if($request->getPathInfo() !== $term->getPermalink()) { return redirect($term->getPermalink());}
 
@@ -33,7 +33,7 @@ trait PermalinkWithTerm {
         return redirect()->route('home');
     }
 
-    public function getTerm($slug) {
+    public function getTerm($request, $slug, $taxonomy = 'category') {
 
 /*         return Cache::tags(['terms'])->remember('term_slug:'.$slug.'_page:'.$currentPage, 3600, function() use ($slug, $taxonomy){
             return Term::whereHas('taxonomy', function (Builder $query) use($taxonomy) {

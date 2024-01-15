@@ -58,7 +58,7 @@ function handleMediasSelected(medias) {
             <button type="button" @click.prevent="showPopupFeatured = true"
                 class="w-full aspect-video bg-gray-300 rounded-lg drop-shadow-lg">
 
-                <template v-if="react.featured.media.hasOwnProperty('responsive_images')">
+                <template v-if="react.featured.media && react.featured.media.hasOwnProperty('responsive_images')">
                     <img :src="fixUrl()" class="rounded-lg"/>
                     <!-- <input type="text" :value="featured.id" /> -->
                 </template>

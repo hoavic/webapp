@@ -43,6 +43,7 @@ return [
             ],
             'has_archive' => true,
             'archive_page' => 'blog',
+            'rewrite' => null
         ],
 
         'page' => [
@@ -61,6 +62,7 @@ return [
             'taxonomies' => [],
             'has_archive' => false,
             'archive_page' => '',
+            'rewrite' => null
         ],
 
         'product' => [
@@ -81,14 +83,16 @@ return [
                 'brand'
             ],
             'has_archive' => true,
-            'archive_page' => 'san-pham',
+            'archive_page' => 'cua-hang',
+            'rewrite' => 'san-pham'
         ],
 
-/*         'custom' => [
+        'custom' => [
             'type' => 'custom',
             'labels' => [
                 'name' => 'Customs',
                 'singular_name' => 'Custom',
+                'vietsub' => 'Tùy biến'
             ],
             'description' => '',
             'public' => true,
@@ -100,7 +104,9 @@ return [
                 'custom_tax'
             ],
             'has_archive' => true,
-        ], */
+            'archive_page' => 'tuy-bien',
+            'rewrite' => 'cus'
+        ],
     ],
 
     //Custom taxinomies config
@@ -119,6 +125,7 @@ return [
             'exclude_from_search' => false,
             'show_in_menu' => true,
             'show_in_admin_bar' => true,
+            'rewrite' => null
         ],
 
         'tag' => [
@@ -134,6 +141,7 @@ return [
             'exclude_from_search' => true,
             'show_in_menu' => true,
             'show_in_admin_bar' => false,
+            'rewrite' => null
         ],
 
         'product_category' => [
@@ -149,6 +157,7 @@ return [
             'exclude_from_search' => false,
             'show_in_menu' => true,
             'show_in_admin_bar' => true,
+            'rewrite' => 'danh-muc'
         ],
 
         'brand' => [
@@ -164,6 +173,7 @@ return [
             'exclude_from_search' => false,
             'show_in_menu' => true,
             'show_in_admin_bar' => true,
+            'rewrite' => 'thuong-hieu'
         ],
 
         'custom_tax' => [
@@ -174,11 +184,12 @@ return [
                 'vietsub' => 'Custom Taxonomy'
             ],
             'description' => '',
-            'public' => true,
+            'public' => false,
             'hierarchical' => true,
             'exclude_from_search' => false,
             'show_in_menu' => true,
             'show_in_admin_bar' => true,
+            'rewrite' => 'tuy-bien'
         ],
     ]
 

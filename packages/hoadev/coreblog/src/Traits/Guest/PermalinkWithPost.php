@@ -5,19 +5,28 @@ namespace Hoadev\CoreBlog\Traits\Guest;
 use Hoadev\CoreBlog\Classes\Breadcrumbs;
 use Hoadev\CoreBlog\Classes\MetaTags;
 use Hoadev\CoreBlog\Models\Post;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\View;
 
 trait PermalinkWithPost {
 
     public function getPost(array $types, $name) {
-        return Post::with(['postMetas', 'terms.taxonomy.ancestors'])->whereIn('type', $types)
+
+        return Cache::tags(['posts'])->remember('post_name:'.$name, 3600, function() use ($name){
+            return Post::with(['postMetas','postMetas.media', 'terms.taxonomy.ancestors'])
+                        ->where('name', $name)
+                        ->first();
+        });
+/*         return Post::with(['postMetas.media', 'terms.taxonomy.ancestors'])->whereIn('type', $types)
                     ->where('name', $name)
-                    ->first();
+                    ->first(); */
     }
 
-    public function renderPost($type, $name) {
+    public function renderPost($request, $type, $name) {
 
         if ($post = $this->getPost($type, $name)) {
+
+            if($request->getPathInfo() !== $post->getPermalink()) { return redirect($post->getPermalink());}
 
             $meta_tags = new MetaTags();
             $meta_tags->importFromPost($post);

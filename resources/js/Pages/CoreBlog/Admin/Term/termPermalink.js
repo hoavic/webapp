@@ -1,8 +1,15 @@
-export function getPermalink(item) {
+export function getPermalink(item, props) {
     if (item.taxonomy === 'category') {
         return parseSlug(item);
     }
-    return '/' + item.taxonomy + parseSlug(item);
+/*     console.log(props); */
+    let term_slug = '';
+    if(props.admin.taxonomies[item.taxonomy].rewrite) {
+        term_slug = props.admin.taxonomies[item.taxonomy].rewrite;
+    } else {
+        term_slug = props.admin.taxonomies[item.taxonomy].taxonomy;
+    }
+    return '/' + term_slug + parseSlug(item);
 }
 
 export function parseSlug(item) {

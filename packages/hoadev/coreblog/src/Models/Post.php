@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Cache;
 
 class Post extends Model
 {
@@ -56,7 +57,9 @@ class Post extends Model
     }
 
     public function getFeatured() {
-        return $this->postMetas->where('key', 'featured_image')->first();
+        return Cache::tags(['posts', 'postMetas', 'medias'])->remember('post:'.$this->name.':featured', 3600, function() {
+            return $this->postMetas->where('key', 'featured_image')->load('media')->first();
+        });
     }
 
     public function getFeaturedImageUrl($size = 'thumbnail') {
@@ -132,16 +135,22 @@ class Post extends Model
 
     public function getRelatedPosts($limit = 6) {
         $post = $this;
-        return Post::whereHas('terms', function (Builder $query) use($post) {
-            $query->whereIn('id', $post->terms->pluck('id'));
-        })->whereNot('id', $post->id)->where('status', 'published')->limit($limit)->latest()->get();
+
+        return Cache::tags(['posts', 'terms', 'taxonomies'])->remember('post_name:'.$this->name.':related_posts', 3600, function() use($post, $limit){
+            return Post::with(['postMetas.media'])
+                ->whereHas('terms', function (Builder $query) use($post) {
+                    $query->whereIn('id', $post->terms->pluck('id'));
+                })->whereNot('id', $post->id)->where('status', 'published')->limit($limit)->latest()->get();
+        });
+
     }
 
     public function getPermalink() {
         if ($this->type === 'post' || $this->type === 'page') {
             return '/'.$this->name;
         }
-        return '/'.$this->type.'/'.$this->name;
+        $post_slug = config('coreblog.post_types.'.$this->type.'.rewrite') ?? config('coreblog.post_types.'.$this->type.'.type');
+        return '/'.$post_slug.'/'.$this->name;
     }
 
 }

@@ -49,51 +49,30 @@ trait CoreBlogRoute {
 
         Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap.index');
 
-        //fix tam, sau nay remove
-        Route::get('{old_key_link}/{any?}', function($old_key_link, $any) {
-
-            switch($old_key_link) {
-                case 'product':
-                    return redirect('/san-pham/'.$any);
-                    break;
-
-                case 'product-category':
-                    return redirect('/danh-muc/'.$any);
-                    break;
-
-                default:
-                    return redirect('/');
-                    break;
-
-            }
-        })->whereIn('old_key_link', ['product', 'product_category']);
-
         $post_types = config('coreblog.post_types');
-        $has_archive_page_types = [];
+        $accept_types = [];
         foreach($post_types as $post_type) {
-            if(isset($post_type['has_archive']) && $post_type['has_archive']) {$has_archive_page_types[] = $post_type['archive_page'] ?? $post_type['type'];}
+            if(isset($post_type['has_archive']) && $post_type['has_archive'] == true) {$accept_types[] = $post_type['type'];}
         }
-
-        Route::get('{post_type}', [PermalinkController::class, 'archive'])->name('permalink.archive')->whereIn('post_type', $has_archive_page_types);
+        Route::get('{post_type}', [PermalinkController::class, 'archive'])->name('permalink.archive')->whereIn('post_type', $accept_types);
 
         Route::get('{name}', [PermalinkController::class, 'single'])->name('permalink.single');
 
-        $public_types = [];
-        foreach($post_types as $post_type) {
-            if(isset($post_type['public']) && $post_type['public']) {
-                $public_types[] = $post_type['rewrite'] ?? $post_type['type'];
-            }
-        }
-        Route::get('{type}/{name}', [PermalinkController::class, 'post'])->name('permalink.post')->whereIn('type', $public_types);
+        Route::get('{type}/{name}', [PermalinkController::class, 'post'])->name('permalink.post')->whereIn('type', ['custom']);
 
         $accept_taxonomies = [];
         foreach(config('coreblog.taxonomies') as $taxonomy) {
-            if(isset($taxonomy['public']) && $taxonomy['public'] && $taxonomy['taxonomy'] !== 'category') {$accept_taxonomies[] = $taxonomy['rewrite'] ?? $taxonomy['taxonomy'];}
+            if(isset($taxonomy['public']) && $taxonomy['public'] == true) {$accept_taxonomies[] = $taxonomy['taxonomy'];}
         }
+        Route::get('{type}/{slug}', [PermalinkController::class, 'term'])->name('permalink.term')->whereIn('type', $accept_taxonomies);
 
-        Route::get('{type}/{parent?}/{slug}', [PermalinkController::class, 'termHasParent'])->name('permalink.term.hasParent')->whereIn('type', $accept_taxonomies)->where('parent', '.*');
-        Route::get('{parent}/{slug}', [PermalinkController::class, 'categoryHasParent'])->name('permalink.category.hasParent')->where('parent', '.*');
+        Route::get('{parent}/{slug}', [PermalinkController::class, 'categoryHasParent'])->name('permalink.category.hasParent');
 
+        Route::get('{type}/{parent}/{slug}', [PermalinkController::class, 'termHasParent'])->name('permalink.term.hasParent')->whereIn('type', $accept_taxonomies);
+        Route::get('{grand}/{parent}/{slug}', [PermalinkController::class, 'categoryHasGrand'])->name('permalink.category.hasGrand');
+
+        Route::get('{type}/{grand}/{parent}/{slug}', [PermalinkController::class, 'termHasGrand'])->name('permalink.term.hasGrand')->whereIn('type', $accept_taxonomies);
+        /* Route::get('{taxonomy}/{slug}', [TermController::class, 'show'])->name('terms.show'); */
     }
 
 }

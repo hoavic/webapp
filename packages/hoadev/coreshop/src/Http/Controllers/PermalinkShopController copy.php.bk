@@ -5,22 +5,24 @@ namespace Hoadev\CoreShop\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Hoadev\CoreBlog\Classes\Breadcrumbs;
 use Hoadev\CoreBlog\Classes\MetaTags;
+use Hoadev\CoreBlog\Models\Term;
+use Hoadev\CoreBlog\Traits\Guest\PermalinkWithPost;
 use Hoadev\CoreBlog\Traits\Guest\PermalinkWithTerm;
 use Hoadev\CoreShop\Models\Product;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 
 class PermalinkShopController extends Controller
 {
 
-    use PermalinkWithTerm;
+    use PermalinkWithTerm, PermalinkWithPost;
 
-    public function product(Request $request, $name)
+    public function product($name)
     {
-
-        if ($post = $this->getPost($name)) {
-
-            if($request->getPathInfo() !== $post->getPermalink()) { return redirect($post->getPermalink());}
+        $post = Product::with(['postMetas', 'terms.taxonomy.ancestors', 'variants'])->where('type', 'product')
+                    ->where('name', $name)
+                    ->first();
+        if ($post) {
 
             $meta_tags = new MetaTags();
             $meta_tags->importFromPost($post);
@@ -42,33 +44,32 @@ class PermalinkShopController extends Controller
         return redirect()->route('home');
     }
 
-    public function getPost($name) {
-
-        return Cache::tags(['posts'])->remember('post_name:'.$name, 3600, function() use ($name){
-            return Product::with(['postMetas', 'terms.taxonomy.ancestors', 'variants'])->where('type', 'product')
-                        ->where('name', $name)
-                        ->first();
-        });
-    }
-
     public function productCategory(Request $request, $slug)
     {
-        return $this->renderTerm($request, $slug);
+        return $this->renderProductCategory($request, $slug);
     }
 
     public function productCategoryHasParent(Request $request, $parent, $slug)
     {
-        return $this->renderTerm($request, $slug);
+        return $this->renderProductCategory($request, $slug);
     }
 
     public function productCategoryHasGrand(Request $request, $grand, $parent, $slug)
     {
-        return $this->renderTerm($request, $slug);
+        return $this->renderProductCategory($request, $slug);
     }
 
-    public function renderTerm($request, $slug) {
+    public function getProductCategory($slug) {
+        return Term::whereHas('taxonomy', function (Builder $query) {
+                        $query->where('taxonomy', 'product_category');
+                    })
+                    ->where('slug', $slug)
+                    ->first();
+    }
 
-        if($term = $this->getTerm($slug)) {
+    public function renderProductCategory($request, $slug) {
+
+        if($term = $this->getProductCategory($slug)) {
 
             if($request->getPathInfo() !== $term->getPermalink()) { return redirect($term->getPermalink());}
 
@@ -79,7 +80,7 @@ class PermalinkShopController extends Controller
 
             return view('coreshop::guest.term.product-category', [
                 'term' => $term,
-                'posts' => $this->listPostsWithPaginate($request, $term),
+                'posts' => $this->listPostsWithPaginate($term),
                 'meta_tags' => $meta_tags,
                 'breadcrumbs' => $breadcrumbs,
                 'contentStyle' => 'no-sidebar'
@@ -90,14 +91,7 @@ class PermalinkShopController extends Controller
         return redirect()->route('home');
     }
 
-    //Overwrite traits
-    public static function listPostsWithPaginate($request, $term) {
-
-        $currentPage = $request->query('page', 1);
-
-        return Cache::tags(['posts', 'terms', 'taxonomies'])->remember('posts_by_term_slug:'.$term->slug.'_page:'.$currentPage, 3600, function() use ($term){
-            return $term->products()->where('status', 'published')->with(['postMetas.media', 'terms', 'variants'])->paginate(10);
-        });
-
+    public static function listPostsWithPaginate(Term $term) {
+        return $term->products()->where('status', 'published')->with(['postMetas.media', 'variants'])->paginate(10);
     }
 }

@@ -8,6 +8,7 @@ use Hoadev\CoreBlog\Models\Taxonomy;
 use Hoadev\CoreShop\Models\Product;
 use Hoadev\CoreShop\Models\Variant;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
 
 class ProductController extends Controller
@@ -101,6 +102,8 @@ class ProductController extends Controller
 
         //Store Variant
         $product->variants()->createMany($validated['variants']);
+
+        Cache::tags(['posts'])->flush();
 
         return redirect()->route('admin.products.index');
     }
@@ -225,6 +228,8 @@ class ProductController extends Controller
 
         Product::find($product->id)->variants()->whereNotIn('id', $variantIds)->delete();
 
+        Cache::tags(['posts'])->flush();
+
         session()->flash('message', 'Update successfully!');
     }
 
@@ -234,6 +239,8 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         $product->delete();
+
+        Cache::tags(['posts'])->flush();
 
         return redirect()->route('admin.products.index');
     }

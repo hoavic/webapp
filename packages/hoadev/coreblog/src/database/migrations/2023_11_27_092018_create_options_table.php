@@ -12,8 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('options', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->bigIncrements('id');
+            $table->string('name')->unique();
+            $table->longText('value')->default(null);
+            $table->string('payload')->nullable()->default('yes');
         });
     }
 

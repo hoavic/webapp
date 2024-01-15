@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Cache;
 use Kalnoy\Nestedset\NodeTrait;
 
 class Taxonomy extends Model
@@ -48,8 +48,13 @@ class Taxonomy extends Model
 
     protected function count(): Attribute
     {
-        return Attribute::make(
+/*         return Attribute::make(
             get: fn (string $value) => $this->term->posts->count(),
+        ); */
+        return Attribute::make(
+            get: fn (string $value) => Cache::tags(['terms', 'taxonomies', 'posts'])->remember('taxonomy:'.$this->term->slug.':count', 3600, function() {
+                return $this->term->posts->count();
+            }),
         );
     }
 
@@ -59,7 +64,8 @@ class Taxonomy extends Model
         if ($this->taxonomy === 'category') {
             return $this->parseSlug();
         }
-        return $this->taxonomy.'/'.$this->parseSlug();
+        $term_slug = config('coreblog.taxonomies.'.$this->taxonomy.'.rewrite') ?? config('coreblog.taxonomies.'.$this->taxonomy.'.taxonomy');
+        return '/'.$term_slug.$this->parseSlug();
     }
 
     public function parseSlug() {

@@ -22,7 +22,13 @@ const props = defineProps({
                 </div>
 
                 <div class="p-8 bg-gray-100 text-yellow-800 overflow-hidden sm:rounded-lg">
-                    <h2>It is under development ...</h2>
+                    <h2 class="my-6">It is under development ...</h2>
+                    <div class="flex flex-col text-gray-500 text-sm">
+                        <p>fix editor center</p>
+                        <p>support caching</p>
+                        <p>fix media grid</p>
+                        <p>optimize term structure</p>
+                    </div>
                 </div>
             </div>
         </div>

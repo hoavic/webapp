@@ -146,7 +146,7 @@ function confirmMedias() {
                     :width="item.custom_properties.width"
                     :height="item.custom_properties.height"
                     :class="react.selectedMedias.includes(item) ? 'border-4 border-blue-400 rounded-lg' : ''"
-                    class="aspect-square transition-all duration-75 ease-in-out"/>
+                    class="aspect-square object-cover transition-all duration-75 ease-in-out"/>
 
                 <div class="text-gray-600 text-sm break-all">{{ item.file_name }}</div>
                 <div class="text-xs text-gray-400">{{ prettyBytes(item.size) }}</div>

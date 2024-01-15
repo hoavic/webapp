@@ -19,11 +19,12 @@ trait CoreShopRoute {
 
     public static function Guest() {
 
-        Route::get('product/{name}', [PermalinkShopController::class, 'product'])->name('permalink.product');
+        $product_slug = config('coreblog.post_types.product.rewrite') ?? config('coreblog.post_types.product.type');
+        Route::get($product_slug.'/{name}', [PermalinkShopController::class, 'product'])->name('permalink.product');
 
-        Route::get('product_category/{slug}', [PermalinkShopController::class, 'productCategory'])->name('permalink.product_category');
-        Route::get('product_category/{parent}/{slug}', [PermalinkShopController::class, 'productCategoryHasParent'])->name('permalink.product_category.hasParent');
-        Route::get('product_category/{grand}/{parent}/{slug}', [PermalinkShopController::class, 'productCategoryHasGrand'])->name('permalink.product_category.hasGrand');
+        $product_category_slug = config('coreblog.taxonomies.product_category.rewrite') ?? config('coreblog.taxonomies.product_category.taxonomy');
+        Route::get($product_category_slug.'/{slug}', [PermalinkShopController::class, 'productCategory'])->name('permalink.product_category');
+        Route::get($product_category_slug.'/{parent?}/{slug}', [PermalinkShopController::class, 'productCategoryHasParent'])->name('permalink.product_category.hasParent')->where($product_category_slug, '.*');
 
     }
 

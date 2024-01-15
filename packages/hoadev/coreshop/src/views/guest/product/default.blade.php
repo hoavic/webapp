@@ -13,7 +13,7 @@
                 <span class="block aspect-square bg-gray-100 rounded-lg">Gallery</span>
             @elseif($post->getFeatured())
                 <a href="{{ $post->getFeaturedImageUrl('large') }}" target="_blank" rel="nofollow">
-                    {!! $post->getFeaturedImage('medium_large', $post->title, 'my-0 rounded aspect-square') !!}
+                    {!! $post->getFeaturedImage('large', $post->title, 'my-0 rounded aspect-square') !!}
                 </a>
             @else
                 <span class="block aspect-square bg-green-50 border border-green-900/10 rounded-lg"></span>

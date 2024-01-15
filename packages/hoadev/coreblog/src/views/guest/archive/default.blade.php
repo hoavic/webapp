@@ -1,6 +1,6 @@
 @extends('coreblog::layouts.blog')
 
-@section('term_name', $post_type)
+@section('term_name', $post_label)
 
 @section('content')
 

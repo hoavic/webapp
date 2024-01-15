@@ -50,7 +50,8 @@ class Term extends Model
         if ($this->taxonomy->taxonomy === 'category') {
             return $this->parseSlug();
         }
-        return '/'.$this->taxonomy->taxonomy.$this->parseSlug();
+        $term_slug = config('coreblog.taxonomies.'.$this->taxonomy->taxonomy.'.rewrite') ?? config('coreblog.taxonomies.'.$this->taxonomy->taxonomy.'.taxonomy');
+        return '/'.$term_slug.$this->parseSlug();
     }
 
     public function parseSlug() {

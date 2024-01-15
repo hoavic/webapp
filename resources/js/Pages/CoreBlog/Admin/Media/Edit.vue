@@ -2,8 +2,8 @@
 
 import AppLayout from '@/Layouts/AppLayout.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
-import SecondaryButton from '@/Components/SecondaryButton.vue';
 import { usePage } from '@inertiajs/vue3';
+import prettyBytes from 'pretty-bytes';
 
 const props = defineProps({
     taxonomy: String,
@@ -73,7 +73,7 @@ async function quickCopy(mytext) {
                 <div class="w-full p-4 lg:w-[420px]">
                     <p class="break-words"><strong>Filename:</strong> {{ media.file_name }}</p>
                     <p><strong>Mimetype:</strong> {{ media.mime_type }}</p>
-                    <p><strong>Size:</strong> {{ media.size }}</p>
+                    <p><strong>Size:</strong> {{ prettyBytes(media.size) }}</p>
                     <p><strong>Time:</strong> {{ media.created_at }}</p>
 
                     <h2 class="my-6 font-bold">Sizes</h2>
