@@ -62,8 +62,8 @@ function destroy() {
 
                     <div class="m-6">
                         <label>
-                            <input type="text" v-model="form.title" name="title" placeholder="Title..."
-                                class="w-full border border-gray-300 rounded-lg"/>
+                            <input type="text" v-model="form.title" name="title" placeholder="Title..." disabled
+                                class="w-full disabled:bg-gray-100 border border-gray-300 rounded-lg"/>
                         </label>
                     </div>
 

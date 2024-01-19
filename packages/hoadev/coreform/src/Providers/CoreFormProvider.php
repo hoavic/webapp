@@ -2,6 +2,8 @@
 
 namespace Hoadev\CoreForm\Providers;
 
+use Hoadev\CoreForm\Models\Form;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 
 class CoreFormProvider extends ServiceProvider

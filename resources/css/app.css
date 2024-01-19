@@ -53,15 +53,15 @@ th, td {
 
 /* notify */
 .notify-enter-active {
-    transition: all 300ms cubic-bezier(0, 1, 0.5, 1);
+    transition: all 200ms ease-out;
 }
 
 .notify-leave-active {
-    transition: all 300ms cubic-bezier(0, 1, 0.5, 1);
+    transition: all 800ms cubic-bezier(0, 1, 0.5, 1);
 }
 
 .notify-enter-from,
-.notify-up-leave-to {
+.notify-leave-to {
     transform: translateX(200px);
     opacity: 0;
 }

@@ -23,7 +23,7 @@ const confirmContacted = (item) => {
     vueform.status = 'contacted';
     vueform.put(route('admin.forms.update', vueform.id), {
         preserveScroll: true,
-        onSuccess: (res) => {console.log(res);}
+        onSuccess: (res) => {/* console.log(res); */}
     });
     //console.log(vueform.form.status);
 }
@@ -33,7 +33,7 @@ const unContacted = (item) => {
     vueform.status = 'pending';
     vueform.put(route('admin.forms.update', vueform.id), {
         preserveScroll: true,
-        onSuccess: (res) => {console.log(res);}
+        onSuccess: (res) => {/* console.log(res); */}
     });
     //console.log(vueform.form.status);
 }

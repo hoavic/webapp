@@ -6,10 +6,17 @@
 
     <div class="entry-content content-box">
 
-        @if (isset($status) && $status == 'success')
+        @if (session('status') && session('status') == 'success')
 
             <div class="m-6 text-center bg-green-50 text-green-900 border border-green-900 rounded-lg">
                 <h2>Đã gửi thành công!</h2>
+                <p>Chúng tôi sẽ liên hệ lại với bạn sớm nhất có thể!</p>
+            </div>
+
+        @elseif (session('status') == 'receipt')
+
+            <div class="m-6 text-center bg-yellow-50 text-yellow-900 border border-yellow-900 rounded-lg">
+                <h2>Yêu cầu này đã được tiếp nhận</h2>
                 <p>Chúng tôi sẽ liên hệ lại với bạn sớm nhất có thể!</p>
             </div>
 

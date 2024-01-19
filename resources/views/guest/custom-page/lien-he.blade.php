@@ -37,19 +37,25 @@
                 </ul>
             </div>
             <div class="">
-                <form x-data="{}" @submit.prevnet="alert('Tính năng đang phát triển!'); return;"
+                <form method="POST" action="/store-form-s"
+                    x-data="{
+                        autoTitle() {
+                            $refs.title.value = 'Liên hệ từ: ' + $refs.name.value;
+                        }
+                    }"
                     class="mx-4 p-4 lg:p-8 bg-yellow-800/10 border border-yellow-900/10">
                     <h2 class="mt-0 text-center font-bold">Gửi yêu cầu liên hệ cho chúng tôi!</h2>
                     @csrf
-                    <input type="text" name="contact_name" placeholder="Họ và Tên" required
+                    <input x-ref="title" type="hidden" name="title"/>
+                    <input x-ref="name" type="text" name="contact_name" placeholder="Họ và Tên" required @input="autoTitle()"
                         class="my-2 w-full focus:border border-yellow-800 rounded-lg"/>
-                    <input type="text" name="address" placeholder="Địa chỉ" required
+                    <input type="text" name="contact_address" placeholder="Địa chỉ" required
                         class="my-2 w-full focus:border border-yellow-800 rounded-lg"/>
-                    <input type="text" name="phone" placeholder="Điện thoại" required
+                    <input type="text" name="contact_phone" placeholder="Điện thoại" required
                         class="my-2 w-full focus:border border-yellow-800 rounded-lg"/>
-                    <input type="email" name="email" placeholder="Email" required
+                    <input type="email" name="contact_email" placeholder="Email" required
                         class="my-2 w-full focus:border border-yellow-800 rounded-lg"/>
-                    <textarea name="message" placeholder="Nội dung" required
+                    <textarea name="content" placeholder="Nội dung" required
                         class="my-2 w-full focus:border border-yellow-800 rounded-lg"></textarea>
                     <button type="submit" class="block py-2 px-8 bg-yellow-800 text-white hover:bg-green-800 transition-all rounded-full uppercase font-bold">Gửi</button>
                 </form>

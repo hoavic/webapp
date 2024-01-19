@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use Hoadev\CoreBlog\Models\Post;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 use Tightenco\Ziggy\Ziggy;
@@ -65,6 +66,7 @@ class HandleInertiaRequests extends Middleware
                     'menu' => config('coreblog.menu'),
                     'post_types' => config('coreblog.post_types'),
                     'taxonomies' => config('coreblog.taxonomies'),
+                    'pending_contact' => Post::where('status', 'pending')->count()
                 ];
         }
     }

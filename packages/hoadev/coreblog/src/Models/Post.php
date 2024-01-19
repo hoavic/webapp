@@ -3,6 +3,7 @@
 namespace Hoadev\CoreBlog\Models;
 
 use App\Models\User;
+use Cviebrock\EloquentSluggable\Sluggable;
 use Hoadev\CoreBlog\Traits\Seo\WithSeoPostFunc;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -15,7 +16,7 @@ use Illuminate\Support\Facades\Cache;
 
 class Post extends Model
 {
-    use HasFactory, SoftDeletes, WithSeoPostFunc;
+    use HasFactory, SoftDeletes, WithSeoPostFunc, Sluggable;
 
     protected $table = 'posts';
 
@@ -31,6 +32,15 @@ class Post extends Model
         'type',
         'comment_count'
     ];
+
+    public function sluggable(): array
+    {
+        return [
+            'name' => [
+                'source' => 'title'
+            ]
+        ];
+    }
 
     public function user(): BelongsTo
     {

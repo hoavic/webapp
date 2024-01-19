@@ -94,7 +94,7 @@ function underDev() {
                                 </label>
                             </div>
                         </div>
-{{ form.post }}
+
                         <div class="mx-2 my-12 lg:mx-6">
                             <label v-if="form.post.post_metas[getMetaIndex('product_type')]" class="flex gap-2 items-center">
                                 <span class="font-bold whitespace-nowrap">Select Product Type:</span>

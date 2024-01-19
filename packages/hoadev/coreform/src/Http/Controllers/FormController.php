@@ -5,6 +5,7 @@ namespace Hoadev\CoreForm\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Hoadev\CoreBlog\Models\Post;
 use Hoadev\CoreForm\Models\Form;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
@@ -71,38 +72,56 @@ class FormController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
+            'title' => 'nullable|string',
+            'content' => 'nullable|string',
             'contact_email' => 'required|string',
             'contact_phone' => 'required|string',
+            'contact_address' => 'nullable|string',
+            'contact_name' => 'nullable|string',
         ]);
+
+        $check = Post::where('title', $validated['title'])
+                        ->where('status', 'pending')
+                        ->get();
+
+        if($check->count() > 0) {
+            return redirect()->route('form.receipt')->with('status', 'receipt');
+        }
 
         $post = Post::create([
-            'title' => 'Đăng ký đại lý từ: '.$validated['contact_email'],
-            'name' => $this->create_slug($validated['contact_email']),
+            'title' => $validated['title'],
             'type' => 'contact_form',
-            'status' => 'pending'
+            'status' => 'pending',
+            'content' => $validated['content'] ?? null
         ]);
-
-        $status = '';
 
         if ($post) {
             $post->postMetas()->createMany([
                 [
                     'key' => 'contact_email',
-                    'value' => $validated['contact_email'],
+                    'value' => $validated['contact_email'] ?? null,
                 ],
                 [
                     'key' => 'contact_phone',
-                    'value' => $validated['contact_phone'],
+                    'value' => $validated['contact_phone'] ?? null,
+                ],
+                [
+                    'key' => 'contact_address',
+                    'value' => $validated['contact_address'] ?? null,
+                ],
+                [
+                    'key' => 'contact_name',
+                    'value' => $validated['contact_name'] ?? null,
                 ]
             ]);
 
-            $status = 'success';
-
         }
 
-        return view('coreform::guest.receipt', [
+/*         return view('coreform::guest.receipt', [
             'status' => $status
-        ]);
+        ]); */
+
+        return redirect()->route('form.receipt')->with('status', 'success');
 
     }
 

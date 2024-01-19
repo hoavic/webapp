@@ -19,7 +19,9 @@ trait CoreFormRoute {
     public static function Guest() {
 
         Route::post('/store-form-s', [FormController::class, 'store'])->name('form.store');
-        /* Route::get('/receipt', [FormController::class, 'receipt'])->name('form.receipt'); */
+        Route::get('/receipt', [FormController::class, function() {
+            return view('coreform::guest.receipt');
+        }])->name('form.receipt');
     }
 
 }

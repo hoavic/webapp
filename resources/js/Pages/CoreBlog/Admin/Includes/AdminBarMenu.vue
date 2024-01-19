@@ -108,7 +108,7 @@ const checkTermActive = (taxomomy) => {
 
     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
         <NavLink :href="route('admin.forms.index')" >
-            Contact
+            Contact <span v-if="$page.props.admin.pending_contact" class="flex mb-2 p-1 w-4 h-4 justify-center items-center text-xs bg-red-500 text-white rounded-full drop-shadow">{{ $page.props.admin.pending_contact }}</span>
         </NavLink>
     </div>
 
