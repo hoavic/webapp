@@ -141,16 +141,13 @@ class ProductController extends Controller
                 $selectedTerms[$tax] = [];
             }
         }
-        $product->load('postMetas');
-        $metas = $product->postMetas->groupBy('key');
-        if(!isset($metas['featured_image'])) {$metas['featured_image'] = [];}
+        $product->load(['postMetas.media', 'variants']);
 
         return Inertia::render('CoreShop/Admin/Product/Edit', [
-            'post' => $product->load('variants'),
+            'post' => $product,
             'post_type' => $product->type,
             'groupTaxonomies' => $groupTaxonomies,
             'selectedTerms' => $selectedTerms,
-            'metas' => $metas,
             'featured_image' => $product->getFeaturedImageUrl('medium')
         ]);
     }
@@ -171,37 +168,30 @@ class ProductController extends Controller
             'post.parent_id' => 'nullable|string',
             'post.type' => 'required|string',
             'selectedTerms' => 'array',
-            'metas' => 'array',
-            'variants' => 'array',
-            'variants.*.id' => 'integer|nullable',
-            'variants.*.post_id' => 'integer|nullable',
-            'variants.*.stock_id' => 'integer|nullable',
-            'variants.*.name' => 'string|nullable',
-            'variants.*.sku' => 'string|nullable',
-            'variants.*.barcode' => 'string|nullable',
-            'variants.*.quantity' => 'integer|nullable',
-            'variants.*.price' => 'integer|nullable',
+            'post.post_metas' => 'array',
+            'post.post_metas.*.key' => 'required|string',
+            'post.post_metas.*.value' => 'nullable',
+            'post.variants' => 'array',
+            'post.variants.*.stock_id' => 'integer|nullable',
+            'post.variants.*.name' => 'string|nullable',
+            'post.variants.*.sku' => 'string|nullable',
+            'post.variants.*.barcode' => 'string|nullable',
+            'post.variants.*.quantity' => 'integer|nullable',
+            'post.variants.*.price' => 'integer|nullable',
         ]);
 
         $product->update($validated['post']);
 
         // handle all metas
-        foreach($validated['metas'] as $key => $metasGroup) {
-            foreach($metasGroup as $meta) {
-                if(isset($meta["id"])) {
-
-                    if($newMeta = PostMeta::find($meta["id"]) ) {
-                        $newMeta->value = $meta["value"];
-                        $newMeta->save();
-                    }
-
-                } else {
-                    $product->postMetas()->create([
-                        'key' => $key,
-                        'value' => $meta["value"],
-                    ]);
-                }
-            }
+        foreach($validated['post']['post_metas'] as $meta) {
+            $product->postMetas()->updateOrCreate(
+                [
+                    'key' => $meta['key'],
+                ],
+                [
+                    'value' => $meta['value'],
+                ]
+            );
         }
 
         $termIDs = [];
@@ -213,20 +203,18 @@ class ProductController extends Controller
         $product->terms()->sync($termIDs);
 
         //Store Variant
-        $variantIds = [];
-        foreach($validated['variants'] as $variant) {
-           /*  dd($variant); */
-            if(isset($variant["id"])) {
-                $product->variants()->update($variant);
-                $variantIds[] = $variant["id"];
-            } else {
-                $realVariant = $product->variants()->create($variant);
-                $variantIds[] = $realVariant->id;
-            }
-            /* $realVariant = $product->variants()->updateOrCreate($variant); */
+        $newVariants = collect();
+        foreach($validated['post']['variants'] as $variant) {
+            $newVariants->push($product->variants()->updateOrCreate(
+                [
+                    'name' => $variant['name'],
+                ],
+                [
+                    'price' => $variant['price'],
+                    'quantity' => $variant['quantity'],
+                ]
+            ));
         }
-
-        Product::find($product->id)->variants()->whereNotIn('id', $variantIds)->delete();
 
         Cache::tags(['posts'])->flush();
 

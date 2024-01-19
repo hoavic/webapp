@@ -16,13 +16,14 @@ class PostMeta extends Model
 
     protected $fillable = [
         'id',
+        'post_id',
         'key',
         'value'
     ];
 
     public function post(): BelongsTo
     {
-        return $this->belongsTo(Post::class, 'post_id');
+        return $this->belongsTo(Post::class, 'post_id', 'id', 'post');
     }
 
     public function media(): BelongsTo

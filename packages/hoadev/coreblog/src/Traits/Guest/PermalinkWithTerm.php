@@ -60,7 +60,7 @@ trait PermalinkWithTerm {
         $currentPage = $request->query('page', 1);
 
         return Cache::tags(['posts', 'terms'])->remember('posts_by_term_slug:'.$term->slug.'_page:'.$currentPage, 3600, function() use ($term){
-            return $term->posts()->where('status', 'published')->with(['postMetas.media'])->paginate(10);
+            return $term->posts()->where('status', 'published')->with(['postMetas.media'])->latest()->paginate(10);
         });
         /* return $term->posts()->where('status', 'published')->with(['postMetas.media'])->paginate(10); */
     }

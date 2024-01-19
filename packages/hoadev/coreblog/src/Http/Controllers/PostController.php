@@ -59,12 +59,6 @@ class PostController extends Controller
             ->defaultOrder()
             ->get()
             ->groupBy(['taxonomy', 'term_id']);
-/*             dd($groupTaxonomies); */
-/*         $group = collect();
-
-        foreach($post_types[$post_type]['taxonomies'] as $taxonomy) {
-            $group =
-        } */
 
         return Inertia::render('CoreBlog/Admin/Post/Create', [
             'post_type' => $post_type,
@@ -93,10 +87,6 @@ class PostController extends Controller
 
         $post = $request->user()->posts()->create($validated['post']);
 
-/*         $post->postMetas()->create([
-            'key' => 'featured_image',
-            'value' => $validated['metas']['featured_image']
-        ]); */
         // handle all metas
         foreach($validated['metas'] as $key => $metasGroup) {
             if(isset($metasGroup) && $metasGroup != []) {
@@ -146,26 +136,17 @@ class PostController extends Controller
             ->groupBy(['taxonomy', 'term_id']);
 
          $selectedTermsObject = $post->terms->load('taxonomy')->groupBy('taxonomy.taxonomy');
-/*        $selectedTerms = [];
-        foreach($selectedTermsObject as $key => $value) {
-            foreach($value as $child) {
-                $selectedTerms[$key][] = $child->id;
-            }
-        } */
 
         $selectedTerms = [];
-        /* dd($post_types[$post->type]['taxonomies']); */
         foreach($post_types[$post->type]['taxonomies'] as $tax) {
             if(isset($selectedTermsObject[$tax])) {
                 $selectedTerms[$tax] = $selectedTermsObject[$tax]->pluck('id');
             } else {
                 $selectedTerms[$tax] = [];
             }
-
         }
 
-        $metas = $post->postMetas->groupBy('key');
-        if(!isset($metas['featured_image'])) {$metas['featured_image'] = [];}
+        $post->load(['postMetas.media']);
 
         /* dd($selectedTerms); */
         return Inertia::render('CoreBlog/Admin/Post/Edit', [
@@ -173,7 +154,6 @@ class PostController extends Controller
             'post_type' => $post->type,
             'groupTaxonomies' => $groupTaxonomies,
             'selectedTerms' => $selectedTerms,
-            'metas' => $metas,
             'featured_image' => $post->getFeaturedImageUrl('medium')
         ]);
     }
@@ -194,33 +174,23 @@ class PostController extends Controller
             'post.parent_id' => 'nullable|string',
             'post.type' => 'required|string',
             'selectedTerms' => 'array',
-            'metas' => 'array',
+            'post.post_metas' => 'array',
+            'post.post_metas.*.key' => 'required|string',
+            'post.post_metas.*.value' => 'nullable',
         ]);
 
         $post->update($validated['post']);
 
-/*         foreach($validated['metas'] as $key => $value) {
-            if($meta = $post->postMetas()->where('key', $key)->first()) {
-                dd($key);
-                $meta->update(['value' => $value]);
-                $meta->save();
-            }
-        } */
         // handle all metas
-        foreach($validated['metas'] as $key => $metasGroup) {
-            if(isset($metasGroup[0])) {
-                if(isset($metasGroup[0]["id"])) {
-                    $post->postMetas()->update([
-                        'key' => $metasGroup[0]["key"],
-                        'value' => $metasGroup[0]["value"],
-                    ]);
-                } else {
-                    $post->postMetas()->create([
-                        'key' => $metasGroup[0]["key"],
-                        'value' => $metasGroup[0]["value"],
-                    ]);
-                }
-            }
+        foreach($validated['post']['post_metas'] as $meta) {
+            $post->postMetas()->updateOrCreate(
+                [
+                    'key' => $meta['key'],
+                ],
+                [
+                    'value' => $meta['value'],
+                ]
+            );
         }
 
         $termIDs = [];

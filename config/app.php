@@ -172,6 +172,7 @@ return [
         App\Providers\JetstreamServiceProvider::class,
         \Hoadev\CoreBlog\Providers\CoreBlogProvider::class,
         \Hoadev\CoreShop\Providers\CoreShopProvider::class,
+        \Hoadev\CoreForm\Providers\CoreFormProvider::class,
         Spatie\Permission\PermissionServiceProvider::class,
     ])->toArray(),
 

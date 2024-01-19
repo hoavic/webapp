@@ -96,7 +96,7 @@ class PermalinkShopController extends Controller
         $currentPage = $request->query('page', 1);
 
         return Cache::tags(['posts', 'terms', 'taxonomies'])->remember('posts_by_term_slug:'.$term->slug.'_page:'.$currentPage, 3600, function() use ($term){
-            return $term->products()->where('status', 'published')->with(['postMetas.media', 'terms', 'variants'])->paginate(10);
+            return $term->products()->where('status', 'published')->with(['postMetas.media', 'terms', 'variants'])->latest()->paginate(10);
         });
 
     }

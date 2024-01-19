@@ -112,25 +112,25 @@ class Image {
     public function setResponsive($optimized_for_blog = true, $optimized_for_product = false, $optimized_for_template = false) {
         $res = [];
 
-        if($this->width >= 150) {
+        if($this->width > 150) {
             $res['thumbnail'] = $this->setThumbnailSize();
         }
 
-        if($this->width >= 300) {
+        if($this->width > 300) {
             $res['medium'] = $this->setMediumSize();
         }
 
         if($optimized_for_blog) {
 
-            if($this->width >= 600) {
+            if($this->width > 600) {
                 $res['medium_large'] = $this->setMediumLargeSize();
             }
 
-            if($this->width >= 800) {
+            if($this->width > 800) {
                 $res['large'] = $this->setLargeSize();
             }
 
-            if($this->width >= 1200) {
+            if($this->width > 1200) {
                 $res['wide'] = $this->setWideSize();
             }
 
@@ -138,7 +138,7 @@ class Image {
 
         if($optimized_for_product) {
 
-            if($this->width >= 1500) {
+            if($this->width > 1500) {
                 $res['extra'] = $this->setExtraSize();
             }
 
@@ -146,7 +146,7 @@ class Image {
 
         if($optimized_for_template) {
 
-            if($this->width >= 1920) {
+            if($this->width > 1920) {
                 $res['full'] = $this->setFullSize();
             }
 

@@ -3,7 +3,6 @@
 namespace Hoadev\CoreBlog\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Hoadev\CoreBlog\Classes\MetaTags;
 use Hoadev\CoreBlog\Models\Post;
 use Hoadev\CoreBlog\Traits\Guest\PermalinkWithPost;
 use Hoadev\CoreBlog\Traits\Guest\PermalinkWithTerm;
@@ -76,6 +75,7 @@ class PermalinkController extends Controller
             $posts = Product::with(['postMetas.media', 'variants'])
                 ->where('status', 'published')
                 ->where('type', 'product')
+                ->latest()
                 ->paginate(10);
 
             return view('coreblog::guest.archive.product', [
@@ -89,6 +89,7 @@ class PermalinkController extends Controller
         foreach ($gb_posts as $gb_post) {
             if($gb_post['archive_page'] === $post_type) {
                 $post_label = $gb_post['labels']['vietsub'];
+                $post_type = $gb_post['type'];
                 break;
             }
             if($gb_post['type'] === $post_type) {
@@ -100,6 +101,7 @@ class PermalinkController extends Controller
         $posts = Post::with(['postMetas.media'])
             ->where('status', 'published')
             ->where('type', $post_type)
+            ->latest()
             ->paginate(10);
 
         return view('coreblog::guest.archive.default', [

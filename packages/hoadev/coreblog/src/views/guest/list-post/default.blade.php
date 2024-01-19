@@ -5,7 +5,7 @@
                 @if ($post->getFeatured())
                     <a href="{{ $post->getpermalink() }}">
                         {{-- <img src="{{ $post->getFeaturedImageUrl('large') }}" alt="{{ $post->title }}" class="m-0 object-cover aspect-[3/2]"> --}}
-                        {!! $post->getFeaturedImage('medium', $post->title, 'm-0 object-cover aspect-[3/2] rounded-t-md') !!}
+                        {!! $post->getFeaturedImage('medium', $post->title, 'm-0 object-cover aspect-[3/2] rounded-t-md', '(max-width: 430px) 95vw, (max-width: 850px) 48vw, 280px', $loop->iteration < 2 ? 'eager' : 'lazy') !!}
                     </a>
                 @endif
                 <h2 class="font-bold leading-4">

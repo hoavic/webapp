@@ -68,7 +68,7 @@ const loadEditor = () => {
         content_style: 'body {font-size:18px; max-width: 850px; margin: 0 auto; padding: 1em 0; color: #333;} body.content-box {margin: 0 auto;} b, strong {font-weight: bold!important} ' + blog_css,
         body_class : 'content-box',
         setup: (editor) => {
-            editor.on("change", (e) => {
+            editor.on("save change", (e) => {
 /*                 form.content = tinymce.get("myeditorinstance").getContent();
                 console.log(form.content); */
                 autoSyncEmit();
@@ -108,7 +108,15 @@ const loadEditor = () => {
 }
 
 function autoSyncEmit() {
-    emit('update:modelValue', tinymce.get("myeditorinstance").getContent());
+    let parser = new DOMParser();
+    const doc3 = parser.parseFromString(tinymce.get("myeditorinstance").getContent(), "text/html");
+    let images = doc3.getElementsByTagName('img');
+    if(images.length > 0) {
+        images[0].setAttribute('loading', 'eager');
+    }
+    console.log(doc3.getElementsByTagName('body')[0].innerHTML);
+    emit('update:modelValue', doc3.getElementsByTagName('body')[0].innerHTML);
+    /* emit('update:modelValue', tinymce.get("myeditorinstance").getContent()); */
 }
 
 function openDialog() {

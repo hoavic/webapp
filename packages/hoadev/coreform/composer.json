@@ -1,0 +1,15 @@
+{
+    "name": "hoadev/coreform",
+    "autoload": {
+        "psr-4": {
+            "Hoadev\\Coreform\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "hoavic",
+            "email": "oceo.info@gmail.com"
+        }
+    ],
+    "require": {}
+}

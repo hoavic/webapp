@@ -10,14 +10,14 @@ const props = defineProps({
 const emit = defineEmits('update:modelValue');
 
 const react = reactive({
-    variant: configVariant()
+    variant: props.modelValue
 });
 
 /* onMounted(() => {
     syncVariant();
 }); */
 
-function configVariant() {
+/* function configVariant() {
     if(props.modelValue != null && props.modelValue.hasOwnProperty('name')) {return props.modelValue}
     let defaultVar = {
         name: 'Default ' + props.product_name,
@@ -26,7 +26,7 @@ function configVariant() {
     };
     emit('update:modelValue', defaultVar);
     return defaultVar;
-}
+} */
 
 function syncVariant() {
     emit('update:modelValue', react.variant)

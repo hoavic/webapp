@@ -39,7 +39,7 @@ class Post extends Model
 
     public function postMetas(): HasMany
     {
-        return $this->hasMany(PostMeta::class, 'post_id');
+        return $this->hasMany(PostMeta::class, 'post_id', 'id');
     }
 
 /*     public function postMetasArr() {
@@ -57,9 +57,13 @@ class Post extends Model
     }
 
     public function getFeatured() {
-        return Cache::tags(['posts', 'postMetas', 'medias'])->remember('post:'.$this->name.':featured', 3600, function() {
+        $featured = Cache::tags(['posts', 'postMetas', 'medias'])->remember('post:'.$this->name.':featured', 3600, function() {
             return $this->postMetas->where('key', 'featured_image')->load('media')->first();
         });
+
+        if(isset($featured) && $featured->value != null) {
+            return $featured;
+        }
     }
 
     public function getFeaturedImageUrl($size = 'thumbnail') {
@@ -69,7 +73,7 @@ class Post extends Model
         return $prefix.$this->getFeatured()->media->responsive_images[$size];
     }
 
-    public function getFeaturedImage($size = 'thumbnail', $alt = '', $classes = '', $loading = 'lazy') {
+    public function getFeaturedImage($size = 'thumbnail', $alt = '', $classes = '', $sizes = '(max-width: 430px) 100vw, (max-width: 820px) 50vw, 280px', $loading = 'lazy') {
         $featured = $this->getFeatured();
         if(!$featured) {return;}
         return '<img src="'.$featured->media->responsive_images[$size].'"
@@ -77,6 +81,7 @@ class Post extends Model
                     width="'.$featured->media->custom_properties['width'].'"
                     height="'.$featured->media->custom_properties['height'].'"
                     srcset="'.$this->getFeaturedImageSrcset().'"
+                    sizes="'.$sizes.'"
                     loading="'.$loading.'"
                     class="'.$classes.'" />';
     }

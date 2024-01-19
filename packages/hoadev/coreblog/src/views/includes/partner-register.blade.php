@@ -12,11 +12,12 @@
             </div>
 
             <div class="w-full">
-                <form @submit.prevent="alert('Tính năng đang phát triển!')"
+                <form method="POST" action="/store-form-s"
                     class="w-full flex flex-col md:flex-row gap-4">
-                    <input type="text" placeholder="Nhập số điện thoại của bạn"
+                    @csrf
+                    <input type="text" name="contact_phone" placeholder="Nhập số điện thoại của bạn" required
                         class="w-full border border-yellow-800 rounded-lg" />
-                    <input type="email" placeholder="Nhập email của bạn"
+                    <input type="email" name="contact_email" placeholder="Nhập email của bạn" required
                         class="w-full border border-yellow-800 rounded-lg " />
                         <button type="submit" class="py-2 px-4 bg-yellow-800 text-white font-bold uppercase rounded-lg hover:bg-green-800">Gửi</button>
                 </form>

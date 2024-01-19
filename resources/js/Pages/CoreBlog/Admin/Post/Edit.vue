@@ -15,15 +15,26 @@ const props = defineProps({
     allTerms: Object,
     groupTaxonomies: Object,
     selectedTerms: Object,
-    metas: Object,
     featured_image: String,
-    errors: Object
 });
 const form = reactive({
     post: props.post,
     selectedTerms: props.selectedTerms,
-    metas: props.metas
 });
+
+const getMetaIndex = (inputkey) => {
+    //console.log(form.post_metas);
+    let index = form.post.post_metas.findIndex((meta) => meta.key === inputkey);
+    //console.log(index);
+    if(index < 0) {
+        let old_lenght = form.post.post_metas.lenght;
+        let newObj = {key: inputkey, value: ''};
+        form.post.post_metas.push(newObj);
+        console.log(old_lenght);
+        return old_lenght;
+    }
+    return index;
+}
 
 function updatePost() {
     form.post.status = 'published';
@@ -35,10 +46,6 @@ function updatePost() {
 
 
 function updatePostAndClose() {
-/*     router.patch(route('admin.posts.update', props.post.id), form, {
-        onSuccess: (page) => router.visit(route('admin.posts.index'))
-    }); */
-
     let options = {
         onSuccess: (page) => router.visit(route('admin.posts.index') + '?post_type=' + props.post_type)
     }
@@ -54,7 +61,7 @@ function sendUpdate(options = {}) {
 <template>
     <AppLayout :title="'Edit ' + post_type">
 
-        <Alert :errors="errors"></Alert>
+        <Alert></Alert>
 
         <div class="lg:max-w-7xl mx-auto">
             <form @submit.prevent="updatePost">
@@ -99,7 +106,9 @@ function sendUpdate(options = {}) {
                                 class="w-full text-sm text-gray-600 border border-gray-300 rounded-lg"/>
                         </div>
 
-                        <FeaturedImage v-model="form.metas.featured_image[0]" :preview="featured_image"></FeaturedImage>
+                        <FeaturedImage
+                            v-if="form.post.post_metas[getMetaIndex('featured_image')]"
+                            v-model="form.post.post_metas[getMetaIndex('featured_image')]" :preview="featured_image"></FeaturedImage>
 
                         <div v-for="(group, groupKey, i) in groupTaxonomies" :key="i" class="m-6">
                             <template v-if="$page.props.admin.taxonomies[groupKey].hierarchical">

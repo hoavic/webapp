@@ -42,9 +42,16 @@ const form = reactive({
         product_gallery: [],
     },
     selectedTerms: configSelectedTerms(),
-    variants: []
+    variants: [
+        {
+            name: 'Default',
+            quantity: 0,
+            price: 0
+        }
+    ]
 });
 /* console.log(page.props.admin.post_types[props.post_type].taxonomies); */
+
 //first time
 function configSelectedTerms() {
     let selectedTerms = new Object;

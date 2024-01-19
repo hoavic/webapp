@@ -106,4 +106,10 @@ const checkTermActive = (taxomomy) => {
         </NavLink>
     </div>
 
+    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+        <NavLink :href="route('admin.forms.index')" >
+            Contact
+        </NavLink>
+    </div>
+
 </template>

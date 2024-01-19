@@ -33,6 +33,7 @@
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/",
             "Hoadev\\CoreBlog\\": "packages/hoadev/coreblog/src",
+            "Hoadev\\CoreForm\\": "packages/hoadev/coreform/src",
             "Hoadev\\CoreShop\\": "packages/hoadev/coreshop/src"
         }
     },

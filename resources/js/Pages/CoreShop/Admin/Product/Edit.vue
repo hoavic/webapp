@@ -17,26 +17,26 @@ const props = defineProps({
     allTerms: Object,
     groupTaxonomies: Object,
     selectedTerms: Object,
-    metas: Object,
-    featured_image: String,
-    errors: Object
+    featured_image: String
 });
 const form = reactive({
     post: props.post,
-    metas: props.metas,
     selectedTerms: props.selectedTerms,
-    variants: props.post.variants
 });
 
-/* function updatePost() {
-    router.patch(route('admin.products.update', props.post.id), form);
+const getMetaIndex = (inputkey) => {
+    //console.log(form.post_metas);
+    let index = form.post.post_metas.findIndex((meta) => meta.key === inputkey);
+    //console.log(index);
+    if(index < 0) {
+        let old_lenght = form.post.post_metas.lenght;
+        let newObj = {key: inputkey, value: ''};
+        form.post.post_metas.push(newObj);
+        console.log(old_lenght);
+        return old_lenght;
+    }
+    return index;
 }
-
-function updatePostAndClose() {
-    router.patch(route('admin.products.update', props.post.id), form, {
-        onSuccess: (page) => router.visit(route('admin.products.index'))
-    });
-} */
 
 function updatePost() {
     form.post.status = 'published';
@@ -68,7 +68,7 @@ function underDev() {
 <template>
     <AppLayout :title="'Edit ' + post_type">
 
-        <Alert :errors="errors"></Alert>
+        <Alert></Alert>
 
         <div class="lg:max-w-7xl mx-auto">
             <form @submit.prevent="updatePost">
@@ -94,20 +94,20 @@ function underDev() {
                                 </label>
                             </div>
                         </div>
-
+{{ form.post }}
                         <div class="mx-2 my-12 lg:mx-6">
-                            <label class="flex gap-2 items-center">
+                            <label v-if="form.post.post_metas[getMetaIndex('product_type')]" class="flex gap-2 items-center">
                                 <span class="font-bold whitespace-nowrap">Select Product Type:</span>
-                                <select v-model="form.metas.product_type[0].value" name="product_type"
+                                <select v-model="form.post.post_metas[getMetaIndex('product_type')].value" name="product_type"
                                     class="w-full text-lg border border-gray-300 rounded-lg">
                                     <option value="simple">Simple</option>
-                     <!--                <option value="has-variant">Has Variant</option>
-                                    <option value="external-link">External Link</option> -->
+                                    <option value="has-variant">Has Variant</option>
+                                    <option value="external-link">External Link</option>
                                 </select>
                             </label>
 
-                            <template v-if="form.metas.product_type[0].value === 'simple'">
-                                <SimpleProduct v-model="form.variants[0]" :product_name="form.post.title"></SimpleProduct>
+                            <template v-if="form.post.post_metas[getMetaIndex('product_type')].value === 'simple'">
+                                <SimpleProduct v-model="form.post.variants[0]" :product_name="form.post.title"></SimpleProduct>
                             </template>
 
                         </div>
@@ -145,7 +145,9 @@ function underDev() {
                                 class="w-full text-sm text-gray-600 border border-gray-300 rounded-lg"/>
                         </div>
 
-                        <FeaturedImage v-model="form.metas.featured_image[0]" :preview="featured_image"></FeaturedImage>
+                        <FeaturedImage
+                            v-if="form.post.post_metas[getMetaIndex('featured_image')]"
+                            v-model="form.post.post_metas[getMetaIndex('featured_image')]" :preview="featured_image"></FeaturedImage>
 
                         <div v-for="(group, groupKey, i) in groupTaxonomies" :key="i" class="m-6">
                             <template v-if="$page.props.admin.taxonomies[groupKey].hierarchical">

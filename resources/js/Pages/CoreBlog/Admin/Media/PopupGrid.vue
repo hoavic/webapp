@@ -66,6 +66,10 @@ const getSrcset = (item) => {
         srcset.push('/' + item.responsive_images.full + ' ' + getSizeFromSrcset(item.responsive_images.full, '1920'));
     }
 
+    if(item.custom_properties.hasOwnProperty('width')) {
+        srcset.push(item.custom_properties.url + ' ' + item.custom_properties.width + 'w');
+    }
+
     return srcset.join(', ');
 }
 
@@ -123,7 +127,7 @@ function confirmMedias() {
     }
     if(react.selectedMedias.length === 0) {return}
     react.selectedMedias.forEach((media) => {
-        tinymce.get("myeditorinstance").insertContent('<img src="' + getUrl(media, 'large') + '" srcset="' + getSrcset(media) + '" width="' + media.custom_properties.width + '" height="' + media.custom_properties.height + '" loading="lazy" />');
+        tinymce.get("myeditorinstance").insertContent('<img width="' + media.custom_properties.width + '" height="' + media.custom_properties.height + '" src="' + getUrl(media, 'large') + '" srcset="' + getSrcset(media) + '" sizes="(max-width: 800px) 100vw, 800px" loading="lazy" />');
     });
     /* tinymce.get("myeditorinstance").insertContent('<img src="' + item.custom_properties.url + '" srcset="' + getSrcset(item) + '" width="' + item.custom_properties.width + '" height="' + item.custom_properties.height + '" loading="lazy" />'); */
 /*     emit('onSelectMedia', '<img src="' + item.custom_properties.url + '" srcset="' + getSrcset(item) + '" width="' + item.custom_properties.width + '" height="' + item.custom_properties.height + '" loading="lazy" />'); */

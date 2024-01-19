@@ -11,7 +11,7 @@
                 <a href="{{ $post->getpermalink() }}" class="block w-full no-underline">
                     @if ($post->getFeatured())
                         {{-- <img src="{{ $post->getFeaturedImageUrl('medium') }}" alt="{{ $post->title }}" class="m-0 rounded"> --}}
-                        {!! $post->getFeaturedImage('medium', $post->title, 'my-0 md:rounded aspect-square') !!}
+                        {!! $post->getFeaturedImage('large', $post->title, 'my-0 md:rounded object-cover aspect-square', '(max-width: 430px) 180px, 280px', $loop->iteration > 4 ? 'eager' : 'lazy') !!}
                     @else
                         <span class="block w-full aspect-square bg-green-800/10 md:rounded"></span>
                     @endif
