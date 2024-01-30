@@ -48,9 +48,9 @@ const getSrcset = (item) => {
             <div v-for="(item, index) in data" :key="index" class="flex flex-col">
                 <a :href="route('admin.medias.edit', item.id)"
                     class="font-bold text-blue-900 whitespace-nowrap">
-                    <img :src="getUrl(item, 'medium')" loading="lazy"
+                    <img :src="getUrl(item, 'medium')" loading="lazy" width="100" height="100"
                         :srcset="getSrcset(item)"
-                        class="aspect-square object-cover "/>
+                        class="w-full aspect-square object-cover"/>
                 </a>
                 <div class="text-gray-600 text-sm break-all">{{ item.file_name }}</div>
                 <div class="text-xs text-gray-400">{{ prettyBytes(item.size) }}</div>

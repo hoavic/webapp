@@ -71,14 +71,17 @@ class Post extends Model
             return $this->postMetas->where('key', 'featured_image')->load('media')->first();
         });
 
-        if(isset($featured) && $featured->value != null) {
+        if(isset($featured) && $featured->media != null) {
             return $featured;
         }
+
+        return null;
     }
 
     public function getFeaturedImageUrl($size = 'thumbnail') {
         if(!$this->getFeatured()) {return;}
         $prefix = '';
+
         if(mb_substr($this->getFeatured()->media->responsive_images[$size], 0 , 1) !== '/') {$prefix = '/';}
         return $prefix.$this->getFeatured()->media->responsive_images[$size];
     }
@@ -152,7 +155,7 @@ class Post extends Model
         $post = $this;
 
         return Cache::tags(['posts', 'terms', 'taxonomies'])->remember('post_name:'.$this->name.':related_posts', 3600, function() use($post, $limit){
-            return Post::with(['postMetas.media'])
+            return Post::with(['postMetas'])
                 ->whereHas('terms', function (Builder $query) use($post) {
                     $query->whereIn('id', $post->terms->pluck('id'));
                 })->whereNot('id', $post->id)->where('status', 'published')->limit($limit)->latest()->get();

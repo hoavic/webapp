@@ -8,6 +8,7 @@ import TermNonHierarchial from '@/Pages/CoreBlog/Admin/Post/TermNonHierarchial.v
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import Alert from '@/Pages/CoreBlog/Admin/Alert.vue';
 import autoSlug from '@/Pages/CoreBlog/Includes/auto-slug';
+import Gallery from '@/Pages/CoreBlog/Admin/Includes/Gallery.vue';
 import FeaturedImage from '@/Pages/CoreBlog/Admin/Includes/FeaturedImage.vue';
 import SimpleProduct from './Variant/SimpleProduct.vue';
 import SimpleEditor from '@/Pages/CoreBlog/Admin/Includes/SimpleEditor.vue';
@@ -39,7 +40,10 @@ const form = reactive({
             key: 'product_type',
             value: 'simple'
         }],
-        product_gallery: [],
+        product_gallery: [{
+            key: 'gallery',
+            value: []
+        }],
     },
     selectedTerms: configSelectedTerms(),
     variants: [
@@ -108,10 +112,11 @@ function underDev() {
                         </div>
 
                         <div class="m-2 lg:m-6 grid gap-4 md:grid-cols-2">
-                            <div  @click.prevent="underDev"
+                            <div
                                 class="">
-                                <span class="my-2 block font-bold">Gallery:</span>
-                                <div class="w-full h-[400px] bg-green-50 border border-green-900/10 rounded-lg"></div>
+                                <!-- <span class="my-2 block font-bold">Gallery:</span> -->
+                                <!-- <div class="w-full h-[400px] bg-green-50 border border-green-900/10 rounded-lg"></div> -->
+                                <Gallery v-model="form.metas.product_gallery[0].value" ></Gallery>
                             </div>
                             <div class="">
                                 <label>

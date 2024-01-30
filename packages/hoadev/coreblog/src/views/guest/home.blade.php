@@ -24,7 +24,7 @@
     <section class="my-6 px-4">
         <h2 class="mx-0 my-6 font-bold text-2xl uppercase text-yellow-800">Bài viết nổi bật</h2>
         {{-- @include('coreblog::includes.post-slide', ['slidePosts' => $newestPosts]) --}}
-        @include('coreblog::guest.list-post.four-column', ['posts' => $newestPosts])
+        @include('coreblog::guest.list-post.four-column', ['posts' => $newestPosts, 'eager_load_from' => 0])
     </section>
 
 @endsection

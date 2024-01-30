@@ -141,7 +141,13 @@ class ProductController extends Controller
                 $selectedTerms[$tax] = [];
             }
         }
-        $product->load(['postMetas.media', 'variants']);
+        $product->load(['postMetas', 'variants']);
+
+        foreach($product->postMetas as $key => $value) {
+            if(!is_array($product->postMetas[$key]->value)) {
+                $product->postMetas[$key]->load('media');
+            }
+        }
 
         return Inertia::render('CoreShop/Admin/Product/Edit', [
             'post' => $product,

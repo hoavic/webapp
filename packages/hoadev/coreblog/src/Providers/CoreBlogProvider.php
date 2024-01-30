@@ -21,9 +21,9 @@ class CoreBlogProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../config/coreblog.php' => config_path('coreblog.php'),
         ], 'coreblog-config');
-        $this->publishes([
+/*         $this->publishes([
             __DIR__.'/../resources/js/Pages/' => resource_path('/js/Pages/CoreBlog/'),
-        ], 'coreblog-js');
+        ], 'coreblog-js'); */
 
     }
 }

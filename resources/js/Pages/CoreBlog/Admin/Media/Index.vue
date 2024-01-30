@@ -1,7 +1,7 @@
 <script setup>
 
 import AppLayout from '@/Layouts/AppLayout.vue';
-import Pagination from '@/Components/Pagination.vue';
+import Pagination from '@/Pages/CoreBlog/Admin/Includes/Pagination.vue';
 
 import Alert from '@/Pages/CoreBlog/Admin/Alert.vue';
 import MediaMultiUpload from '@/Pages/CoreBlog/Admin/Media/MediaMultiUpload.vue';

@@ -52,7 +52,7 @@
     </div> --}}
 
     <div class="px-4">
-        @includeIf('coreshop::guest.list-product.four-column')
+        @includeIf('coreshop::guest.list-product.four-column', ['eager_load_from' => 5])
     </div>
 
 

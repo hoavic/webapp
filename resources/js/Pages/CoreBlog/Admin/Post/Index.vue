@@ -1,7 +1,7 @@
 <script setup>
 
 import AppLayout from '@/Layouts/AppLayout.vue';
-import Pagination from '@/Components/Pagination.vue';
+import Pagination from '@/Pages/CoreBlog/Admin/Includes/Pagination.vue';
 
 import Alert from '@/Pages/CoreBlog/Admin/Alert.vue';
 import PostAction from '@/Pages/CoreBlog/Admin/Post/PostAction.vue';

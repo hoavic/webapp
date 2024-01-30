@@ -1,7 +1,7 @@
 <script setup>
 
 import AppLayout from '@/Layouts/AppLayout.vue';
-import Pagination from '@/Components/Pagination.vue';
+import Pagination from '@/Pages/CoreBlog/Admin/Includes/Pagination.vue';
 
 import FormAction from '@/Pages/CoreForm/Admin/Form/FormAction.vue';
 import FormTable from '@/Pages/CoreForm/Admin/Form/FormTable.vue';

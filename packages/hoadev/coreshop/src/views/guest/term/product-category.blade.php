@@ -9,7 +9,7 @@
 </div>
 
     <div class="p-4">
-        @includeIf('coreshop::guest.list-product.four-column', ['posts' => $posts])
+        @includeIf('coreshop::guest.list-product.four-column', ['posts' => $posts, 'eager_load_from' => 5])
     </div>
 
     {{ $posts->links() }}

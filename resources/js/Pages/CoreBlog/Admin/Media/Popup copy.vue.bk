@@ -1,7 +1,7 @@
 <script setup>
 
 import PopupLayout from '@/Layouts/PopupLayout.vue';
-import Pagination from '@/Components/Pagination.vue';
+import Pagination from '@/Pages/CoreBlog/Admin/Includes/Pagination.vue';
 import { onMounted, reactive, ref } from 'vue';
 import Alert from '@/Pages/CoreBlog/Admin/Alert.vue';
 import MediaUpload from '@/Pages/CoreBlog/Admin/Media/MediaUpload.vue';

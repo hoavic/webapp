@@ -120,7 +120,7 @@ function selectMedia(media) {
 }
 
 function confirmMedias() {
-    if(props.parent === 'featured') {
+    if(props.parent === 'featured' || props.parent === 'gallery') {
         emit('onConfirmMedias', react.selectedMedias);
         react.selectedMedias = [];
         return;

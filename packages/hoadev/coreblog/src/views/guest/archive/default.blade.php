@@ -8,7 +8,7 @@
     {{ $posts }} --}}
 
 <div class="p-4">
-    @includeIf('coreblog::guest.list-post.default')
+    @includeIf('coreblog::guest.list-post.default', ['eager_load_from' => 5])
 </div>
 
     {{ $posts->links() }}

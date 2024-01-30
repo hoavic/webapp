@@ -33,7 +33,7 @@
         @endif
     </div> --}}
     <div class="p-4">
-        @includeIf('coreblog::guest.list-post.default', ['posts' => $posts])
+        @includeIf('coreblog::guest.list-post.default', ['posts' => $posts, 'eager_load_from' => 5])
     </div>
 
     {{ $posts->links() }}

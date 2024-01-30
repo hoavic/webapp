@@ -9,8 +9,53 @@
                 $gallery = $post->postMetas->where('key', 'gallery')->first() ?? '';
             @endphp
 
-            @if ($gallery)
-                <span class="block aspect-square bg-gray-100 rounded-lg">Gallery</span>
+            @if ($gallery->value)
+                <div
+                    x-data="{
+                        show_light_box: false,
+                        currentIndex: 0,
+                        prevIndex: 0,
+                        images: {},
+                        totalImages: 0,
+                        imageWidth: 0,
+                        nextImage() {
+
+                            this.prevIndex = this.currentIndex;
+                            this.currentIndex = (this.currentIndex + 1) % this.totalImages;
+                            $refs.carousel.style.transform = 'translateX(-${this.imageWidth}px)';
+                            $refs.backgroundImage.src = this.images[this.currentIndex].src;
+                            setTimeout(() => {
+                                $refs.carousel.appendChild(this.images[this.prevIndex]);
+                                $refs.carousel.style.transform = '';
+                            }, 500);
+
+                        },
+                        initData() {
+                            this.images = $refs.carousel.getElementsByTagName('img');
+
+                            this.totalImages = Object.keys(this.images).length;
+                            this.imageWidth = $refs.carousel.offsetWidth;
+                            console.log(this.totalImages);
+                        }
+                    }"
+                    x-init="initData()"
+                    class="relative overflow-hidden transition-all">
+                    <img x-ref="backgroundImage" class='absolute top-0 left-0 w-full m-0' />
+                    <div
+                        x-ref="carousel"
+                        :class="show_light_box ? 'fixed top-0 bottom-0 right-0 w-full z-50 justify-center' : ''"
+                        class="flex gap-0 bg-gray-100 transition-all">
+                        @foreach ($gallery->value as $media)
+
+                            <img src="{{ $media->custom_properties->url }}" class="m-0 transition-all"/>
+
+                        @endforeach
+                    </div>
+                    <button @click.prevent="show_light_box = !show_light_box" @keyup.esc="show_light_box = false"
+                            class="absolute top-0 right-0 bg-gray-800">tog</button>
+                    <button class="arrow-button left-arrow">Prev</button>
+                    <button @click.prevent="nextImage()" class="arrow-button right-arrow">Next</button>
+                </div>
             @elseif($post->getFeatured())
                 <a href="{{ $post->getFeaturedImageUrl('large') }}" target="_blank" rel="nofollow">
                     {!! $post->getFeaturedImage('large', $post->title, 'my-0 rounded aspect-square') !!}
@@ -79,6 +124,6 @@
 
     @if ($relatedPosts->count() > 0)
         <h2 class="my-6 mx-4 font-bold uppercase text-green-800">Sản phẩm liên quan</h2>
-        @includeIf('coreshop::guest.list-product.default', ['posts' => $relatedPosts])
+        @includeIf('coreshop::guest.list-product.default', ['posts' => $relatedPosts, 'eager_load_from' => 0])
     @endif
 @endsection

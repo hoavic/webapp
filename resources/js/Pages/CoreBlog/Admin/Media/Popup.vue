@@ -76,7 +76,7 @@ function searchMedia() {
 }
 
 function mediasSelected(medias) {
-    if(props.parent === 'featured') {
+    if(props.parent === 'featured' || props.parent === 'gallery') {
         return emit('onMediasSelected', medias);
     }
     emit('onMediasSelected');
