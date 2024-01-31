@@ -106,7 +106,7 @@ const removeImage = (index) => {
                 class="py-2 px-4 bg-gray-500 text-white rounded-full">Add an Image</button>
         </div>
 
-        <div v-if="react.gallery" :class="react.gallery.length <= 0 ? 'w-full h-[400px] bg-green-50 border border-green-900/10 rounded-lg' : ''"
+        <div v-if="react.gallery != '[]'" :class="react.gallery.length <= 0 ? 'w-full h-[400px] bg-green-50 border border-green-900/10 rounded-lg' : ''"
             class="my-2 grid grid-cols-3 gap-4">
 
             <div v-for="(imageObj, index) in react.gallery" :class="index <= 0 ? 'col-span-3' : ''" class="relative">

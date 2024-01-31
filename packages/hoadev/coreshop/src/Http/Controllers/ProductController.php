@@ -5,6 +5,7 @@ namespace Hoadev\CoreShop\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Hoadev\CoreBlog\Models\PostMeta;
 use Hoadev\CoreBlog\Models\Taxonomy;
+use Hoadev\CoreBlog\Traits\Core\CorePost;
 use Hoadev\CoreShop\Models\Product;
 use Hoadev\CoreShop\Models\Variant;
 use Illuminate\Http\Request;
@@ -13,47 +14,25 @@ use Inertia\Inertia;
 
 class ProductController extends Controller
 {
+    use CorePost;
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
 
-        $search = $request->query('search');
-
-        $products = Product::where('type', 'product')
-                        ->where('title', 'like', '%'.$search.'%')
-                        ->latest()
-                        ->paginate(10);
-
-        if($search !== null) {
-            $products->appends(['search' => $search]);
-        }
-
         return Inertia::render('CoreShop/Admin/Product/Index', [
-            'post_type' => 'product',
-            'posts' => $products
+            'posts' => $this->paginatePosts($request, 'product', ['postMetas'])
         ]);
     }
 
 /**
      * Show the form for creating a new resource.
      */
-    public function create(Request $request)
+    public function create()
     {
-        $post_type = $request->query('post_type', 'product');
-
-        $post_types = config('coreblog.post_types');
-
-        $groupTaxonomies = Taxonomy::with(['term', 'ancestors'])
-            ->whereIn('taxonomy', $post_types[$post_type]['taxonomies'])
-            ->defaultOrder()
-            ->get()
-            ->groupBy(['taxonomy', 'term_id']);
-
         return Inertia::render('CoreShop/Admin/Product/Create', [
-            'post_type' => $post_type,
-            'groupTaxonomies' => $groupTaxonomies
+            'groupTaxonomies' => $this->getGroupTaxonomies('product')
         ]);
     }
 
@@ -123,26 +102,6 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        $post_types = config('coreblog.post_types');
-
-        $groupTaxonomies = Taxonomy::with(['term', 'ancestors'])
-            ->whereIn('taxonomy', $post_types[$product->type]['taxonomies'])
-            ->defaultOrder()
-            ->get()
-            ->groupBy(['taxonomy', 'term_id']);
-
-        $selectedTermsObject = $product->terms->load('taxonomy')->groupBy('taxonomy.taxonomy');
-
-        $selectedTerms = [];
-        foreach($post_types[$product->type]['taxonomies'] as $tax) {
-            if(isset($selectedTermsObject[$tax])) {
-                $selectedTerms[$tax] = $selectedTermsObject[$tax]->pluck('id');
-            } else {
-                $selectedTerms[$tax] = [];
-            }
-        }
-        $product->load(['postMetas', 'variants']);
-
         foreach($product->postMetas as $key => $value) {
             if(!is_array($product->postMetas[$key]->value)) {
                 $product->postMetas[$key]->load('media');
@@ -150,10 +109,9 @@ class ProductController extends Controller
         }
 
         return Inertia::render('CoreShop/Admin/Product/Edit', [
-            'post' => $product,
-            'post_type' => $product->type,
-            'groupTaxonomies' => $groupTaxonomies,
-            'selectedTerms' => $selectedTerms,
+            'post' => $product->load(['postMetas', 'variants']),
+            'groupTaxonomies' => $this->getGroupTaxonomies($product->type),
+            'selectedTerms' => $this->getSelectedTerms($product),
             'featured_image' => $product->getFeaturedImageUrl('medium')
         ]);
     }

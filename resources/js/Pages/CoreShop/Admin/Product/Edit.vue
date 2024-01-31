@@ -12,9 +12,10 @@ import FeaturedImage from '@/Pages/CoreBlog/Admin/Includes/FeaturedImage.vue';
 import SimpleProduct from './Variant/SimpleProduct.vue';
 import SimpleEditor from '@/Pages/CoreBlog/Admin/Includes/SimpleEditor.vue';
 
+
+
 const props = defineProps({
     post: Object,
-    post_type: String,
     allTerms: Object,
     groupTaxonomies: Object,
     selectedTerms: Object,
@@ -67,7 +68,7 @@ function underDev() {
 </script>
 
 <template>
-    <AppLayout :title="'Edit ' + post_type">
+    <AppLayout :title="'Edit ' + $page.props.post_type">
 
         <Alert></Alert>
 

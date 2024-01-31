@@ -4,57 +4,104 @@
 
     <div x-data="{}" class="m-4 md:grid md:grid-cols-2">
 
-        <div class="w-full">
+        <div class="relative w-full">
             @php
                 $gallery = $post->postMetas->where('key', 'gallery')->first() ?? '';
             @endphp
 
             @if ($gallery->value)
                 <div
+                    x-ref="carousel_container"
+                    @keyup.esc="hideLightBox()"
                     x-data="{
                         show_light_box: false,
                         currentIndex: 0,
-                        prevIndex: 0,
+                        currentScroll: 0,
                         images: {},
+                        imageThumbnails: {},
                         totalImages: 0,
-                        imageWidth: 0,
                         nextImage() {
-
-                            this.prevIndex = this.currentIndex;
-                            this.currentIndex = (this.currentIndex + 1) % this.totalImages;
-                            $refs.carousel.style.transform = 'translateX(-${this.imageWidth}px)';
-                            $refs.backgroundImage.src = this.images[this.currentIndex].src;
-                            setTimeout(() => {
-                                $refs.carousel.appendChild(this.images[this.prevIndex]);
-                                $refs.carousel.style.transform = '';
-                            }, 500);
-
+                            if(this.currentIndex >= (this.totalImages - 1)) {
+                                this.moveToImageIndex(0);
+                            } else {
+                                this.moveToImageIndex(this.currentIndex + 1);
+                            }
+                        },
+                        prevImage() {
+                            if(this.currentIndex <= 0) {
+                                this.moveToImageIndex(this.totalImages - 1);
+                            } else {
+                                this.moveToImageIndex(this.currentIndex - 1)
+                            }
                         },
                         initData() {
                             this.images = $refs.carousel.getElementsByTagName('img');
-
-                            this.totalImages = Object.keys(this.images).length;
-                            this.imageWidth = $refs.carousel.offsetWidth;
-                            console.log(this.totalImages);
+                            this.totalImages = this.images.length;
+                            this.imageThumbnails = $refs.carousel_thumb.getElementsByTagName('img');
+                        },
+                        showLightBox() {
+                            this.show_light_box = true;
+                            this.moveToImageIndex(0);
+                        },
+                        hideLightBox() {
+                            this.show_light_box = false;
+                            this.moveToImageIndex(0);
+                        },
+                        moveToImageIndex(index) {
+                            this.currentIndex = index;
+                            $refs.carousel.scrollTo($refs.carousel.scrollWidth/this.totalImages * this.currentIndex, 0);
+                            [...this.imageThumbnails].forEach((image) => {
+                                image.classList.remove('border-4');
+                                image.classList.remove('rounded-lg');
+                            });
+                            this.imageThumbnails[this.currentIndex].classList.add('border-4');
+                            this.imageThumbnails[this.currentIndex].classList.add('rounded-lg');
                         }
                     }"
                     x-init="initData()"
-                    class="relative overflow-hidden transition-all">
-                    <img x-ref="backgroundImage" class='absolute top-0 left-0 w-full m-0' />
+
+                    >
                     <div
-                        x-ref="carousel"
-                        :class="show_light_box ? 'fixed top-0 bottom-0 right-0 w-full z-50 justify-center' : ''"
-                        class="flex gap-0 bg-gray-100 transition-all">
-                        @foreach ($gallery->value as $media)
+                        :class="show_light_box ? 'fixed top-0 bottom-0 right-0 w-full z-50' : ''"
+                        class="overflow-hidden transition-all">
+                        <div
+                            x-ref="carousel"
+                            :class="show_light_box ? '' : ''"
+                            class="flex flex-nowrap overflow-x-auto overflow-y-hidden scroll-smooth scrollbar-hide snap-x snap-mandatory gap-0 bg-gray-100 duration-100 transition-all">
+                            @foreach ($gallery->value as $media)
+                                <div :class="show_light_box ? 'h-screen flex items-center justify-center bg-black' : ''" class="flex-none w-full snap-start transition-all">
+                                    <img src="{{ $media->custom_properties->url }}" @if($loop->index !== 0) loading="lazy" @endif class="block m-0 lg:h-full"/>
+                                </div>
+                            @endforeach
+                        </div>
 
-                            <img src="{{ $media->custom_properties->url }}" class="m-0 transition-all"/>
+                        <div
+                            x-show="show_light_box"
+                            x-ref="carousel_thumb"
+                            :class="show_light_box ? 'justify-center' : ''"
+                            class="absolute bottom-4 left-0 right-0 mx-auto flex flex-wrap overflow-x-auto scroll-smooth gap-2 duration-100 transition-all">
+                            @foreach ($gallery->value as $media)
+                                <img @click.prevent="moveToImageIndex({{ $loop->index }})" src="{{ $media->custom_properties->url }}" loading="lazy" class="m-0 w-20 @if($loop->index === 0) border-4 @endif border-green-800 transition-all"/>
+                            @endforeach
+                        </div>
 
-                        @endforeach
+                        <button x-show="!show_light_box" @click.prevent="showLightBox()"
+                                class="absolute top-0 right-0 text-white bg-gray-800/20 z-50">
+                            <svg class="w-8 h-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" fill="currentColor"><path d="M290 236.4l43.9-43.9a8.01 8.01 0 0 0-4.7-13.6L169 160c-5.1-.6-9.5 3.7-8.9 8.9L179 329.1c.8 6.6 8.9 9.4 13.6 4.7l43.7-43.7L370 423.7c3.1 3.1 8.2 3.1 11.3 0l42.4-42.3c3.1-3.1 3.1-8.2 0-11.3L290 236.4zm352.7 187.3c3.1 3.1 8.2 3.1 11.3 0l133.7-133.6 43.7 43.7a8.01 8.01 0 0 0 13.6-4.7L863.9 169c.6-5.1-3.7-9.5-8.9-8.9L694.8 179c-6.6.8-9.4 8.9-4.7 13.6l43.9 43.9L600.3 370a8.03 8.03 0 0 0 0 11.3l42.4 42.4zM845 694.9c-.8-6.6-8.9-9.4-13.6-4.7l-43.7 43.7L654 600.3a8.03 8.03 0 0 0-11.3 0l-42.4 42.3a8.03 8.03 0 0 0 0 11.3L734 787.6l-43.9 43.9a8.01 8.01 0 0 0 4.7 13.6L855 864c5.1.6 9.5-3.7 8.9-8.9L845 694.9zm-463.7-94.6a8.03 8.03 0 0 0-11.3 0L236.3 733.9l-43.7-43.7a8.01 8.01 0 0 0-13.6 4.7L160.1 855c-.6 5.1 3.7 9.5 8.9 8.9L329.2 845c6.6-.8 9.4-8.9 4.7-13.6L290 787.6 423.7 654c3.1-3.1 3.1-8.2 0-11.3l-42.4-42.4z"></path></svg>
+                        </button>
+                        <button x-show="show_light_box" @click.prevent="hideLightBox()"
+                                class="absolute top-0 right-0 text-white bg-gray-800/20 z-50">
+                            <svg class="w-8 h-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" fill="currentColor"><path d="M391 240.9c-.8-6.6-8.9-9.4-13.6-4.7l-43.7 43.7L200 146.3a8.03 8.03 0 0 0-11.3 0l-42.4 42.3a8.03 8.03 0 0 0 0 11.3L280 333.6l-43.9 43.9a8.01 8.01 0 0 0 4.7 13.6L401 410c5.1.6 9.5-3.7 8.9-8.9L391 240.9zm10.1 373.2L240.8 633c-6.6.8-9.4 8.9-4.7 13.6l43.9 43.9L146.3 824a8.03 8.03 0 0 0 0 11.3l42.4 42.3c3.1 3.1 8.2 3.1 11.3 0L333.7 744l43.7 43.7A8.01 8.01 0 0 0 391 783l18.9-160.1c.6-5.1-3.7-9.4-8.8-8.8zm221.8-204.2L783.2 391c6.6-.8 9.4-8.9 4.7-13.6L744 333.6 877.7 200c3.1-3.1 3.1-8.2 0-11.3l-42.4-42.3a8.03 8.03 0 0 0-11.3 0L690.3 279.9l-43.7-43.7a8.01 8.01 0 0 0-13.6 4.7L614.1 401c-.6 5.2 3.7 9.5 8.8 8.9zM744 690.4l43.9-43.9a8.01 8.01 0 0 0-4.7-13.6L623 614c-5.1-.6-9.5 3.7-8.9 8.9L633 783.1c.8 6.6 8.9 9.4 13.6 4.7l43.7-43.7L824 877.7c3.1 3.1 8.2 3.1 11.3 0l42.4-42.3c3.1-3.1 3.1-8.2 0-11.3L744 690.4z"></path></svg>
+                        </button>
+                        <button @click.prevent="prevImage()" class="absolute left-0 top-0 bottom-0 my-auto text-white">
+                            <svg class="w-8 h-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><polyline fill="none" stroke="currentColor" stroke-width="2" points="7 2 17 12 7 22" transform="matrix(-1 0 0 1 24 0)"></polyline></svg>
+                        </button>
+                        <button @click.prevent="nextImage()" class="absolute right-0 top-0 bottom-0 my-auto text-white">
+                            <svg class="w-8 h-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><polyline fill="none" stroke="currentColor" stroke-width="2" points="7 2 17 12 7 22"></polyline></svg>
+                        </button>
                     </div>
-                    <button @click.prevent="show_light_box = !show_light_box" @keyup.esc="show_light_box = false"
-                            class="absolute top-0 right-0 bg-gray-800">tog</button>
-                    <button class="arrow-button left-arrow">Prev</button>
-                    <button @click.prevent="nextImage()" class="arrow-button right-arrow">Next</button>
+
+
                 </div>
             @elseif($post->getFeatured())
                 <a href="{{ $post->getFeaturedImageUrl('large') }}" target="_blank" rel="nofollow">

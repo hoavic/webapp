@@ -37,6 +37,7 @@ return [
             'exclude_from_search' => false,
             'show_in_menu' => true,
             'show_in_admin_bar' => true,
+            'has_custom_admin_controller' => false,
             'taxonomies' => [
                 'category',
                 'tag'
@@ -59,6 +60,7 @@ return [
             'exclude_from_search' => false,
             'show_in_menu' => true,
             'show_in_admin_bar' => true,
+            'has_custom_admin_controller' => false,
             'taxonomies' => [],
             'has_archive' => false,
             'archive_page' => '',
@@ -78,6 +80,7 @@ return [
             'exclude_from_search' => false,
             'show_in_menu' => true,
             'show_in_admin_bar' => true,
+            'has_custom_admin_controller' => 'products',
             'taxonomies' => [
                 'product_category',
                 'brand'
@@ -100,6 +103,7 @@ return [
             'exclude_from_search' => false,
             'show_in_menu' => true,
             'show_in_admin_bar' => true,
+            'has_custom_admin_controller' => false,
             'taxonomies' => [
                 'custom_tax'
             ],

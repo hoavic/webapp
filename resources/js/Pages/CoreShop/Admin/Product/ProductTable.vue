@@ -1,15 +1,15 @@
 <script setup>
-import { useForm } from '@inertiajs/vue3';
+import { useForm, usePage } from '@inertiajs/vue3';
 import { getPermalink } from '../../../CoreBlog/Admin/Post/postPermalink';
-import { stripHtml } from '../../../CoreBlog/Includes/global';
+
+const page = usePage();
 
 const props = defineProps({
-    post_type: String,
     data: Object,
 });
 
 const formDel = useForm({
-    name: props.post_type
+    name: page.props.post_type
 });
 
 function destroy(id) {
@@ -63,7 +63,7 @@ function destroy(id) {
 
                 <template v-else>
                     <tr>
-                        <td colspan="6" class="text-center text-sm text-gray-500">There is no {{ post_type }}. Please, add new one!</td>
+                        <td colspan="6" class="text-center text-sm text-gray-500">There is no {{ $page.props.post_type }}. Please, add new one!</td>
                     </tr>
                 </template>
 

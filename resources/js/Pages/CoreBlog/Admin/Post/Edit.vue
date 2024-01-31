@@ -1,7 +1,7 @@
 <script setup>
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
-import { router } from '@inertiajs/vue3';
+import { router, usePage } from '@inertiajs/vue3';
 import { reactive } from 'vue'
 import Editor from '@/Pages/CoreBlog/Admin/Includes/Editor.vue';
 import TermNonHierarchial from './TermNonHierarchial.vue';
@@ -9,9 +9,10 @@ import SecondaryButton from '@/Components/SecondaryButton.vue';
 import Alert from '../Alert.vue';
 import FeaturedImage from '../Includes/FeaturedImage.vue';
 
+const page = usePage();
+
 const props = defineProps({
     post: Object,
-    post_type: String,
     allTerms: Object,
     groupTaxonomies: Object,
     selectedTerms: Object,
@@ -39,7 +40,7 @@ const getMetaIndex = (inputkey) => {
 function updatePost() {
     form.post.status = 'published';
     let options = {
-        onSuccess: (page) => router.visit(route('admin.posts.index') + '?post_type=' + props.post_type)
+        onSuccess: (page) => router.visit(route('admin.posts.index') + '?selectedTerms=' + page.props.post_type)
     }
     sendUpdate(options);
 }
@@ -47,7 +48,7 @@ function updatePost() {
 
 function updatePostAndClose() {
     let options = {
-        onSuccess: (page) => router.visit(route('admin.posts.index') + '?post_type=' + props.post_type)
+        onSuccess: (page) => router.visit(route('admin.posts.index') + '?post_type=' + page.props.post_type)
     }
     sendUpdate(options);
 }
@@ -59,7 +60,7 @@ function sendUpdate(options = {}) {
 </script>
 
 <template>
-    <AppLayout :title="'Edit ' + post_type">
+    <AppLayout :title="'Edit ' + $page.props.post_type">
 
         <Alert></Alert>
 

@@ -20,6 +20,7 @@
         "vue": "^3.2.31"
     },
     "dependencies": {
+        "@alpinejs/intersect": "^3.13.5",
         "alpinejs": "^3.13.3",
         "pretty-bytes": "^6.1.1",
         "slugify": "^1.6.6",

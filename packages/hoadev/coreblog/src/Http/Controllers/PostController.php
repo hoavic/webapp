@@ -4,41 +4,26 @@ namespace Hoadev\CoreBlog\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Hoadev\CoreBlog\Models\Post;
-use Hoadev\CoreBlog\Models\PostMeta;
 use Hoadev\CoreBlog\Models\Taxonomy;
-use Hoadev\CoreBlog\Models\Term;
-use Illuminate\Database\Eloquent\Builder;
+use Hoadev\CoreBlog\Traits\Core\CorePost;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
 
 class PostController extends Controller
 {
+
+    use CorePost;
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
-
-        $post_type = $request->query('post_type', 'post');
-        if($post_type === 'product') { return redirect()->route('admin.products.index'); }
-
-        $search = $request->query('search');
-
-        $posts = Post::where('type', $post_type)
-                        ->where('title', 'like', '%'.$search.'%')
-                        ->latest()
-                        ->paginate(10);
-
-        $posts->appends(['post_type' => $post_type]);
-
-        if($search !== null) {
-            $posts->appends(['search' => $search]);
+        if($customAdmin = config('coreblog.post_types.'.$request->query('post_type', 'post').'.has_custom_admin_controller')) {
+            return redirect()->route('admin.'.$customAdmin.'.index');
         }
-
         return Inertia::render('CoreBlog/Admin/Post/Index', [
-            'post_type' => $post_type,
-            'posts' => $posts
+            'posts' => $this->paginatePosts($request)
         ]);
     }
 
@@ -48,21 +33,13 @@ class PostController extends Controller
     public function create(Request $request)
     {
         $post_type = $request->query('post_type', 'post');
-        if($post_type === 'product') { return redirect()->route('admin.products.create'); }
 
-        $post_types = config('coreblog.post_types');
-
-        /* $groupTaxonomies = Taxonomy::with(['term', 'ancestors'])->whereIn('taxonomy', $post_types[$post_type]['taxonomies'])->defaultOrder()->get()->groupBy('taxonomy'); */
-
-        $groupTaxonomies = Taxonomy::with(['term', 'ancestors'])
-            ->whereIn('taxonomy', $post_types[$post_type]['taxonomies'])
-            ->defaultOrder()
-            ->get()
-            ->groupBy(['taxonomy', 'term_id']);
+        if($customAdmin = config('coreblog.post_types.'.$post_type.'.has_custom_admin_controller')) {
+            return redirect()->route('admin.'.$customAdmin.'.create');
+        }
 
         return Inertia::render('CoreBlog/Admin/Post/Create', [
-            'post_type' => $post_type,
-            'groupTaxonomies' => $groupTaxonomies
+            'groupTaxonomies' => $this->getGroupTaxonomies($post_type)
         ]);
     }
 
@@ -126,34 +103,14 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        if($post->type === 'product') { return redirect()->route('admin.products.edit', $post); }
-        $post_types = config('coreblog.post_types');
-
-        $groupTaxonomies = Taxonomy::with(['term', 'ancestors'])
-            ->whereIn('taxonomy', $post_types[$post->type]['taxonomies'])
-            ->defaultOrder()
-            ->get()
-            ->groupBy(['taxonomy', 'term_id']);
-
-         $selectedTermsObject = $post->terms->load('taxonomy')->groupBy('taxonomy.taxonomy');
-
-        $selectedTerms = [];
-        foreach($post_types[$post->type]['taxonomies'] as $tax) {
-            if(isset($selectedTermsObject[$tax])) {
-                $selectedTerms[$tax] = $selectedTermsObject[$tax]->pluck('id');
-            } else {
-                $selectedTerms[$tax] = [];
-            }
+        if($customAdmin = config('coreblog.post_types.'.$post->type.'.has_custom_admin_controller')) {
+            return redirect()->route('admin.'.$customAdmin.'.index');
         }
 
-        $post->load(['postMetas.media']);
-
-        /* dd($selectedTerms); */
         return Inertia::render('CoreBlog/Admin/Post/Edit', [
-            'post' => $post,
-            'post_type' => $post->type,
-            'groupTaxonomies' => $groupTaxonomies,
-            'selectedTerms' => $selectedTerms,
+            'post' => $post->load(['postMetas.media']),
+            'groupTaxonomies' => $this->getGroupTaxonomies($post->type),
+            'selectedTerms' => $this->getSelectedTerms($post),
             'featured_image' => $post->getFeaturedImageUrl('medium')
         ]);
     }

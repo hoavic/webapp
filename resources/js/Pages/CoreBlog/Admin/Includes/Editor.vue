@@ -114,7 +114,7 @@ function autoSyncEmit() {
     if(images.length > 0) {
         images[0].setAttribute('loading', 'eager');
     }
-    console.log(doc3.getElementsByTagName('body')[0].innerHTML);
+    //console.log(doc3.getElementsByTagName('body')[0].innerHTML);
     emit('update:modelValue', doc3.getElementsByTagName('body')[0].innerHTML);
     /* emit('update:modelValue', tinymce.get("myeditorinstance").getContent()); */
 }

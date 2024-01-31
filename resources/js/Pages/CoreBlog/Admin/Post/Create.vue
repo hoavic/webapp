@@ -13,7 +13,6 @@ import FeaturedImage from '../Includes/FeaturedImage.vue';
 const page = usePage();
 
 const props = defineProps({
-    post_type: String,
     allTerms: Object,
     groupTaxonomies: Object,
     errors: Object
@@ -29,7 +28,7 @@ const form = reactive({
         password: null,
         name: null,
         parent_id: null,
-        type: props.post_type,
+        type: page.props.post_type,
     },
     metas: {
         featured_image: [],
@@ -40,8 +39,8 @@ const form = reactive({
 //first time
 function configSelectedTerms() {
     let selectedTerms = new Object;
-    for(let i = 0; i < page.props.admin.post_types[props.post_type].taxonomies.length; i++) {
-        selectedTerms[page.props.admin.post_types[props.post_type].taxonomies[i]] = [];
+    for(let i = 0; i < page.props.admin.post_types[page.props.post_type].taxonomies.length; i++) {
+        selectedTerms[page.props.admin.post_types[page.props.post_type].taxonomies[i]] = [];
         /* console.log(page.props.admin.post_types[props.post_type]); */
     }
     return selectedTerms;
@@ -64,7 +63,7 @@ function savePost() {
 </script>
 
 <template>
-    <AppLayout :title="'Create ' + post_type">
+    <AppLayout :title="'Create ' + $page.props.post_type">
 
         <Alert :errors="errors"></Alert>
 
@@ -75,7 +74,7 @@ function savePost() {
                     <!-- Main -->
                     <div class="lg:flex-1">
                         <div class="my-6 mx-2 lg:mx-6">
-                            <input type="text" v-model="form.post.title" name="title" @input="form.post.name = autoSlug(form.post.title)" :placeholder="post_type.charAt(0).toUpperCase() + post_type.slice(1) + ' Title...'"
+                            <input type="text" v-model="form.post.title" name="title" @input="form.post.name = autoSlug(form.post.title)" :placeholder="$page.props.post_type.charAt(0).toUpperCase() + $page.props.post_type.slice(1) + ' Title...'"
                                 class="w-full text-lg font-bold border border-gray-300 rounded-lg"/>
                         </div>
 

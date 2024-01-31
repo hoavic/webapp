@@ -8,6 +8,8 @@ import ProductAction from '@/Pages/CoreShop/Admin/Product/ProductAction.vue';
 import ProductTable from '@/Pages/CoreShop/Admin/Product/ProductTable.vue';
 
 const props = defineProps({
+    post_type: String,
+    search: String,
     posts: Object,
     errors: Object
 });
@@ -15,14 +17,14 @@ const props = defineProps({
 </script>
 
 <template>
-    <AppLayout :title="$page.props.post_type + ' Index'">
+    <AppLayout :title="post_type + ' Index'">
 
         <Alert :errors="errors"></Alert>
 
         <div class="py-8 px-4 lg:px-8">
 
-            <ProductAction/>
-            <ProductTable :data="posts.data"></ProductTable>
+            <ProductAction :post_type="post_type" :search="search"/>
+            <ProductTable :post_type="post_type" :data="posts.data"></ProductTable>
             <Pagination :links="posts.links" class="px-4"></Pagination>
 
         </div>

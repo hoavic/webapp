@@ -8,8 +8,6 @@ import PostAction from '@/Pages/CoreBlog/Admin/Post/PostAction.vue';
 import PostTable from '@/Pages/CoreBlog/Admin/Post/PostTable.vue';
 
 const props = defineProps({
-    post_type: String,
-    search: String,
     posts: Object,
     errors: Object
 });
@@ -17,14 +15,14 @@ const props = defineProps({
 </script>
 
 <template>
-    <AppLayout :title="post_type + ' Index'">
+    <AppLayout :title="$page.props.post_type + ' Index'">
 
         <Alert :errors="errors"></Alert>
 
         <div class="py-8 px-4 lg:px-8">
 
-            <PostAction :post_type="post_type" :search="search"/>
-            <PostTable :post_type="post_type" :data="posts.data"></PostTable>
+            <PostAction/>
+            <PostTable :data="posts.data"></PostTable>
             <Pagination :links="posts.links" class="px-4"></Pagination>
 
         </div>
