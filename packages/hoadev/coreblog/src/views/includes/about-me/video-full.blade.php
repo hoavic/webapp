@@ -3,9 +3,8 @@
         x-data="{
 
         }"
-            x-intersect:enter="$el.classList.add('animate-fade')"
-            x-intersect:leave="$el.classList.remove('animate-fade')"
-            class="animate-duration-[2000ms] animate-ease-in-out relative w-full aspect-video text-center">
+        x-intersect:enter="$el.classList.add('animate-fade')"
+        class="animate-duration-[2000ms] animate-ease-in-out relative w-full aspect-video text-center">
 
         <video width="1920" height="1080" loop autoplay muted playsinline>
             <source src="/uploads/about-sia-clip.mp4" type="video/mp4" />
