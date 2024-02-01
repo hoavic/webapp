@@ -10,12 +10,16 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
 
-            <div class="">
+            <div
+                x-intersect:enter="$el.classList.add('animate-fade-right')"
+                class="animate-duration-[2000ms] animate-ease-in-out">
                 <h2 class="mx-0 font-bold text-2xl text-yellow-800">ĐĂNG KÝ PHÂN PHỐI</h2>
                 <p class="mx-0 text-sm">Để tìm hiểu rõ hơn về chính sách hợp tác cùng Sâm Sia Ginseng</p>
             </div>
 
-            <div class="w-full">
+            <div
+                x-intersect:enter="$el.classList.add('animate-fade-left')"
+                class="animate-duration-[2000ms] animate-ease-in-out w-full">
                 <form method="POST" action="/store-form-s"
                     class="w-full flex flex-col md:flex-row gap-4">
                     @csrf

@@ -1,4 +1,7 @@
-<div class="py-4 lg:py-16 bg-green-500/10 text-green-800">
+<div x-data="{}"
+    x-intersect:enter="$el.classList.add('animate-fade-up')"
+
+    class="animate-ease-in-out animate-duration-[2000ms] py-4 lg:py-16 bg-green-500/10 text-green-800">
     <div class="max-w-7xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-4">
         <div class="flex flex-col items-center text-center">
             <div class="p-1 rounded-full border-2 border-green-800 hover:rotate-[360deg] transition-all duration-700">

@@ -7,7 +7,8 @@
     @if ($posts && $posts->count() > 0)
         @foreach ($posts as $post)
 
-            <div class="md:p-4 lg:p-3 flex flex-col items-center border border-gray-100 md:rounded-lg hover:shadow-lg">
+            <div x-intersect:enter="$el.classList.add('animate-fade-left')"
+                class="animate-ease-in-out animate-delay-{{ 150*$loop->iteration }} animate-duration-[2000ms] md:p-4 lg:p-3 flex flex-col items-center border border-gray-100 md:rounded-lg hover:shadow-lg">
                 <a href="{{ $post->getpermalink() }}" class="block w-full no-underline">
                     @if ($post->getFeatured())
                         {{-- <img src="{{ $post->getFeaturedImageUrl('medium') }}" alt="{{ $post->title }}" class="m-0 rounded"> --}}
